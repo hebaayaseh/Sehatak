@@ -1,0 +1,69 @@
+﻿using Microsoft.Extensions.Localization;
+
+namespace Sehatak.API.Middleware;
+
+public class ExceptionMiddleware
+{
+    private readonly RequestDelegate _next;
+    private readonly ILogger<ExceptionMiddleware> _logger;
+    private readonly IStringLocalizerFactory _localizerFactory;
+
+    public ExceptionMiddleware(
+        RequestDelegate next,
+        ILogger<ExceptionMiddleware> logger,
+        IStringLocalizerFactory localizerFactory)
+    {
+        _next = next;
+        _logger = logger;
+        _localizerFactory = localizerFactory;
+    }
+
+    public async Task InvokeAsync(HttpContext context)
+    {
+        try
+        {
+            await _next(context);
+        }
+        catch (Exception ex)
+        {
+            // نسجل الخطأ الحقيقي للـ logs فقط — المستخدم ما يشوفه
+            _logger.LogError(ex, "Unhandled exception occurred.");
+            await HandleExceptionAsync(context, ex, _localizerFactory);
+        }
+    }
+
+    private static async Task HandleExceptionAsync(
+        HttpContext context,
+        Exception ex,
+        IStringLocalizerFactory localizerFactory)
+    {
+        var localizer = localizerFactory.Create(
+            "Messages",
+            System.Reflection.Assembly.GetExecutingAssembly().GetName().Name!
+        );
+
+        context.Response.ContentType = "application/json";
+
+        // نحدد الـ status code حسب نوع الخطأ
+        var (statusCode, messageKey) = ex switch
+        {
+            UnauthorizedAccessException => (StatusCodes.Status401Unauthorized, "Auth.Unauthorized"),
+            KeyNotFoundException => (StatusCodes.Status404NotFound, "General.NotFound"),
+            ArgumentException => (StatusCodes.Status400BadRequest, ex.Message),
+            _ => (StatusCodes.Status500InternalServerError, "General.ServerError")
+        };
+
+        context.Response.StatusCode = statusCode;
+
+        // نجيب الرسالة باللغة الصح
+        var message = statusCode == 400
+            ? ex.Message
+            : localizer[messageKey].Value;
+
+        await context.Response.WriteAsJsonAsync(new
+        {
+            status = statusCode,
+            message = message
+        });
+    }
+}

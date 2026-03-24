@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>2.0</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<data name="Auth.LoginFailed" xml:space="preserve"><value>Invalid email or password.</value></data>
+	<data name="Auth.EmailExists" xml:space="preserve"><value>This email is already registered.</value></data>
+	<data name="Auth.Unauthorized" xml:space="preserve"><value>Unauthorized. Please login first.</value></data>
+	<data name="Auth.Forbidden" xml:space="preserve"><value>You do not have permission to access this resource.</value></data>
+	<data name="Auth.AccountSuspended" xml:space="preserve"><value>Your account has been suspended. Please contact support.</value></data>
+	<data name="Auth.PasswordResetSent" xml:space="preserve"><value>Password reset instructions have been sent to your email.</value></data>
+	<data name="Auth.PasswordChanged" xml:space="preserve"><value>Password changed successfully.</value></data>
+	<data name="Validation.Required" xml:space="preserve"><value>This field is required.</value></data>
+	<data name="Validation.InvalidEmail" xml:space="preserve"><value>Please enter a valid email address.</value></data>
+	<data name="Validation.PasswordTooShort" xml:space="preserve"><value>Password must be at least 8 characters long.</value></data>
+	<data name="Validation.InvalidPhone" xml:space="preserve"><value>Please enter a valid phone number.</value></data>
+	<data name="Validation.InvalidDate" xml:space="preserve"><value>Please enter a valid date.</value></data>
+	<data name="Center.Created" xml:space="preserve"><value>Medical center created successfully.</value></data>
+	<data name="Center.Updated" xml:space="preserve"><value>Medical center updated successfully.</value></data>
+	<data name="Center.Suspended" xml:space="preserve"><value>Medical center has been suspended.</value></data>
+	<data name="Center.Activated" xml:space="preserve"><value>Medical center has been activated.</value></data>
+	<data name="Center.NotFound" xml:space="preserve"><value>Medical center not found.</value></data>
+	<data name="Center.SubscriptionExpired" xml:space="preserve"><value>Your subscription has expired. Please renew to continue.</value></data>
+	<data name="Center.UrlExists" xml:space="preserve"><value>This URL is already taken. Please choose another.</value></data>
+	<data name="Subscription.Renewed" xml:space="preserve"><value>Subscription renewed successfully.</value></data>
+	<data name="Subscription.Cancelled" xml:space="preserve"><value>Subscription cancelled successfully.</value></data>
+	<data name="Subscription.PlanNotFound" xml:space="preserve"><value>Subscription plan not found.</value></data>
+	<data name="User.Created" xml:space="preserve"><value>User created successfully.</value></data>
+	<data name="User.Updated" xml:space="preserve"><value>Profile updated successfully.</value></data>
+	<data name="User.NotFound" xml:space="preserve"><value>User not found.</value></data>
+	<data name="User.Deleted" xml:space="preserve"><value>User deleted successfully.</value></data>
+	<data name="Doctor.Created" xml:space="preserve"><value>Doctor added successfully.</value></data>
+	<data name="Doctor.NotFound" xml:space="preserve"><value>Doctor not found.</value></data>
+	<data name="Doctor.Updated" xml:space="preserve"><value>Doctor information updated successfully.</value></data>
+	<data name="Doctor.ScheduleUpdated" xml:space="preserve"><value>Doctor schedule updated successfully.</value></data>
+	<data name="Doctor.NoAvailableSlots" xml:space="preserve"><value>No available time slots for this doctor.</value></data>
+	<data name="Department.Created" xml:space="preserve"><value>Department created successfully.</value></data>
+	<data name="Department.NotFound" xml:space="preserve"><value>Department not found.</value></data>
+	<data name="Department.Deleted" xml:space="preserve"><value>Department deleted successfully.</value></data>
+	<data name="Patient.Registered" xml:space="preserve"><value>Patient registered successfully.</value></data>
+	<data name="Patient.NotFound" xml:space="preserve"><value>Patient not found.</value></data>
+	<data name="Patient.SubProfileCreated" xml:space="preserve"><value>Family member profile created successfully.</value></data>
+	<data name="Appointment.Booked" xml:space="preserve"><value>Appointment booked successfully.</value></data>
+	<data name="Appointment.Cancelled" xml:space="preserve"><value>Appointment cancelled successfully.</value></data>
+	<data name="Appointment.Confirmed" xml:space="preserve"><value>Appointment confirmed.</value></data>
+	<data name="Appointment.NotFound" xml:space="preserve"><value>Appointment not found.</value></data>
+	<data name="Appointment.SlotTaken" xml:space="preserve"><value>This time slot is already booked. Please choose another.</value></data>
+	<data name="Appointment.MarkedNoShow" xml:space="preserve"><value>Patient marked as no-show.</value></data>
+	<data name="Appointment.DayCancelled" xml:space="preserve"><value>All appointments for this day have been cancelled.</value></data>
+	<data name="Waitlist.Joined" xml:space="preserve"><value>You have been added to the waitlist successfully.</value></data>
+	<data name="Waitlist.AlreadyJoined" xml:space="preserve"><value>You are already on the waitlist for this doctor.</value></data>
+	<data name="Waitlist.SlotAvailable" xml:space="preserve"><value>A slot is now available. Your appointment has been booked.</value></data>
+	<data name="Payment.Success" xml:space="preserve"><value>Payment recorded successfully.</value></data>
+	<data name="Payment.Failed" xml:space="preserve"><value>Payment failed. Please try again.</value></data>
+	<data name="Payment.Refunded" xml:space="preserve"><value>Refund processed successfully.</value></data>
+	<data name="Payment.NotFound" xml:space="preserve"><value>Payment record not found.</value></data>
+	<data name="MedicalRecord.Created" xml:space="preserve"><value>Medical record saved successfully.</value></data>
+	<data name="MedicalRecord.NotFound" xml:space="preserve"><value>Medical record not found.</value></data>
+	<data name="Lab.ResultAdded" xml:space="preserve"><value>Lab result added successfully.</value></data>
+	<data name="Lab.ResultNotFound" xml:space="preserve"><value>Lab result not found.</value></data>
+	<data name="Lab.AiAnalysisFailed" xml:space="preserve"><value>AI analysis is temporarily unavailable. Results are shown without summary.</value></data>
+	<data name="Consultation.Booked" xml:space="preserve"><value>Online consultation booked successfully.</value></data>
+	<data name="Consultation.Accepted" xml:space="preserve"><value>Consultation request accepted.</value></data>
+	<data name="Consultation.Rejected" xml:space="preserve"><value>Consultation request rejected. A full refund will be issued.</value></data>
+	<data name="Consultation.NotFound" xml:space="preserve"><value>Consultation not found.</value></data>
+	<data name="Notification.Sent" xml:space="preserve"><value>Notification sent successfully.</value></data>
+	<data name="Notification.AllRead" xml:space="preserve"><value>All notifications marked as read.</value></data>
+	<data name="Rating.Submitted" xml:space="preserve"><value>Rating submitted successfully.</value></data>
+	<data name="Rating.NotAllowed" xml:space="preserve"><value>You can only rate a doctor after a completed appointment.</value></data>
+	<data name="Rating.AlreadySubmitted" xml:space="preserve"><value>You have already rated this appointment.</value></data>
+	<data name="General.ServerError" xml:space="preserve"><value>An unexpected error occurred. Please try again later.</value></data>
+	<data name="General.NotFound" xml:space="preserve"><value>The requested resource was not found.</value></data>
+	<data name="General.Success" xml:space="preserve"><value>Operation completed successfully.</value></data>
+	<data name="General.TooManyRequests" xml:space="preserve"><value>Too many requests. Please slow down and try again later.</value></data>
+</root>

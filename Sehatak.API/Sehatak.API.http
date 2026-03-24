@@ -1,0 +1,6 @@
+@Sehatak.API_HostAddress = http://localhost:5022
+
+GET {{Sehatak.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
