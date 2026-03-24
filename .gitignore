@@ -3,3 +3,8 @@ bin/
 obj/
 *.user
 *.suo
+packages/
+*.nupkg
+.DS_Store
+Thumbs.db
+appsettings.Development.json
