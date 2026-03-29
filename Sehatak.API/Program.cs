@@ -1,10 +1,13 @@
-﻿using System.Text;
-using System.Threading.RateLimiting;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Sehatak.API.Hubs;
 using Sehatak.API.Middleware;
+using Sehatak.Infrastructure.Data;
 using Sehatak.Infrastructure.Security;
+using System.Text;
+using System.Threading.RateLimiting;
 
 namespace Sehatak.API
 {
@@ -66,7 +69,38 @@ namespace Sehatak.API
                        .AddSupportedUICultures(supportedCultures);
             });
 
-            // 4. CORS
+            // 4. SHARED DATABASE
+            // بيتصل بداتا بيس المنصة الرئيسية — Singleton
+            
+            builder.Services.AddDbContext<SharedDbContext>(options =>
+                options.UseMySql(
+                    builder.Configuration.GetConnectionString("sehatak_shared"),
+                    ServerVersion.AutoDetect(
+                        builder.Configuration.GetConnectionString("sehatak_shared")
+                    )
+                )
+            );
+
+            // 5. TENANT DATABASE
+            // بيتصل بداتا بيس المركز الصح لكل request — Scoped
+            // ============================================================
+
+            // بنضيف IHttpContextAccessor عشان نقرأ الـ JWT Token
+            builder.Services.AddHttpContextAccessor();
+
+            // Factory — لإنشاء داتا بيس لمراكز جديدة
+            // Singleton لأنه ما بيعتمد على الـ Request
+            builder.Services.AddSingleton<TenantDbContextFactory>();
+
+            // Accessor — للوصول لداتا بيس المركز الحالي
+            // Scoped لأنه بيعتمد على الـ Request الحالي
+            builder.Services.AddScoped<TenantDbContextAccessor>();
+
+            
+            // 6. SIGNALR — chat between staff  
+            builder.Services.AddSignalR();
+
+            // 7. CORS
             // Determine how can call the API ! ... only FrontEnd when i determine it in appsitting
             var allowedOrigins = builder.Configuration
                 .GetSection("Cors:AllowedOrigins")
@@ -85,7 +119,7 @@ namespace Sehatak.API
             });
 
 
-            // 5. RATE LIMITING
+            // 8. RATE LIMITING
 
             builder.Services.AddRateLimiter(options =>
             {
@@ -126,7 +160,7 @@ namespace Sehatak.API
                 };
             });
 
-            // 6. JWT AUTHENTICATION
+            // 9. JWT AUTHENTICATION
             
             var jwtKey = builder.Configuration["Jwt:SecretKey"]!;
             var jwtIssuer = builder.Configuration["Jwt:Issuer"]!;
@@ -178,7 +212,7 @@ namespace Sehatak.API
                 };
             });
 
-            // 7. AUTHORIZATION — ROLES
+            // 10. AUTHORIZATION — ROLES
             builder.Services.AddAuthorization(options =>
             {
                 //  SuperAdmin
@@ -197,12 +231,16 @@ namespace Sehatak.API
                 options.AddPolicy("DoctorOnly",
                     policy => policy.RequireRole("Doctor"));
 
+                // only Receptionist
+                options.AddPolicy("ReceptionistOnly",
+                    policy => policy.RequireRole("Receptionist"));
+
                 // Only Patient
                 options.AddPolicy("PatientOnly",
                     policy => policy.RequireRole("Patient"));
             });
 
-            // 8. SERVICES
+            // 11. SERVICES
             
             // Singleton — ينشأ مرة وحدة طول عمر التطبيق
             builder.Services.AddSingleton<JwtTokenGenerator>();
@@ -242,6 +280,9 @@ namespace Sehatak.API
 
             // 9. Controllers
             app.MapControllers();
+
+            // 10. SignalR Hub — للشات الداخلي
+            app.MapHub<ChatHub>("/hubs/chat");
 
             app.Run();
         }
