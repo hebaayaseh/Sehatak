@@ -28,5 +28,351 @@ namespace Sehatak.Infrastructure.Data
         public DbSet<DoctorRating> DoctorRatings => Set<DoctorRating>();
         public DbSet<Notification> Notifications => Set<Notification>();
         public DbSet<Chat> Chats => Set<Chat>();
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            //  USER 
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.ToTable("users");
+                entity.HasKey(e => e.Id);
+
+                entity.HasIndex(e => e.email)
+                      .IsUnique()
+                      .HasFilter("email IS NOT NULL");
+
+                entity.Property(e => e.firstName)
+                      .IsRequired()
+                      .HasMaxLength(100);
+
+                entity.Property(e => e.lastName)
+                      .IsRequired()
+                      .HasMaxLength(100);
+
+                entity.Property(e => e.passwordHash)
+                      .IsRequired();
+
+                entity.Property(e => e.role)
+                      .HasConversion<string>();
+            });
+
+            //  DEPARTMENT 
+            modelBuilder.Entity<Department>(entity =>
+            {
+                entity.ToTable("departments");
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Name)
+                      .IsRequired()
+                      .HasMaxLength(100);
+            });
+
+            //  DOCTOR 
+            modelBuilder.Entity<Doctor>(entity =>
+            {
+                entity.ToTable("doctors");
+                entity.HasKey(e => e.doctorId);
+
+                // كل يوزر يكون دكتور وحد بس
+                entity.HasIndex(e => e.userId).IsUnique();
+
+                entity.Property(e => e.cost)
+                      .HasPrecision(10, 2);
+
+                // علاقة مع User
+                entity.HasOne(e => e.user)
+                      .WithOne(u => u.doctor)
+                      .HasForeignKey<Doctor>(e => e.userId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                // علاقة مع Department
+                entity.HasOne(e => e.department)
+                      .WithMany(d => d.Doctors)
+                      .HasForeignKey(e => e.departmentId)
+                      .OnDelete(DeleteBehavior.SetNull);
+            });
+
+            //  PATIENT 
+            modelBuilder.Entity<Patient>(entity =>
+            {
+                entity.ToTable("patients");
+                entity.HasKey(e => e.patientId);
+
+                entity.Property(e => e.Gender)
+                      .HasConversion<string>();
+
+                // علاقة مع User
+                entity.HasOne(e => e.user)
+                      .WithOne(u => u.patient)
+                      .HasForeignKey<Patient>(e => e.userId)
+                      .OnDelete(DeleteBehavior.SetNull);
+
+                // علاقة المريض الفرعي مع الرئيسي
+                entity.HasOne(e => e.ParentPatient)
+                      .WithMany(p => p.SubPatients)
+                      .HasForeignKey(e => e.ParentPatientId)
+                      .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            // DOCTOR SCHEDULE 
+            modelBuilder.Entity<Doctorschedule>(entity =>
+            {
+                entity.ToTable("doctor_schedules");
+                entity.HasKey(e => e.Id);
+
+                // DayOfWeek ينحفظ كـ string بالداتا بيس
+                entity.Property(e => e.DayOfWeek)
+                      .HasConversion<string>();
+
+                entity.HasOne(e => e.doctor)
+                      .WithMany(d => d.doctorschedules)
+                      .HasForeignKey(e => e.DoctorId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            //  STAFF SHIFT 
+            modelBuilder.Entity<StaffShift>(entity =>
+            {
+                entity.ToTable("staff_shifts");
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.DayOfWeek)
+                      .HasConversion<string>();
+
+                entity.HasOne(e => e.User)
+                      .WithMany(u => u.Shifts)
+                      .HasForeignKey(e => e.Id)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            //  APPOINTMENT 
+            modelBuilder.Entity<Appointment>(entity =>
+            {
+                entity.ToTable("appointments");
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.prepayment)
+                      .HasPrecision(10, 2);
+
+                entity.Property(e => e.BillAmount)
+                      .HasPrecision(10, 2);
+
+                entity.Property(e => e.status)
+                      .HasConversion<string>();
+
+                // علاقة مع Patient
+                entity.HasOne(e => e.Patient)
+                      .WithMany(p => p.appointments)
+                      .HasForeignKey(e => e.patientId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                // علاقة مع Doctor
+                entity.HasOne(e => e.Doctor)
+                      .WithMany(d => d.dailyAppointment)
+                      .HasForeignKey(e => e.doctorId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                // علاقة مع Receptionist — NoAction عشان ما يحذف الموعد لو الريسبشن اتحذف
+                entity.HasOne(e => e.Receptionist)
+                      .WithMany()
+                      .HasForeignKey(e => e.ReceptionistId)
+                      .OnDelete(DeleteBehavior.NoAction);
+            });
+
+            //  WAITLIST
+            modelBuilder.Entity<Waitlist>(entity =>
+            {
+                entity.ToTable("waitlists");
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Status)
+                      .HasConversion<string>();
+
+                entity.HasOne(e => e.Patient)
+                      .WithMany(p => p.Waitlists)
+                      .HasForeignKey(e => e.PatientId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(e => e.Doctor)
+                      .WithMany(d => d.Waitlists)
+                      .HasForeignKey(e => e.DoctorId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(e => e.Receptionist)
+                      .WithMany()
+                      .HasForeignKey(e => e.ReceptionistId)
+                      .OnDelete(DeleteBehavior.NoAction);
+            });
+
+            //  PAYMENT 
+            modelBuilder.Entity<Payment>(entity =>
+            {
+                entity.ToTable("payments");
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Amount)
+                      .HasPrecision(10, 2);
+
+                entity.Property(e => e.Method)
+                      .HasConversion<string>();
+
+                entity.Property(e => e.Type)
+                      .HasConversion<string>();
+
+                entity.Property(e => e.Status)
+                      .HasConversion<string>();
+
+                entity.HasOne(e => e.Appointment)
+                      .WithOne(a => a.Payment)
+                      .HasForeignKey<Payment>(e => e.AppointmentId)
+                      .OnDelete(DeleteBehavior.SetNull);
+
+                entity.HasOne(e => e.Patient)
+                      .WithMany(p => p.payments)
+                      .HasForeignKey(e => e.PatientId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(e => e.Receptionist)
+                      .WithMany()
+                      .HasForeignKey(e => e.ReceptionistId)
+                      .OnDelete(DeleteBehavior.NoAction);
+            });
+
+            // MEDICAL RECORD 
+            modelBuilder.Entity<MedicalRecord>(entity =>
+            {
+                entity.ToTable("medical_records");
+                entity.HasKey(e => e.Id);
+
+                entity.HasOne(e => e.Patient)
+                      .WithMany(p => p.MedicalRecords)
+                      .HasForeignKey(e => e.PatientId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(e => e.Doctor)
+                      .WithMany(d => d.medicicalRecord)
+                      .HasForeignKey(e => e.DoctorId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(e => e.Appointment)
+                      .WithOne(a => a.MedicalRecord)
+                      .HasForeignKey<MedicalRecord>(e => e.AppointmentId)
+                      .OnDelete(DeleteBehavior.SetNull);
+            });
+
+            //  LAB RESULT 
+            modelBuilder.Entity<LabResult>(entity =>
+            {
+                entity.ToTable("lab_results");
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.LabPayment)
+                      .HasPrecision(10, 2);
+
+                entity.Property(e => e.PaymentMethod)
+                      .HasConversion<string>();
+
+                entity.Property(e => e.PaymentStatus)
+                      .HasConversion<string>();
+
+                entity.HasOne(e => e.Patient)
+                      .WithMany(p => p.LabResults)
+                      .HasForeignKey(e => e.PatientId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                // التقني بيرجع لـ User مباشرة
+                entity.HasOne(e => e.Technician)
+                      .WithMany()
+                      .HasForeignKey(e => e.TechnicianId)
+                      .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            // CONSULTATION 
+            modelBuilder.Entity<Consultation>(entity =>
+            {
+                entity.ToTable("consultations");
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.consultationCost)
+                      .HasPrecision(10, 2);
+
+                entity.Property(e => e.Status)
+                      .HasConversion<string>();
+
+                entity.HasOne(e => e.Patient)
+                      .WithMany(p => p.Consultations)
+                      .HasForeignKey(e => e.PatientId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(e => e.Doctor)
+                      .WithMany(d => d.Consultations)
+                      .HasForeignKey(e => e.DoctorId)
+                      .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            //  DOCTOR RATING 
+            modelBuilder.Entity<DoctorRating>(entity =>
+            {
+                entity.ToTable("doctor_ratings");
+                entity.HasKey(e => e.Id);
+
+                // كل موعد ما ينقيّم أكثر من مرة
+                entity.HasIndex(e => e.AppointmentId).IsUnique();
+
+                // التقييم بين 1 و 5
+                entity.Property(e => e.Rating)
+                      .HasAnnotation("Range", new[] { 1, 5 });
+
+                entity.HasOne(e => e.Doctor)
+                      .WithMany(d => d.doctorRatings)
+                      .HasForeignKey(e => e.DoctorId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(e => e.Patient)
+                      .WithMany(p => p.Ratings)
+                      .HasForeignKey(e => e.PatientId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(e => e.Appointment)
+                      .WithOne(a => a.Rating)
+                      .HasForeignKey<DoctorRating>(e => e.AppointmentId)
+                      .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            //  NOTIFICATION 
+            modelBuilder.Entity<Notification>(entity =>
+            {
+                entity.ToTable("notifications");
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Type)
+                      .HasConversion<string>();
+
+                entity.HasOne(e => e.User)
+                      .WithMany(u => u.notification)
+                      .HasForeignKey(e => e.UserId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            // CHAT 
+            modelBuilder.Entity<Chat>(entity =>
+            {
+                entity.ToTable("chats");
+                entity.HasKey(e => e.Id);
+
+                // علاقة المرسل — NoAction عشان ما يحذف الرسائل لو المرسل اتحذف
+                entity.HasOne(e => e.Sender)
+                      .WithMany(u => u.sentMessages)
+                      .HasForeignKey(e => e.SenderId)
+                      .OnDelete(DeleteBehavior.NoAction);
+
+                entity.HasOne(e => e.Receiver)
+                      .WithMany(u => u.receivedMessages)
+                      .HasForeignKey(e => e.ReceiverId)
+                      .OnDelete(DeleteBehavior.NoAction);
+            });
+        }
     }
 }

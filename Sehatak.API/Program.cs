@@ -6,6 +6,7 @@ using Sehatak.API.Hubs;
 using Sehatak.API.Middleware;
 using Sehatak.Infrastructure.Data;
 using Sehatak.Infrastructure.Security;
+using System;
 using System.Text;
 using System.Threading.RateLimiting;
 
@@ -20,6 +21,7 @@ namespace Sehatak.API
             // Add services to the container.
 
             builder.Services.AddControllers();
+            
 
             // 2. SWAGGER
 
@@ -74,9 +76,9 @@ namespace Sehatak.API
             
             builder.Services.AddDbContext<SharedDbContext>(options =>
                 options.UseMySql(
-                    builder.Configuration.GetConnectionString("sehatak_shared"),
+                    builder.Configuration.GetConnectionString("SharedDb"),
                     ServerVersion.AutoDetect(
-                        builder.Configuration.GetConnectionString("sehatak_shared")
+                        builder.Configuration.GetConnectionString("SharedDb")
                     )
                 )
             );

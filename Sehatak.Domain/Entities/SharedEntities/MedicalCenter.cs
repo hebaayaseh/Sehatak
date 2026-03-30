@@ -32,7 +32,7 @@ namespace Sehatak.Domain.Entities.SharedEntities
         public CenterStatus Status { get; set; } = CenterStatus.Pending;
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public int AddedBySuperAdminId { get; set; }
+        public int? AddedBySuperAdminId { get; set; }
         // The notifications sent contain subscription information : 
         public string? AdminWhatsappNumber { get; set; }
 
