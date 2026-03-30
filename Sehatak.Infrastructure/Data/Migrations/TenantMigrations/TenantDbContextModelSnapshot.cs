@@ -209,7 +209,7 @@ namespace Sehatak.Infrastructure.Data.Migrations.TenantMigrations
                         .HasPrecision(10, 2)
                         .HasColumnType("decimal(10,2)");
 
-                    b.Property<int>("departmentId")
+                    b.Property<int?>("departmentId")
                         .HasColumnType("int");
 
                     b.Property<int>("userId")
@@ -692,14 +692,12 @@ namespace Sehatak.Infrastructure.Data.Migrations.TenantMigrations
                     b.HasOne("Sehatak.Domain.Entities.Department", "department")
                         .WithMany("Doctors")
                         .HasForeignKey("departmentId")
-                        .OnDelete(DeleteBehavior.SetNull)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("Sehatak.Domain.Entities.User", "user")
                         .WithOne("doctor")
                         .HasForeignKey("Sehatak.Domain.Entities.Doctor", "userId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("department");
 

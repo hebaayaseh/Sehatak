@@ -8,7 +8,7 @@ namespace Sehatak.Domain.Entities
         [Key]
         public int doctorId { get; set; }
         public int userId { get; set; }
-        public int departmentId { get; set; }
+        public int? departmentId { get; set; }
         public string Specialization { get; set; }
         public string Bio { get; set; }
         public decimal cost { get; set; }

@@ -85,6 +85,7 @@ namespace Sehatak.Infrastructure.Data
                 entity.HasOne(e => e.user)
                       .WithOne(u => u.doctor)
                       .HasForeignKey<Doctor>(e => e.userId)
+                      .IsRequired(false)
                       .OnDelete(DeleteBehavior.Cascade);
 
                 // علاقة مع Department
