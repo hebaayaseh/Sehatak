@@ -284,7 +284,7 @@ namespace Sehatak.API
             app.MapControllers();
 
             // 10. SignalR Hub — للشات الداخلي
-            app.MapHub<ChatHub>("/hubs/chat");
+            app.MapHub<ChatHubs>("/hubs/chat");
 
             app.Run();
         }

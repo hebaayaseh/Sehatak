@@ -5,7 +5,7 @@ namespace Sehatak.API.Hubs;
 
 // بس الطاقم الطبي يقدر يستخدم الشات
 [Authorize(Policy = "MedicalStaff")]
-public class ChatHub : Hub
+public class ChatHubs : Hub
 {
     // لما موظف يبعت رسالة
     public async Task SendMessage(int receiverId, string message)
