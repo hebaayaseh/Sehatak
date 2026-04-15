@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Sehatak.Infrastructure.Data.Migrations.TenantMigrations
 {
     /// <inheritdoc />
-    public partial class InitialTenant : Migration
+    public partial class IntialMigrationTenant : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -46,11 +46,11 @@ namespace Sehatak.Infrastructure.Data.Migrations.TenantMigrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     email = table.Column<string>(type: "varchar(255)", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    passwordHash = table.Column<string>(type: "longtext", nullable: false)
+                    passwordHash = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    phoneNumber = table.Column<string>(type: "longtext", nullable: true)
+                    phoneNumber = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    address = table.Column<string>(type: "longtext", nullable: false)
+                    address = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     city = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -58,7 +58,8 @@ namespace Sehatak.Infrastructure.Data.Migrations.TenantMigrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     createdAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     isActive = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    ProfileImageUrl = table.Column<string>(type: "longtext", nullable: true)
+                    lastLogin = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    ProfileImageUrl = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
@@ -100,7 +101,7 @@ namespace Sehatak.Infrastructure.Data.Migrations.TenantMigrations
                 name: "doctors",
                 columns: table => new
                 {
-                    doctorId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     userId = table.Column<int>(type: "int", nullable: false),
                     departmentId = table.Column<int>(type: "int", nullable: true),
@@ -108,12 +109,11 @@ namespace Sehatak.Infrastructure.Data.Migrations.TenantMigrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Bio = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    cost = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: false),
                     OnlineEnabled = table.Column<bool>(type: "tinyint(1)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_doctors", x => x.doctorId);
+                    table.PrimaryKey("PK_doctors", x => x.Id);
                     table.ForeignKey(
                         name: "FK_doctors_departments_departmentId",
                         column: x => x.departmentId,
@@ -162,11 +162,11 @@ namespace Sehatak.Infrastructure.Data.Migrations.TenantMigrations
                     patientId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     userId = table.Column<int>(type: "int", nullable: true),
-                    ParentPatientId = table.Column<int>(type: "int", nullable: true),
-                    age = table.Column<int>(type: "int", nullable: false),
+                    SubPatientId = table.Column<int>(type: "int", nullable: true),
+                    DateOfBith = table.Column<DateOnly>(type: "date", nullable: false),
                     WhatsappNumber = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    BloodType = table.Column<string>(type: "longtext", nullable: true)
+                    BloodType = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Gender = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4")
@@ -175,8 +175,8 @@ namespace Sehatak.Infrastructure.Data.Migrations.TenantMigrations
                 {
                     table.PrimaryKey("PK_patients", x => x.patientId);
                     table.ForeignKey(
-                        name: "FK_patients_patients_ParentPatientId",
-                        column: x => x.ParentPatientId,
+                        name: "FK_patients_patients_SubPatientId",
+                        column: x => x.SubPatientId,
                         principalTable: "patients",
                         principalColumn: "patientId",
                         onDelete: ReferentialAction.Restrict);
@@ -224,7 +224,8 @@ namespace Sehatak.Infrastructure.Data.Migrations.TenantMigrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     StartTime = table.Column<TimeOnly>(type: "time(6)", nullable: false),
                     EndTime = table.Column<TimeOnly>(type: "time(6)", nullable: false),
-                    IsActive = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    IsActive = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    SlotDurationMinutes = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -233,7 +234,7 @@ namespace Sehatak.Infrastructure.Data.Migrations.TenantMigrations
                         name: "FK_doctor_schedules_doctors_DoctorId",
                         column: x => x.DoctorId,
                         principalTable: "doctors",
-                        principalColumn: "doctorId",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
@@ -247,19 +248,21 @@ namespace Sehatak.Infrastructure.Data.Migrations.TenantMigrations
                     IsEmergency = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     ReceptionistId = table.Column<int>(type: "int", nullable: true),
                     RescheduleCount = table.Column<int>(type: "int", nullable: false),
-                    actualStartTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    actualEndTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    actualStartTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    actualEndTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     patientId = table.Column<int>(type: "int", nullable: false),
                     doctorId = table.Column<int>(type: "int", nullable: false),
                     appointmentDate = table.Column<DateOnly>(type: "date", nullable: false),
                     timeSlot = table.Column<TimeOnly>(type: "time(6)", nullable: true),
                     queueNumber = table.Column<int>(type: "int", nullable: true),
                     BillAmount = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: true),
-                    status = table.Column<string>(type: "longtext", nullable: false)
+                    appointmentStatus = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     prepayment = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: false),
                     createdAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    updateAt = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                    updateAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    cancellationReason = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
@@ -268,7 +271,7 @@ namespace Sehatak.Infrastructure.Data.Migrations.TenantMigrations
                         name: "FK_appointments_doctors_doctorId",
                         column: x => x.doctorId,
                         principalTable: "doctors",
-                        principalColumn: "doctorId",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_appointments_patients_patientId",
@@ -308,7 +311,7 @@ namespace Sehatak.Infrastructure.Data.Migrations.TenantMigrations
                         name: "FK_consultations_doctors_DoctorId",
                         column: x => x.DoctorId,
                         principalTable: "doctors",
-                        principalColumn: "doctorId",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_consultations_patients_PatientId",
@@ -364,7 +367,7 @@ namespace Sehatak.Infrastructure.Data.Migrations.TenantMigrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     PatientId = table.Column<int>(type: "int", nullable: false),
                     DoctorId = table.Column<int>(type: "int", nullable: false),
-                    ReceptionistId = table.Column<int>(type: "int", nullable: false),
+                    ReceptionistId = table.Column<int>(type: "int", nullable: true),
                     PreferredDate = table.Column<DateOnly>(type: "date", nullable: false),
                     Status = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -377,7 +380,7 @@ namespace Sehatak.Infrastructure.Data.Migrations.TenantMigrations
                         name: "FK_waitlists_doctors_DoctorId",
                         column: x => x.DoctorId,
                         principalTable: "doctors",
-                        principalColumn: "doctorId",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_waitlists_patients_PatientId",
@@ -421,7 +424,7 @@ namespace Sehatak.Infrastructure.Data.Migrations.TenantMigrations
                         name: "FK_doctor_ratings_doctors_DoctorId",
                         column: x => x.DoctorId,
                         principalTable: "doctors",
-                        principalColumn: "doctorId",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_doctor_ratings_patients_PatientId",
@@ -447,7 +450,8 @@ namespace Sehatak.Infrastructure.Data.Migrations.TenantMigrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Diagnosis = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -462,7 +466,7 @@ namespace Sehatak.Infrastructure.Data.Migrations.TenantMigrations
                         name: "FK_medical_records_doctors_DoctorId",
                         column: x => x.DoctorId,
                         principalTable: "doctors",
-                        principalColumn: "doctorId",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_medical_records_patients_PatientId",
@@ -613,9 +617,9 @@ namespace Sehatak.Infrastructure.Data.Migrations.TenantMigrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_patients_ParentPatientId",
+                name: "IX_patients_SubPatientId",
                 table: "patients",
-                column: "ParentPatientId");
+                column: "SubPatientId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_patients_userId",

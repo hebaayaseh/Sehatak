@@ -6,12 +6,12 @@ namespace Sehatak.Domain.Entities
     public class Doctor
     {
         [Key]
-        public int doctorId { get; set; }
+        public int Id { get; set; }
         public int userId { get; set; }
         public int? departmentId { get; set; }
         public string Specialization { get; set; }
         public string Bio { get; set; }
-        public decimal cost { get; set; }
+        
         // initial value = false 
         public bool OnlineEnabled { get; set; } = false;
         

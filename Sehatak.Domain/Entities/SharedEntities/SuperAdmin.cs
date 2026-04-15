@@ -16,8 +16,10 @@ namespace Sehatak.Domain.Entities.SharedEntities
         public string Email { get; set; }
         public string phone {  get; set; }
         public userRole role { get; set; }
-        public string ProfileImageUrl { get; set; }
+        public string? ProfileImageUrl { get; set; }
         public string PasswordHash { get; set; }
+        public DateTime CreateAt { get; set; }
+        public bool IsActive { get; set; }
         // Navication Proparite :
         public ICollection<MedicalCenter> AddedCenters { get; set; } = new List<MedicalCenter>();
     }

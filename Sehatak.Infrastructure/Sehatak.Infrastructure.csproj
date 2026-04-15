@@ -11,6 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Data\Migrations\" />
+    <Folder Include="Data\Migrations\TenantMigrations\" />
     <Folder Include="Repositories\" />
   </ItemGroup>
 

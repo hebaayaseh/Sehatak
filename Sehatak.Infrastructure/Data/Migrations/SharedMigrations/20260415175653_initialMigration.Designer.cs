@@ -12,8 +12,8 @@ using Sehatak.Infrastructure.Data;
 namespace Sehatak.Infrastructure.Data.Migrations.SharedMigrations
 {
     [DbContext(typeof(SharedDbContext))]
-    [Migration("20260330143455_InitialShared")]
-    partial class InitialShared
+    [Migration("20260415175653_initialMigration")]
+    partial class initialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -44,7 +44,8 @@ namespace Sehatak.Infrastructure.Data.Migrations.SharedMigrations
                         .HasColumnType("date");
 
                     b.Property<string>("PaymentReference")
-                        .HasColumnType("longtext");
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
 
                     b.Property<int>("PlanId")
                         .HasColumnType("int");
@@ -78,12 +79,17 @@ namespace Sehatak.Infrastructure.Data.Migrations.SharedMigrations
 
                     b.Property<string>("Address")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
 
                     b.Property<string>("AdminWhatsappNumber")
                         .HasColumnType("longtext");
 
                     b.Property<string>("BookingType")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("CenterStatus")
                         .IsRequired()
                         .HasColumnType("longtext");
 
@@ -95,16 +101,17 @@ namespace Sehatak.Infrastructure.Data.Migrations.SharedMigrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("varchar(150)");
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)");
 
                     b.Property<decimal>("PartialRefundPercent")
-                        .HasPrecision(5, 2)
-                        .HasColumnType("decimal(5,2)");
+                        .HasPrecision(10, 2)
+                        .HasColumnType("decimal(10,2)");
 
                     b.Property<string>("Phone")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
 
                     b.Property<decimal>("PrepaymentAmount")
                         .HasPrecision(10, 2)
@@ -115,10 +122,6 @@ namespace Sehatak.Infrastructure.Data.Migrations.SharedMigrations
 
                     b.Property<bool>("RequiresPrepayment")
                         .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("longtext");
 
                     b.Property<string>("UniqueUrl")
                         .IsRequired()
@@ -146,9 +149,6 @@ namespace Sehatak.Infrastructure.Data.Migrations.SharedMigrations
                     b.Property<int>("DurationDays")
                         .HasColumnType("int");
 
-                    b.Property<string>("Features")
-                        .HasColumnType("longtext");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -171,10 +171,16 @@ namespace Sehatak.Infrastructure.Data.Migrations.SharedMigrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime>("CreateAt")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("varchar(150)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -183,15 +189,16 @@ namespace Sehatak.Infrastructure.Data.Migrations.SharedMigrations
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)");
 
                     b.Property<string>("ProfileImageUrl")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("phone")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
 
                     b.Property<int>("role")
                         .HasColumnType("int");
@@ -225,12 +232,12 @@ namespace Sehatak.Infrastructure.Data.Migrations.SharedMigrations
 
             modelBuilder.Entity("Sehatak.Domain.Entities.SharedEntities.MedicalCenter", b =>
                 {
-                    b.HasOne("Sehatak.Domain.Entities.SharedEntities.SuperAdmin", "AddedBy")
+                    b.HasOne("Sehatak.Domain.Entities.SharedEntities.SuperAdmin", "AddedByAdmin")
                         .WithMany("AddedCenters")
                         .HasForeignKey("AddedBySuperAdminId")
                         .OnDelete(DeleteBehavior.SetNull);
 
-                    b.Navigation("AddedBy");
+                    b.Navigation("AddedByAdmin");
                 });
 
             modelBuilder.Entity("Sehatak.Domain.Entities.SharedEntities.MedicalCenter", b =>

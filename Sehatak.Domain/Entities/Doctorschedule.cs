@@ -6,9 +6,9 @@ namespace Sehatak.Domain.Entities
 {
     public class Doctorschedule
     {
-        [Key]
+        
         public int Id { get; set; }
-        [ForeignKey("doctor")]
+        
         public int DoctorId { get; set; }
 
         public DayOfWeek DayOfWeek { get; set; }
@@ -18,7 +18,7 @@ namespace Sehatak.Domain.Entities
         public TimeOnly EndTime { get; set; }
         // The doctor can change that if the doctor wants to cancel appointments
         public bool IsActive { get; set; } = true;
-
+        public int? SlotDurationMinutes { get; set; }
         //  Navigation Properties :
         public Doctor doctor { get; set; } = null!;
     }

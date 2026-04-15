@@ -11,10 +11,10 @@ namespace Sehatak.Domain.Entities
         public bool IsEmergency { get; set; } = false;
         public int? ReceptionistId { get; set; } 
         public int RescheduleCount { get; set; } = 0;
+        // Queue management properties :
+        public DateTime? actualStartTime { get; set; }
 
-        public DateTime actualStartTime { get; set; }
-
-        public DateTime actualEndTime { get; set; }
+        public DateTime? actualEndTime { get; set; }
 
         public int patientId { get; set; }
 
@@ -28,13 +28,14 @@ namespace Sehatak.Domain.Entities
 
         public decimal? BillAmount { get; set; }
 
-        public AppointmentStatus status { get; set; } = AppointmentStatus.Pending;
+        public AppointmentStatus appointmentStatus { get; set; } = AppointmentStatus.Pending;
 
         public decimal prepayment { get; set; } = 0;
 
         public DateTime createdAt { get; set; } = DateTime.UtcNow;
 
         public DateTime updateAt {  get; set; } = DateTime.UtcNow;
+        public string cancellationReason { get; set; } 
 
         //  Navigation Properties :
         public Patient Patient { get; set; } = null!;

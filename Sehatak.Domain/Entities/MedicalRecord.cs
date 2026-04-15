@@ -5,7 +5,7 @@ namespace Sehatak.Domain.Entities
 {
     public class MedicalRecord
     {
-        [Key]
+        
         public int Id { get; set; }
 
         public int PatientId { get; set; }
@@ -20,7 +20,7 @@ namespace Sehatak.Domain.Entities
         public string? Diagnosis { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
         // Navigation Properties :
         public Patient Patient { get; set; } = null!;
         public Doctor Doctor { get; set; } = null!;

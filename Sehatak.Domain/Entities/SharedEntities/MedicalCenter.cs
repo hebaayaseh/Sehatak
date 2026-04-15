@@ -29,7 +29,7 @@ namespace Sehatak.Domain.Entities.SharedEntities
 
         public decimal PartialRefundPercent { get; set; }
 
-        public CenterStatus Status { get; set; } = CenterStatus.Pending;
+        public CenterStatus CenterStatus { get; set; } = CenterStatus.Pending;
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public int? AddedBySuperAdminId { get; set; }
@@ -38,6 +38,6 @@ namespace Sehatak.Domain.Entities.SharedEntities
 
         // Navigation Properties :
         public ICollection<CenterSubscription> Subscriptions { get; set; } = new List<CenterSubscription>();
-        public SuperAdmin AddedBy { get; set; }
+        public SuperAdmin AddedByAdmin { get; set; }
     }
 }

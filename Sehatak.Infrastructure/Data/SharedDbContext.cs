@@ -38,7 +38,12 @@ namespace Sehatak.Infrastructure.Data
                       .HasMaxLength(150);
 
                 entity.Property(e => e.PasswordHash)
-                      .IsRequired();
+                      .IsRequired()
+                      .HasMaxLength(256);
+
+                entity.Property(e => e.phone)
+                .IsRequired()
+                .HasMaxLength(20);
             });
 
             //  MedicalCenter 
@@ -51,24 +56,32 @@ namespace Sehatak.Infrastructure.Data
 
                 entity.Property(e => e.Name)
                       .IsRequired()
-                      .HasMaxLength(150);
+                      .HasMaxLength(256);
 
                 entity.Property(e => e.UniqueUrl)
                       .IsRequired()
                       .HasMaxLength(100);
 
+                entity.Property(e=>e.Phone)
+                      .IsRequired()
+                      .HasMaxLength(20);
+
                 entity.Property(e => e.PrepaymentAmount)
                       .HasPrecision(10, 2);
 
                 entity.Property(e => e.PartialRefundPercent)
-                      .HasPrecision(5, 2);
+                      .HasPrecision(10, 2);
 
-                entity.HasOne(e => e.AddedBy)
+                entity.HasOne(e => e.AddedByAdmin)
                       .WithMany(s => s.AddedCenters)
                       .HasForeignKey(e => e.AddedBySuperAdminId)
                       .OnDelete(DeleteBehavior.SetNull);
 
-                entity.Property(e => e.Status)
+                entity.Property(e => e.Address)
+                      .IsRequired()
+                      .HasMaxLength(500);
+
+                entity.Property(e => e.CenterStatus)
                       .HasConversion<string>();
 
                 entity.Property(e => e.BookingType)
@@ -106,6 +119,9 @@ namespace Sehatak.Infrastructure.Data
 
                 entity.Property(e => e.AmountPaid)
                       .HasPrecision(10, 2);
+
+                entity.Property(e=>e.PaymentReference)
+                        .HasMaxLength(20);
 
                 entity.Property(e => e.Status)
                       .HasConversion<string>();

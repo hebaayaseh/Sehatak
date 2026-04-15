@@ -7,7 +7,7 @@ namespace Sehatak.Domain.Entities
         public int Id { get; set; }
         public int PatientId { get; set; }
         public int DoctorId { get; set; }
-        public int ReceptionistId { get; set; } 
+        public int? ReceptionistId { get; set; } 
         public DateOnly PreferredDate { get; set; }
         public WaitlistStatus Status { get; set; } = WaitlistStatus.Waiting;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

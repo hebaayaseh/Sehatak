@@ -5,13 +5,12 @@ namespace Sehatak.Domain.Entities
     public class Patient
     {
         public int patientId {  get; set; }
-        // If patient have family
         public int? userId {  get; set; }
         //If the patient is the main one
-        public int? ParentPatientId { get; set; }
-        public int age { get; set; }
+        public int? SubPatientId { get; set; }
+        public DateOnly DateOfBith { get; set; }
         public string WhatsappNumber { get; set; }
-        public string? BloodType { get; set; }
+        public BloodType BloodType { get; set; }
         public Gender Gender { get; set; }
 
         // Navigation Properties : 

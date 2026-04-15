@@ -15,6 +15,7 @@ namespace Sehatak.Domain.Entities
         public userRole role { get; set; }
         public DateTime createdAt { get; set; } = DateTime.UtcNow;
         public bool isActive { get; set; }
+        public DateTime lastLogin { get; set; }
         public string? ProfileImageUrl { get; set; }
 
         // Navigation Properties :

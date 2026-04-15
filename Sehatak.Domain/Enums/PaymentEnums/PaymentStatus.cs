@@ -11,7 +11,7 @@ namespace Sehatak.Domain.Enums.PaymentEnums
         Pending = 0,
         Paid = 1,
         Refunded = 2,
-        faild = 3
+        Failed = 3
     }
 
 }

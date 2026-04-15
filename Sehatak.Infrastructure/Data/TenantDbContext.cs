@@ -52,7 +52,17 @@ namespace Sehatak.Infrastructure.Data
                       .HasMaxLength(100);
 
                 entity.Property(e => e.passwordHash)
-                      .IsRequired();
+                      .IsRequired()
+                      .HasMaxLength(256);
+
+                entity.Property(entity => entity.phoneNumber)
+                      .HasMaxLength(20);
+
+                entity.Property(entity => entity.address)
+                      .HasMaxLength(500);
+
+                entity.Property(e=>e.ProfileImageUrl)
+                        .HasMaxLength(500);
 
                 entity.Property(e => e.role)
                       .HasConversion<string>();
@@ -73,13 +83,11 @@ namespace Sehatak.Infrastructure.Data
             modelBuilder.Entity<Doctor>(entity =>
             {
                 entity.ToTable("doctors");
-                entity.HasKey(e => e.doctorId);
+                entity.HasKey(e => e.Id);
 
                 // كل يوزر يكون دكتور وحد بس
                 entity.HasIndex(e => e.userId).IsUnique();
 
-                entity.Property(e => e.cost)
-                      .HasPrecision(10, 2);
 
                 // علاقة مع User
                 entity.HasOne(e => e.user)
@@ -113,8 +121,11 @@ namespace Sehatak.Infrastructure.Data
                 // علاقة المريض الفرعي مع الرئيسي
                 entity.HasOne(e => e.ParentPatient)
                       .WithMany(p => p.SubPatients)
-                      .HasForeignKey(e => e.ParentPatientId)
+                      .HasForeignKey(e => e.SubPatientId)
                       .OnDelete(DeleteBehavior.Restrict);
+
+                entity.Property(e => e.BloodType)
+                      .HasConversion<string>();
             });
 
             // DOCTOR SCHEDULE 
@@ -160,7 +171,7 @@ namespace Sehatak.Infrastructure.Data
                 entity.Property(e => e.BillAmount)
                       .HasPrecision(10, 2);
 
-                entity.Property(e => e.status)
+                entity.Property(e => e.appointmentStatus)
                       .HasConversion<string>();
 
                 // علاقة مع Patient
