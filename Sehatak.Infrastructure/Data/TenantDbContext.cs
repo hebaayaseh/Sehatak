@@ -194,7 +194,23 @@ namespace Sehatak.Infrastructure.Data
                       .HasForeignKey(e => e.ReceptionistId)
                       .OnDelete(DeleteBehavior.NoAction);
             });
+            // servicePrice 
+            modelBuilder.Entity<ServicePrice>(entity =>
+            {
+                entity.ToTable("service_prices");
+                entity.HasKey(e => e.Id);
+                
+                entity.Property(e => e.ServiceName)
+                      .IsRequired()
+                      .HasMaxLength(256);
 
+                entity.Property(e => e.Price)
+                      .HasPrecision(10, 2);
+
+                
+            });
+
+            
             //  WAITLIST
             modelBuilder.Entity<Waitlist>(entity =>
             {
