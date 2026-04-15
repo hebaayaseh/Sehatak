@@ -35,7 +35,7 @@ namespace Sehatak.Domain.Entities
         public DateTime createdAt { get; set; } = DateTime.UtcNow;
 
         public DateTime updateAt {  get; set; } = DateTime.UtcNow;
-        public string cancellationReason { get; set; } 
+        public string? cancellationReason { get; set; } 
 
         //  Navigation Properties :
         public Patient Patient { get; set; } = null!;

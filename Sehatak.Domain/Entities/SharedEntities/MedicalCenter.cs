@@ -39,5 +39,6 @@ namespace Sehatak.Domain.Entities.SharedEntities
         // Navigation Properties :
         public ICollection<CenterSubscription> Subscriptions { get; set; } = new List<CenterSubscription>();
         public SuperAdmin AddedByAdmin { get; set; }
+        public ICollection<CenterFeature> Features { get; set; } = new List<CenterFeature>();
     }
 }

@@ -5,15 +5,15 @@ namespace Sehatak.Domain.Entities.SharedEntities
 {
     public class CenterSubscription
     {
-        [Key]
+        
         public int Id { get; set; }
 
         public int CenterId { get; set; }
 
         public int PlanId { get; set; }
-        [Required]
+        
         public DateOnly StartDate { get; set; }
-        [Required]
+        
         public DateOnly EndDate { get; set; }
 
         public SubscriptionStatus Status { get; set; } = SubscriptionStatus.Active;

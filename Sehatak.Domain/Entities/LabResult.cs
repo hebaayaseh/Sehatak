@@ -19,9 +19,7 @@ namespace Sehatak.Domain.Entities
         public int? PaymentId { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public PaymentMethod PaymentMethod { get; set; }
-
-        public PaymentStatus PaymentStatus { get; set; } = PaymentStatus.Pending;
+        
 
         // Navigation Properties :
         public Patient Patient { get; set; } = null!;

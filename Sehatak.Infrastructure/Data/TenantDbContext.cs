@@ -294,12 +294,6 @@ namespace Sehatak.Infrastructure.Data
                       .OnDelete(DeleteBehavior.SetNull);
 
 
-                entity.Property(e => e.PaymentMethod)
-                      .HasConversion<string>();
-
-                entity.Property(e => e.PaymentStatus)
-                      .HasConversion<string>();
-
                 entity.HasOne(e => e.Patient)
                       .WithMany(p => p.LabResults)
                       .HasForeignKey(e => e.PatientId)
