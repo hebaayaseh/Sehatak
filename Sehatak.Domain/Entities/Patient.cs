@@ -8,6 +8,7 @@ namespace Sehatak.Domain.Entities
         public int? userId {  get; set; }
         //If the patient is the main one
         public int? SubPatientId { get; set; }
+        public string? SubPatientName { get; set; }
         public DateOnly DateOfBith { get; set; }
         public string WhatsappNumber { get; set; }
         public BloodType BloodType { get; set; }

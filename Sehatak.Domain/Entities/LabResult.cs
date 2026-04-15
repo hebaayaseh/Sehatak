@@ -16,7 +16,7 @@ namespace Sehatak.Domain.Entities
 
         public string? AiSummary { get; set; }
 
-        public decimal LabPayment { get; set; } = 0;
+        public int? PaymentId { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public PaymentMethod PaymentMethod { get; set; }
@@ -26,6 +26,7 @@ namespace Sehatak.Domain.Entities
         // Navigation Properties :
         public Patient Patient { get; set; } = null!;
         public User Technician { get; set; } = null!;
-       
+        public Payment? Payment { get; set; }
+
     }
 }

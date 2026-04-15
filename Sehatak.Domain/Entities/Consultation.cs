@@ -16,7 +16,8 @@ namespace Sehatak.Domain.Entities
 
         public ConsultationStatus Status { get; set; } = ConsultationStatus.Pending;
 
-        public decimal consultationCost { get; set; }
+        public int? PaymentId { get; set; }
+
 
         public string? VideoLink { get; set; }
 
@@ -25,5 +26,6 @@ namespace Sehatak.Domain.Entities
         // Navigation Properties :
         public Patient Patient { get; set; } = null!;
         public Doctor Doctor { get; set; } = null!;
+        public Payment? Payment { get; set; }
     }
 }

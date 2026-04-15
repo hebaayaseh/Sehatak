@@ -124,6 +124,8 @@ namespace Sehatak.Infrastructure.Data
                       .HasForeignKey(e => e.SubPatientId)
                       .OnDelete(DeleteBehavior.Restrict);
 
+                entity.Property(e => e.SubPatientName).HasMaxLength(200);
+
                 entity.Property(e => e.BloodType)
                       .HasConversion<string>();
             });
@@ -155,7 +157,7 @@ namespace Sehatak.Infrastructure.Data
 
                 entity.HasOne(e => e.User)
                       .WithMany(u => u.Shifts)
-                      .HasForeignKey(e => e.Id)
+                      .HasForeignKey(e => e.staffId)
                       .OnDelete(DeleteBehavior.Cascade);
             });
 
@@ -224,21 +226,27 @@ namespace Sehatak.Infrastructure.Data
                 entity.ToTable("payments");
                 entity.HasKey(e => e.Id);
 
-                entity.Property(e => e.Amount)
-                      .HasPrecision(10, 2);
+                entity.Property(e => e.Amount).HasPrecision(10, 2);
+                entity.Property(e => e.Method).HasConversion<string>();
+                entity.Property(e => e.Type).HasConversion<string>();
+                entity.Property(e => e.Status).HasConversion<string>();
 
-                entity.Property(e => e.Method)
-                      .HasConversion<string>();
-
-                entity.Property(e => e.Type)
-                      .HasConversion<string>();
-
-                entity.Property(e => e.Status)
-                      .HasConversion<string>();
-
+                // Appointment — One-to-One
                 entity.HasOne(e => e.Appointment)
                       .WithOne(a => a.Payment)
                       .HasForeignKey<Payment>(e => e.AppointmentId)
+                      .OnDelete(DeleteBehavior.SetNull);
+
+                // LabResult — One-to-One
+                entity.HasOne(e => e.LabResult)
+                      .WithOne(l => l.Payment)
+                      .HasForeignKey<Payment>(e => e.LabResultId)
+                      .OnDelete(DeleteBehavior.SetNull);
+
+                // Consultation — One-to-One
+                entity.HasOne(e => e.Consultation)
+                      .WithOne(c => c.Payment)
+                      .HasForeignKey<Payment>(e => e.ConsultationId)
                       .OnDelete(DeleteBehavior.SetNull);
 
                 entity.HasOne(e => e.Patient)
@@ -280,8 +288,11 @@ namespace Sehatak.Infrastructure.Data
                 entity.ToTable("lab_results");
                 entity.HasKey(e => e.Id);
 
-                entity.Property(e => e.LabPayment)
-                      .HasPrecision(10, 2);
+                entity.HasOne(e => e.Payment)
+                      .WithOne(p => p.LabResult)
+                      .HasForeignKey<LabResult>(e => e.PaymentId)
+                      .OnDelete(DeleteBehavior.SetNull);
+
 
                 entity.Property(e => e.PaymentMethod)
                       .HasConversion<string>();
@@ -307,8 +318,10 @@ namespace Sehatak.Infrastructure.Data
                 entity.ToTable("consultations");
                 entity.HasKey(e => e.Id);
 
-                entity.Property(e => e.consultationCost)
-                      .HasPrecision(10, 2);
+                entity.HasOne(e => e.Payment)
+                      .WithOne(p => p.Consultation)
+                      .HasForeignKey<Consultation>(e => e.PaymentId)
+                      .OnDelete(DeleteBehavior.SetNull);
 
                 entity.Property(e => e.Status)
                       .HasConversion<string>();
