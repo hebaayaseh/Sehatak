@@ -8,8 +8,8 @@ namespace Sehatak.Domain.Enums.SharedEnums
 {
     public enum SubscriptionStatus
     {
-        Active = 0,
-        Expired = 1,
-        Cancelled = 2
+        Active = 1,
+        Expired = 2,
+        Cancelled = 3
     }
 }

@@ -9,9 +9,14 @@ namespace Sehatak.Domain.Entities.SharedEntities
     public class PlatformFeature
     {
         public int Id { get; set; }
-        public string NameOfFeature { get; set; } = string.Empty;// "LabAI", "WhatsappNotif", "StaffChat"
-        // Navigation Properties :
+
+        // اسم الفيتشر مثل "LabAI", "WhatsappNotif", "StaffChat", "OnlineConsultation"
+        public string NameOfFeature { get; set; } = string.Empty;
+
+        public string? Description { get; set; }
+
+        // Navigation Properties
+        public ICollection<PlanFeature> PlanFeatures { get; set; } = new List<PlanFeature>();
         public ICollection<CenterFeature> CenterFeatures { get; set; } = new List<CenterFeature>();
-        public SubscriptionPlan SubscriptionPlan { get; set; }
     }
 }

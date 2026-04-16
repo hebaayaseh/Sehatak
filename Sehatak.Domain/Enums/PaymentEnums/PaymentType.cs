@@ -8,10 +8,12 @@ namespace Sehatak.Domain.Enums.PaymentEnums
 {
     public enum PaymentType
     {
-        Appointment = 0,
-        Lab = 1,
-        Consultation = 2,
-        Prepayment = 3,
-        Refund = 4
+        Appointment = 1,
+        Lab = 2,
+        Consultation = 3,
+        Prepayment = 4,
+        Refund = 5,
+        Emergency=6
+
     }
 }

@@ -8,9 +8,9 @@ namespace Sehatak.Domain.Enums.PaymentEnums
 {
     public enum PaymentMethod
     {
-        cash = 0,
-        card= 1,
-        online = 2,
+        cash = 1,
+        card= 2,
+        online = 3,
     }
     
 }

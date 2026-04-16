@@ -8,11 +8,11 @@ namespace Sehatak.Domain.Enums
 {
     public enum userRole
     {
-        SuperAdmin = 0,
-        Admin = 1,
-        Doctor = 2,
-        Receptionist = 3,
-        LabTechnician= 4,
-        Patient = 5
+        SuperAdmin = 1,
+        Admin = 2,
+        Doctor = 3,
+        Receptionist = 4,
+        LabTechnician= 5,
+        Patient = 6
     }
 }

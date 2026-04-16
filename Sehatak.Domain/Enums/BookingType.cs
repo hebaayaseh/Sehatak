@@ -8,7 +8,7 @@ namespace Sehatak.Domain.Enums
 {
     public enum BookingType
     {
-        TimeSlot = 0,
-        Queue = 1 
+        TimeSlot = 1,
+        Queue = 2    
     }
 }

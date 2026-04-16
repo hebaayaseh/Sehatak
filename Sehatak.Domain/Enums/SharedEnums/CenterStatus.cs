@@ -8,8 +8,8 @@ namespace Sehatak.Domain.Enums.SharedEnums
 {
     public enum CenterStatus
     {
-        Pending = 0,
-        Active = 1,
-        Suspended = 2
+        Pending = 1,
+        Active = 2,
+        Suspended = 3
     }
 }

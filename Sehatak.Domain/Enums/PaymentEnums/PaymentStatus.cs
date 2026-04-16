@@ -8,10 +8,10 @@ namespace Sehatak.Domain.Enums.PaymentEnums
 {
     public enum PaymentStatus
     {
-        Pending = 0,
-        Paid = 1,
-        Refunded = 2,
-        Failed = 3
+        Pending = 1,
+        Paid = 2,
+        Refunded = 3,
+        Failed = 4
     }
 
 }

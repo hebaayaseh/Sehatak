@@ -28,6 +28,8 @@ namespace Sehatak.Infrastructure.Data
         public DbSet<DoctorRating> DoctorRatings => Set<DoctorRating>();
         public DbSet<Notification> Notifications => Set<Notification>();
         public DbSet<Chat> Chats => Set<Chat>();
+        public DbSet<ServicePrice> ServicePrices => Set<ServicePrice>();
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -85,9 +87,13 @@ namespace Sehatak.Infrastructure.Data
                 entity.ToTable("doctors");
                 entity.HasKey(e => e.Id);
 
+
                 // كل يوزر يكون دكتور وحد بس
                 entity.HasIndex(e => e.userId).IsUnique();
 
+                
+                entity.Property(e => e.Specialization)
+                .HasMaxLength(256);
 
                 // علاقة مع User
                 entity.HasOne(e => e.user)
@@ -281,6 +287,12 @@ namespace Sehatak.Infrastructure.Data
             {
                 entity.ToTable("medical_records");
                 entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Notes)
+                .HasMaxLength(500);
+
+                entity.Property(e => e.Prescription)
+                .HasMaxLength(500);
 
                 entity.HasOne(e => e.Patient)
                       .WithMany(p => p.MedicalRecords)

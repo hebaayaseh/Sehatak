@@ -8,9 +8,9 @@ namespace Sehatak.Domain.Enums
 {
     public enum WaitlistStatus
     {
-        Waiting = 0,
-        Notified = 1,
-        Booked = 2,
-        Expired = 3
+        Waiting = 1,
+        Notified = 2,
+        Booked = 3,
+        Expired = 4
     }
 }

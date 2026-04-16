@@ -18,6 +18,6 @@ namespace Sehatak.Domain.Entities.SharedEntities
         public bool IsActive { get; set; } = true;
         //  Navigation Properties :
         public ICollection<CenterSubscription> CenterSubscriptions { get; set; } = new List<CenterSubscription>();
-        public ICollection<PlatformFeature> Features { get; set; }
+        public ICollection<PlanFeature> PlanFeatures { get; set; } = new List<PlanFeature>();
     }
 }

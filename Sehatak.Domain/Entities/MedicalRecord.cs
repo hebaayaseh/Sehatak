@@ -14,9 +14,9 @@ namespace Sehatak.Domain.Entities
 
         public int? AppointmentId { get; set; }
 
-        public string? Note { get; set; }
-        // وصفة علاج
-        public string? Prescription { get; set; }
+        // If you add a pharmacy, the prescription must be complete. If you don't add one, you can use the AI-powered prescription generator.
+        public string Prescription { get; set; }
+        public string Notes { get; set; }
         public string? Diagnosis { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

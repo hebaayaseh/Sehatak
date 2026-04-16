@@ -16,11 +16,56 @@ namespace Sehatak.Infrastructure.Data
         public DbSet<MedicalCenter> MedicalCenters => Set<MedicalCenter>();
         public DbSet<SubscriptionPlan> SubscriptionPlans => Set<SubscriptionPlan>();
         public DbSet<CenterSubscription> CenterSubscriptions => Set<CenterSubscription>();
+        public DbSet<PlatformFeature> PlatformFeatures => Set<PlatformFeature>();
+        public DbSet<PlanFeature> PlanFeatures => Set<PlanFeature>();
+        public DbSet<CenterFeature> CenterFeatures => Set<CenterFeature>();
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // PlatFormFeature 
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<PlatformFeature>(entity =>
+            {
+                entity.ToTable("platform_features");
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.NameOfFeature).IsRequired().HasMaxLength(100);
+                entity.Property(e => e.Description).HasMaxLength(300);
+            });
 
+            // PlanFeature
+            modelBuilder.Entity<PlanFeature>(entity =>
+            {
+                entity.ToTable("plan_features");
+                entity.HasKey(e => new { e.PlanId, e.FeatureId }); 
+
+                entity.HasOne(e => e.Plan)
+                      .WithMany(p => p.PlanFeatures)
+                      .HasForeignKey(e => e.PlanId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(e => e.Feature)
+                      .WithMany(f => f.PlanFeatures)
+                      .HasForeignKey(e => e.FeatureId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
+            // CenterFeature
+
+            modelBuilder.Entity<CenterFeature>(entity =>
+            {
+                entity.ToTable("center_features");
+                entity.HasKey(e => new { e.CenterId, e.FeatureId }); 
+
+                entity.HasOne(e => e.Center)
+                      .WithMany(c => c.Features)
+                      .HasForeignKey(e => e.CenterId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(e => e.Feature)
+                      .WithMany(f => f.CenterFeatures)
+                      .HasForeignKey(e => e.FeatureId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
             //  SuperAdmin 
             modelBuilder.Entity<SuperAdmin>(entity =>
             {
