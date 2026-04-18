@@ -1,4 +1,5 @@
-﻿using Sehatak.Domain.Enums.PaymentEnums;
+﻿using Sehatak.Domain.Enums;
+using Sehatak.Domain.Enums.PaymentEnums;
 using System.ComponentModel.DataAnnotations;
 
 namespace Sehatak.Domain.Entities
@@ -15,9 +16,8 @@ namespace Sehatak.Domain.Entities
         public string? ResultFileUrl { get; set; }
 
         public string? AiSummary { get; set; }
-
+        public LabStatus Status { get; set; } = LabStatus.Pending;
         public int? PaymentId { get; set; }
-
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         
 
