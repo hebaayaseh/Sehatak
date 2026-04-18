@@ -29,7 +29,8 @@ namespace Sehatak.Infrastructure.Data
         public DbSet<Notification> Notifications => Set<Notification>();
         public DbSet<Chat> Chats => Set<Chat>();
         public DbSet<ServicePrice> ServicePrices => Set<ServicePrice>();
-
+        public DbSet<AppointmentItem> AppointmentItems => Set<AppointmentItem>();
+        
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -91,7 +92,7 @@ namespace Sehatak.Infrastructure.Data
                 // كل يوزر يكون دكتور وحد بس
                 entity.HasIndex(e => e.userId).IsUnique();
 
-                
+
                 entity.Property(e => e.Specialization)
                 .HasMaxLength(256);
 
@@ -107,6 +108,12 @@ namespace Sehatak.Infrastructure.Data
                       .WithMany(d => d.Doctors)
                       .HasForeignKey(e => e.departmentId)
                       .OnDelete(DeleteBehavior.SetNull);
+
+                entity.HasOne(e => e.ConsultationCost)
+                      .WithMany()
+                      .HasForeignKey(e => e.ConsultationCostId)
+                      .OnDelete(DeleteBehavior.SetNull);
+
             });
 
             //  PATIENT 
@@ -205,18 +212,33 @@ namespace Sehatak.Infrastructure.Data
             {
                 entity.ToTable("service_prices");
                 entity.HasKey(e => e.Id);
-                
-                entity.Property(e => e.ServiceName)
-                      .IsRequired()
-                      .HasMaxLength(256);
+                entity.Property(e => e.ServiceName).IsRequired().HasMaxLength(256);
+                entity.Property(e => e.Price).HasPrecision(10, 2);
+                entity.Property(e => e.Type).HasConversion<string>();
 
-                entity.Property(e => e.Price)
-                      .HasPrecision(10, 2);
+                entity.HasIndex(e => e.Type);
+            });
+            // APPOINTMENT ITEM
+            modelBuilder.Entity<AppointmentItem>(entity =>
+            {
+                entity.ToTable("appointment_items");
+                entity.HasKey(e => e.Id);
 
-                
+                entity.Property(e => e.UnitPrice).HasPrecision(10, 2);
+                entity.Property(e => e.TotalPrice).HasPrecision(10, 2);
+
+                entity.HasOne(e => e.Appointment)
+                      .WithMany(a => a.Items)
+                      .HasForeignKey(e => e.AppointmentId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(e => e.ServicePrice)
+                      .WithMany()
+                      .HasForeignKey(e => e.ServicePriceId)
+                      .OnDelete(DeleteBehavior.Restrict);
             });
 
-            
+
             //  WAITLIST
             modelBuilder.Entity<Waitlist>(entity =>
             {

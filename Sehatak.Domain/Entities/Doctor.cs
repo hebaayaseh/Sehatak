@@ -14,7 +14,10 @@ namespace Sehatak.Domain.Entities
         
         // initial value = false 
         public bool OnlineEnabled { get; set; } = false;
-        
+        // For connect with service price table to get the consultation cost for the doctor
+        public int? ConsultationCostId { get; set; }
+
+
         // Navigation Properties :
         public User user { get; set; }
         public Department department { get; set; }
@@ -24,6 +27,7 @@ namespace Sehatak.Domain.Entities
         public ICollection<DoctorRating> doctorRatings { get; set; } = new List<DoctorRating>();
         public ICollection<MedicalRecord> medicicalRecord { get; set; }=new List<MedicalRecord>();
         public ICollection<Consultation> Consultations { get; set; } = new List<Consultation>();
+        public ServicePrice? ConsultationCost { get; set; }
 
 
     }

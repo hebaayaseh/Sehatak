@@ -35,7 +35,10 @@ namespace Sehatak.Domain.Entities
         public DateTime createdAt { get; set; } = DateTime.UtcNow;
 
         public DateTime updateAt {  get; set; } = DateTime.UtcNow;
-        public string? cancellationReason { get; set; } 
+        public string? cancellationReason { get; set; }
+        public decimal ConsultationCost { get; set; } = 0;
+        public decimal ItemsTotal { get; set; } = 0;
+
 
         //  Navigation Properties :
         public Patient Patient { get; set; } = null!;
@@ -44,5 +47,7 @@ namespace Sehatak.Domain.Entities
         public Payment Payment { get; set; }
         public MedicalRecord? MedicalRecord { get; set; }
         public DoctorRating? Rating { get; set; }
+        public ICollection<AppointmentItem> Items { get; set; } = new List<AppointmentItem>();
+
     }
 }
