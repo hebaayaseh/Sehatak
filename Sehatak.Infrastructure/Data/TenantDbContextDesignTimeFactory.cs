@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Design;
 namespace Sehatak.Infrastructure.Data;
 
 public class TenantDbContextDesignTimeFactory
-    : IDesignTimeDbContextFactory<TenantDbContext>
+        : IDesignTimeDbContextFactory<TenantDbContext>
 {
     public TenantDbContext CreateDbContext(string[] args)
     {
@@ -17,10 +17,6 @@ public class TenantDbContextDesignTimeFactory
             new MySqlServerVersion(new Version(8, 0, 30))
         );
 
-        // تنشئ الداتا بيس تلقائياً لو ما موجودة
-        var context = new TenantDbContext(optionsBuilder.Options);
-        context.Database.EnsureCreated();
-
-        return context;
+        return new TenantDbContext(optionsBuilder.Options);
     }
 }

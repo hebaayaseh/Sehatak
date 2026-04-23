@@ -7,12 +7,29 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Sehatak.Infrastructure.Data.Migrations.SharedMigrations
 {
     /// <inheritdoc />
-    public partial class initialMigration : Migration
+    public partial class Name : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterDatabase()
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "platform_features",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    NameOfFeature = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Description = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_platform_features", x => x.Id);
+                })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
@@ -24,7 +41,9 @@ namespace Sehatak.Infrastructure.Data.Migrations.SharedMigrations
                     Name = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Price = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: false),
-                    DurationDays = table.Column<int>(type: "int", nullable: false)
+                    DurationDays = table.Column<int>(type: "int", nullable: false),
+                    platformFeatureId = table.Column<int>(type: "int", nullable: false),
+                    IsActive = table.Column<bool>(type: "tinyint(1)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -55,6 +74,31 @@ namespace Sehatak.Infrastructure.Data.Migrations.SharedMigrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_super_admins", x => x.Id);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "plan_features",
+                columns: table => new
+                {
+                    PlanId = table.Column<int>(type: "int", nullable: false),
+                    FeatureId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_plan_features", x => new { x.PlanId, x.FeatureId });
+                    table.ForeignKey(
+                        name: "FK_plan_features_platform_features_FeatureId",
+                        column: x => x.FeatureId,
+                        principalTable: "platform_features",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_plan_features_subscription_plans_PlanId",
+                        column: x => x.PlanId,
+                        principalTable: "subscription_plans",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -100,6 +144,32 @@ namespace Sehatak.Infrastructure.Data.Migrations.SharedMigrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "center_features",
+                columns: table => new
+                {
+                    CenterId = table.Column<int>(type: "int", nullable: false),
+                    FeatureId = table.Column<int>(type: "int", nullable: false),
+                    IsEnabled = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_center_features", x => x.CenterId);
+                    table.ForeignKey(
+                        name: "FK_center_features_medical_centers_CenterId",
+                        column: x => x.CenterId,
+                        principalTable: "medical_centers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_center_features_platform_features_FeatureId",
+                        column: x => x.FeatureId,
+                        principalTable: "platform_features",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "center_subscriptions",
                 columns: table => new
                 {
@@ -134,6 +204,11 @@ namespace Sehatak.Infrastructure.Data.Migrations.SharedMigrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateIndex(
+                name: "IX_center_features_FeatureId",
+                table: "center_features",
+                column: "FeatureId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_center_subscriptions_CenterId",
                 table: "center_subscriptions",
                 column: "CenterId");
@@ -155,6 +230,11 @@ namespace Sehatak.Infrastructure.Data.Migrations.SharedMigrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_plan_features_FeatureId",
+                table: "plan_features",
+                column: "FeatureId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_super_admins_Email",
                 table: "super_admins",
                 column: "Email",
@@ -165,10 +245,19 @@ namespace Sehatak.Infrastructure.Data.Migrations.SharedMigrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "center_features");
+
+            migrationBuilder.DropTable(
                 name: "center_subscriptions");
 
             migrationBuilder.DropTable(
+                name: "plan_features");
+
+            migrationBuilder.DropTable(
                 name: "medical_centers");
+
+            migrationBuilder.DropTable(
+                name: "platform_features");
 
             migrationBuilder.DropTable(
                 name: "subscription_plans");

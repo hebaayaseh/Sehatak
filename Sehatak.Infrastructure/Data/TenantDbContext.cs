@@ -173,6 +173,9 @@ namespace Sehatak.Infrastructure.Data
                 entity.Property(e => e.DayOfWeek)
                       .HasConversion<string>();
 
+                entity.Property(e=>e.ShiftName)
+                      .HasMaxLength(100);
+
                 entity.HasOne(e => e.User)
                       .WithMany(u => u.Shifts)
                       .HasForeignKey(e => e.staffId)

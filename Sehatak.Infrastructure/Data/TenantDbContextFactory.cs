@@ -13,19 +13,10 @@ namespace Sehatak.Infrastructure.Data
             _config = config;
         }
 
-        // بتبني TenantDbContext لمركز معين بناءً على الـ CenterId
         public TenantDbContext CreateForCenter(int centerId)
         {
-            // بنبني اسم الداتا بيس
-            var dbName = $"sehatak_center_{centerId}";
+            var connectionString = BuildConnectionString(centerId);
 
-            // بنجيب الـ Template من الـ appsettings
-            var template = _config.GetConnectionString("TenantDbTemplate");
-
-            // بنضيف اسم الداتا بيس للـ Connection String
-            var connectionString = $"{template}Database={dbName};";
-
-            // بنبني الـ Options
             var optionsBuilder = new DbContextOptionsBuilder<TenantDbContext>();
             optionsBuilder.UseMySql(
                 connectionString,
@@ -35,15 +26,45 @@ namespace Sehatak.Infrastructure.Data
             return new TenantDbContext(optionsBuilder.Options);
         }
 
-        // بتنشئ داتا بيس جديد وتطبق كل الجداول تلقائياً
-        // بتشتغل مرة وحدة لما مركز جديد ينضاف
         public async Task CreateTenantDatabaseAsync(int centerId)
         {
-            using var tenantDb = CreateForCenter(centerId);
+            var connectionString = BuildConnectionString(centerId);
 
-            // هاد السطر هو اللي بيعمل الداتا بيس وكل الجداول
-            // بيشوف الـ Migrations اللي عملناها ويطبقها
-            await tenantDb.Database.MigrateAsync();
+            // إنشاء DB إذا مش موجودة
+            await EnsureDatabaseCreated(connectionString);
+
+            using var context = CreateForCenter(centerId);
+
+            // تطبيق كل الـ migrations
+            await context.Database.MigrateAsync();
+        }
+
+        private string BuildConnectionString(int centerId)
+        {
+            var dbName = $"sehatak_center_{centerId}";
+            var template = _config.GetConnectionString("TenantDbTemplate");
+
+            if (string.IsNullOrEmpty(template))
+                throw new Exception("TenantDbTemplate is missing");
+
+            return $"{template}Database={dbName};";
+        }
+
+        private async Task EnsureDatabaseCreated(string connectionString)
+        {
+            var builder = new MySqlConnector.MySqlConnectionStringBuilder(connectionString);
+            var databaseName = builder.Database;
+
+            // نشيل اسم الداتا بيس مؤقتاً
+            builder.Database = "";
+
+            using var connection = new MySqlConnector.MySqlConnection(builder.ConnectionString);
+            await connection.OpenAsync();
+
+            var command = connection.CreateCommand();
+            command.CommandText = $"CREATE DATABASE IF NOT EXISTS `{databaseName}`;";
+            await command.ExecuteNonQueryAsync();
         }
     }
 }
+

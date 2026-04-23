@@ -13,7 +13,7 @@ namespace Sehatak.Domain.Entities
         public int Id { get; set; }
         public int DoctorId { get; set; }
         public int PatientId { get; set; }
-        public int AppointmentId { get; set; }
+        public int? AppointmentId { get; set; }
         public string? Notes { get; set; }
         public LabRequestStatus Status { get; set; } = LabRequestStatus.Pending;
         public DateTime RequstedAt { get; set; } = DateTime.UtcNow;
