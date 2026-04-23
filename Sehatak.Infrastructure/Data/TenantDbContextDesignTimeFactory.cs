@@ -8,11 +8,19 @@ public class TenantDbContextDesignTimeFactory
 {
     public TenantDbContext CreateDbContext(string[] args)
     {
+        var connectionString =
+            "Server=localhost;Database=sehatak_design;User=root;Password=;";
+
         var optionsBuilder = new DbContextOptionsBuilder<TenantDbContext>();
         optionsBuilder.UseMySql(
-            "Server=localhost;Database=sehatak_design;User=root;Password=;",
+            connectionString,
             new MySqlServerVersion(new Version(8, 0, 30))
         );
-        return new TenantDbContext(optionsBuilder.Options);
+
+        // تنشئ الداتا بيس تلقائياً لو ما موجودة
+        var context = new TenantDbContext(optionsBuilder.Options);
+        context.Database.EnsureCreated();
+
+        return context;
     }
 }

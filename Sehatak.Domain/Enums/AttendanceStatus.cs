@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 namespace Sehatak.Domain.Enums
 {
-    public enum LabStatus
+    public enum AttendanceStatus
     {
-        Pending = 1,       
-        Checked = 2,     
-        Completed = 3,
-        Delivered = 4
+        Present=1,
+        Absent=2,
+        Late=3,
+        EarlyOut = 4,
+        OnLeave = 5
     }
 }

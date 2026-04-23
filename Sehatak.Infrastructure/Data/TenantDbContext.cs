@@ -32,6 +32,7 @@ namespace Sehatak.Infrastructure.Data
         public DbSet<AppointmentItem> AppointmentItems => Set<AppointmentItem>();
         public DbSet<FollowUp> FollowUps => Set<FollowUp>();
         public DbSet<PostponedService> PostponedServices => Set<PostponedService>();
+        public DbSet<StaffAttendance> StaffAttendances => Set<StaffAttendance>();
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -472,6 +473,28 @@ namespace Sehatak.Infrastructure.Data
                       .WithOne(a => a.Rating)
                       .HasForeignKey<DoctorRating>(e => e.AppointmentId)
                       .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            //StaffAttendance
+            modelBuilder.Entity<StaffAttendance>(entity =>
+            {
+                entity.ToTable("staff_attendance");
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.attendanceStatus)
+                      .HasConversion<string>();
+
+                entity.HasIndex(e => new { e.StaffId, e.AttendanceDate }).IsUnique();
+
+                entity.HasOne(e => e.User)
+                      .WithMany()
+                      .HasForeignKey(e => e.StaffId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(e => e.Shift)
+                      .WithMany()
+                      .HasForeignKey(e => e.StaffShiftId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
             });
 
             //  NOTIFICATION 
