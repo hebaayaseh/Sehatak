@@ -33,7 +33,9 @@ namespace Sehatak.Infrastructure.Data
         public DbSet<FollowUp> FollowUps => Set<FollowUp>();
         public DbSet<PostponedService> PostponedServices => Set<PostponedService>();
         public DbSet<StaffAttendance> StaffAttendances => Set<StaffAttendance>();
-
+        public DbSet<LabRequest> LabRequests => Set<LabRequest>();
+        public DbSet<LabRequestItem> LabRequestItems => Set<LabRequestItem>();
+        
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -359,6 +361,11 @@ namespace Sehatak.Infrastructure.Data
                       .WithMany()
                       .HasForeignKey(e => e.TechnicianId)
                       .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(e => e.LabRequest)
+                      .WithOne(r => r.LabResult)
+                      .HasForeignKey<LabResult>(e => e.LabRequestId)
+                      .OnDelete(DeleteBehavior.SetNull);
             });
             // FOLLOW UP
             modelBuilder.Entity<FollowUp>(entity =>
@@ -529,6 +536,51 @@ namespace Sehatak.Infrastructure.Data
                       .HasForeignKey(e => e.ReceiverId)
                       .OnDelete(DeleteBehavior.NoAction);
             });
+
+            // Lap Request 
+            modelBuilder.Entity<LabRequest>(entity =>
+            {
+                entity.ToTable("lab_requests");
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Status).HasConversion<string>();
+
+                entity.HasIndex(e => new { e.PatientId, e.Status });
+
+                entity.HasOne(e => e.Doctor)
+                      .WithMany()
+                      .HasForeignKey(e => e.DoctorId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(e => e.Patient)
+                      .WithMany()
+                      .HasForeignKey(e => e.PatientId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(e => e.Appointment)
+                      .WithMany()
+                      .HasForeignKey(e => e.AppointmentId)
+                      .OnDelete(DeleteBehavior.SetNull);
+            });
+            // Lab Request Item
+            modelBuilder.Entity<LabRequestItem>(entity =>
+            {
+                entity.ToTable("lab_request_items");
+                entity.HasKey(e => e.Id);
+
+                entity.HasOne(e => e.LabRequest)
+                      .WithMany(r => r.Items)
+                      .HasForeignKey(e => e.LabRequestId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(e => e.ServicePrice)
+                      .WithMany()
+                      .HasForeignKey(e => e.ServicePriceId)
+                      .OnDelete(DeleteBehavior.Restrict);
+            });
+
+
+
         }
     }
 }

@@ -14,7 +14,7 @@ namespace Sehatak.Domain.Entities
         public int TechnicianId { get; set; }
 
         public string? ResultFileUrl { get; set; }
-
+        public int? LabRequestId { get; set; }
         public string? AiSummary { get; set; }
         public LabStatus Status { get; set; } = LabStatus.Pending;
         public int? PaymentId { get; set; }
@@ -25,6 +25,7 @@ namespace Sehatak.Domain.Entities
         public Patient Patient { get; set; } = null!;
         public User Technician { get; set; } = null!;
         public Payment? Payment { get; set; }
+        public LabRequest? LabRequest { get; set; }
 
     }
 }
