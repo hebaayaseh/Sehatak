@@ -9,7 +9,7 @@ using Sehatak.Infrastructure.Security;
 using System;
 using System.Text;
 using System.Threading.RateLimiting;
-
+using Serilog;
 namespace Sehatak.API
 {
     public class Program
@@ -17,6 +17,17 @@ namespace Sehatak.API
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            //  Application Logs (System/Error Logs)
+            builder.Host.UseSerilog((context, services, configuration) => configuration // Delet defualt consol system
+            .ReadFrom.Configuration(context.Configuration) // Read from appsetting
+            .Enrich.FromLogContext() // Add special (context) for each log line 
+            .WriteTo.Console()
+            .WriteTo.File(
+            path: "Logs/log-.txt",// Replace .txt to date
+            rollingInterval: RollingInterval.Day,   // ملف جديد كل يوم
+            retainedFileCountLimit: 30,             // احتفظ بآخر 30 يوم بس
+            outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u3}] {Message:lj} {Properties:j}{NewLine}{Exception}"
+            ));
 
             // Add services to the container.
 

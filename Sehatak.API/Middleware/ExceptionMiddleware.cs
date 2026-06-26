@@ -26,8 +26,12 @@ public class ExceptionMiddleware
         }
         catch (Exception ex)
         {
-            // نسجل الخطأ الحقيقي للـ logs فقط — المستخدم ما يشوفه
-            _logger.LogError(ex, "Unhandled exception occurred.");
+            // Add errors 
+            _logger.LogError(ex,
+             "Unhandled exception occurred. Path: {Path}, Method: {Method}",
+             context.Request.Path,
+             context.Request.Method);
+
             await HandleExceptionAsync(context, ex, _localizerFactory);
         }
     }
@@ -65,5 +69,6 @@ public class ExceptionMiddleware
             status = statusCode,
             message = message
         });
+
     }
 }
