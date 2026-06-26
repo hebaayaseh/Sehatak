@@ -8,12 +8,15 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Sehatak.Domain\Sehatak.Domain.csproj" />
+    <ProjectReference Include="..\Sehatak.Infrastructure\Sehatak.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="DTOs\" />
-    <Folder Include="Interfaces\" />
-    <Folder Include="Services\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.9" />
   </ItemGroup>
 
 </Project>

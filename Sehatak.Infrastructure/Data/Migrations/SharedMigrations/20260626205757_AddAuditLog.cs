@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Sehatak.Infrastructure.Data.Migrations.SharedMigrations
 {
     /// <inheritdoc />
-    public partial class Name : Migration
+    public partial class AddAuditLog : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

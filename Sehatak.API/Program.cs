@@ -4,12 +4,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Sehatak.API.Hubs;
 using Sehatak.API.Middleware;
+using Sehatak.Application.Interfaces;
 using Sehatak.Infrastructure.Data;
 using Sehatak.Infrastructure.Security;
+using Sehatak.Infrastructure.Services;
+using Serilog;
 using System;
 using System.Text;
 using System.Threading.RateLimiting;
-using Serilog;
 namespace Sehatak.API
 {
     public class Program
@@ -257,8 +259,8 @@ namespace Sehatak.API
             
             // Singleton — ينشأ مرة وحدة طول عمر التطبيق
             builder.Services.AddSingleton<JwtTokenGenerator>();
+            builder.Services.AddScoped<IAuditLogService, AuditLogService>();
 
-            
             var app = builder.Build();
 
             // MIDDLEWARE PIPELINE — الترتيب مهم جداً

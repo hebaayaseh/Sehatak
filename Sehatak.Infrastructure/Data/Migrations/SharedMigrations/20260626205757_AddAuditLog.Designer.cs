@@ -12,8 +12,8 @@ using Sehatak.Infrastructure.Data;
 namespace Sehatak.Infrastructure.Data.Migrations.SharedMigrations
 {
     [DbContext(typeof(SharedDbContext))]
-    [Migration("20260423225147_Name")]
-    partial class Name
+    [Migration("20260626205757_AddAuditLog")]
+    partial class AddAuditLog
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

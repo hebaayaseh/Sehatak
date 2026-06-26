@@ -35,7 +35,8 @@ namespace Sehatak.Infrastructure.Data
         public DbSet<StaffAttendance> StaffAttendances => Set<StaffAttendance>();
         public DbSet<LabRequest> LabRequests => Set<LabRequest>();
         public DbSet<LabRequestItem> LabRequestItems => Set<LabRequestItem>();
-        
+        public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -398,6 +399,20 @@ namespace Sehatak.Infrastructure.Data
                       .WithMany()
                       .HasForeignKey(e => e.ReceptionistId)
                       .OnDelete(DeleteBehavior.Restrict);
+            });
+            // AUDIT LOG
+            modelBuilder.Entity<AuditLog>(entity =>
+            {
+                entity.ToTable("audit_logs");
+                entity.HasKey(e => e.Id);
+
+                entity.HasOne(e => e.User)
+                      .WithMany()
+                      .HasForeignKey(e => e.UserId)
+                      .OnDelete(DeleteBehavior.Restrict); // ما تحذف اليوزر لو عنده audit logs
+
+                entity.HasIndex(e => new { e.EntityType, e.EntityId }); // فهرسة للبحث السريع
+                entity.HasIndex(e => e.CreatedAt);
             });
 
             // POSTPONED SERVICE
