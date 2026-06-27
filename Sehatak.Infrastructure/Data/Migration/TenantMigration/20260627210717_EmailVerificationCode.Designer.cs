@@ -9,11 +9,11 @@ using Sehatak.Infrastructure.Data;
 
 #nullable disable
 
-namespace Sehatak.Infrastructure.Data.Migrations.TenantMigrations
+namespace Sehatak.Infrastructure.Data.Migration.TenantMigration
 {
     [DbContext(typeof(TenantDbContext))]
-    [Migration("20260626210002_AddAuditLog")]
-    partial class AddAuditLog
+    [Migration("20260627210717_EmailVerificationCode")]
+    partial class EmailVerificationCode
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -391,6 +391,37 @@ namespace Sehatak.Infrastructure.Data.Migrations.TenantMigrations
                     b.HasIndex("DoctorId");
 
                     b.ToTable("doctor_schedules", (string)null);
+                });
+
+            modelBuilder.Entity("Sehatak.Domain.Entities.EmailVerificationCode", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<bool>("IsUsed")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("email_verification_codes", (string)null);
                 });
 
             modelBuilder.Entity("Sehatak.Domain.Entities.FollowUp", b =>
@@ -1146,6 +1177,17 @@ namespace Sehatak.Infrastructure.Data.Migrations.TenantMigrations
                         .IsRequired();
 
                     b.Navigation("doctor");
+                });
+
+            modelBuilder.Entity("Sehatak.Domain.Entities.EmailVerificationCode", b =>
+                {
+                    b.HasOne("Sehatak.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Sehatak.Domain.Entities.FollowUp", b =>

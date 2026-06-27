@@ -37,6 +37,7 @@ namespace Sehatak.Infrastructure.Data
         public DbSet<LabRequestItem> LabRequestItems => Set<LabRequestItem>();
         public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
 
+        public DbSet<EmailVerificationCode> EmailVerificationCodes => Set<EmailVerificationCode>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -596,7 +597,20 @@ namespace Sehatak.Infrastructure.Data
                       .HasForeignKey(e => e.ServicePriceId)
                       .OnDelete(DeleteBehavior.Restrict);
             });
+            // Email Verification Code
+            modelBuilder.Entity<EmailVerificationCode>(e =>
+            { 
+                e.ToTable("email_verification_codes");
+                e.HasKey("Id");
 
+                e.HasOne(e => e.User)
+                .WithMany()
+                .HasForeignKey(e => e.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+                e.HasIndex(e => e.UserId);
+
+            });
 
 
         }

@@ -260,6 +260,8 @@ namespace Sehatak.API
             // Singleton — ينشأ مرة وحدة طول عمر التطبيق
             builder.Services.AddSingleton<JwtTokenGenerator>();
             builder.Services.AddScoped<IAuditLogService, AuditLogService>();
+            builder.Services.AddSingleton<TenantDbContextFactory>();   
+            builder.Services.AddScoped<TenantMigrationRunner>();
 
             var app = builder.Build();
 
@@ -298,6 +300,10 @@ namespace Sehatak.API
 
             // 10. SignalR Hub — للشات الداخلي
             app.MapHub<ChatHubs>("/hubs/chat");
+
+            // Access TenantDbContext in Controllers or Services
+            builder.Services.AddScoped<TenantDbContext>();
+
 
             app.Run();
         }
