@@ -17,6 +17,7 @@ namespace Sehatak.Domain.Entities
         public string? NewValue { get; set; }   // JSON snapshot بعد التعديل
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
+        // Navigation property
         public User User { get; set; } = null!;
     }
 }

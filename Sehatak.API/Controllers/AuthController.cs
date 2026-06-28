@@ -1,0 +1,38 @@
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
+using Sehatak.Application.DTOs;
+using Sehatak.Application.Interfaces;
+
+namespace Sehatak.API.Controllers
+{
+    [ApiController]
+    [Route("api/auth")]
+    public class AuthController : ControllerBase
+    {
+        private readonly IAuthService authService;
+        public AuthController(IAuthService authService)
+        {
+            authService = authService;
+            
+        }
+        
+        [HttpPost("RegisterPatient")]
+        public async Task<IActionResult> RegisterPatient ([FromBody] RegisterRequestDto registerRequestDto)
+        {
+            var result = await authService.RegisterAsync(registerRequestDto);
+            return Ok(result);
+        }
+        
+        [HttpPost("verify-code")]
+        public async Task<IActionResult> VerifyCode([FromBody] VerifyOtpRequestDto request)
+        {
+            var result = await authService.VerifyOtpAsync(request);
+
+            if (result == null)
+                throw new ArgumentException("الكود غير صحيح أو منتهي الصلاحية.");
+
+            return Ok(result);
+        }
+    }
+}

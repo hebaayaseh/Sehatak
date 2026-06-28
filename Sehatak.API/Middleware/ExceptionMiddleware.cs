@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Localization;
+using Sehatak.Application.DTOs.Exceptions;
 
 namespace Sehatak.API.Middleware;
 
@@ -45,12 +46,14 @@ public class ExceptionMiddleware
             "Messages",
             System.Reflection.Assembly.GetExecutingAssembly().GetName().Name!
         );
-
+        
         context.Response.ContentType = "application/json";
+
 
         // نحدد الـ status code حسب نوع الخطأ
         var (statusCode, messageKey) = ex switch
         {
+            BusinessException be => (StatusCodes.Status400BadRequest, be.Message), // جديد — يستخدم Resources
             UnauthorizedAccessException => (StatusCodes.Status401Unauthorized, "Auth.Unauthorized"),
             KeyNotFoundException => (StatusCodes.Status404NotFound, "General.NotFound"),
             ArgumentException => (StatusCodes.Status400BadRequest, ex.Message),
@@ -60,9 +63,9 @@ public class ExceptionMiddleware
         context.Response.StatusCode = statusCode;
 
         // نجيب الرسالة باللغة الصح
-        var message = statusCode == 400
-            ? ex.Message
-            : localizer[messageKey].Value;
+        var message = (statusCode == 400 && ex is ArgumentException)
+        ? ex.Message
+    :   localizer[messageKey].Value;
 
         await context.Response.WriteAsJsonAsync(new
         {

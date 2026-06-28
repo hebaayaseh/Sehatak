@@ -8,6 +8,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sehatak.Application", "Sehatak.Application\Sehatak.Application.csproj", "{3A15FD90-E209-4816-B273-F90D4B602DD9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sehatak.Infrastructure", "Sehatak.Infrastructure\Sehatak.Infrastructure.csproj", "{AC35D013-7137-48AD-A732-EA3F30B8C7B5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3A15FD90-E209-4816-B273-F90D4B602DD9} = {3A15FD90-E209-4816-B273-F90D4B602DD9}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sehatak.API", "Sehatak.API\Sehatak.API.csproj", "{C473840B-2AC6-4CA6-8973-B7894E646469}"
 EndProject

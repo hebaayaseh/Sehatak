@@ -9,11 +9,11 @@ using Sehatak.Infrastructure.Data;
 
 #nullable disable
 
-namespace Sehatak.Infrastructure.Data.Migration.TenantMigration
+namespace Sehatak.Infrastructure.Data.Migrations.TenantMigrations
 {
     [DbContext(typeof(TenantDbContext))]
-    [Migration("20260627210717_EmailVerificationCode")]
-    partial class EmailVerificationCode
+    [Migration("20260627213602_tenant")]
+    partial class tenant
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

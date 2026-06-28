@@ -1,17 +1,31 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.IdentityModel.Tokens;
 using Sehatak.API.Hubs;
+using Sehatak.API.Hubs;
+using Sehatak.API.Middleware;
 using Sehatak.API.Middleware;
 using Sehatak.Application.Interfaces;
+using Sehatak.Application.Interfaces;
 using Sehatak.Infrastructure.Data;
+using Sehatak.Infrastructure.Data;
+using Sehatak.Infrastructure.Repositories;
+using Sehatak.Infrastructure.Repositories;
+using Sehatak.Infrastructure.Security;
 using Sehatak.Infrastructure.Security;
 using Sehatak.Infrastructure.Services;
+using Sehatak.Infrastructure.Services;
+using Serilog;
 using Serilog;
 using System;
 using System.Text;
 using System.Threading.RateLimiting;
+
 namespace Sehatak.API
 {
     public class Program
@@ -19,29 +33,26 @@ namespace Sehatak.API
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            //  Application Logs (System/Error Logs)
-            builder.Host.UseSerilog((context, services, configuration) => configuration // Delet defualt consol system
-            .ReadFrom.Configuration(context.Configuration) // Read from appsetting
-            .Enrich.FromLogContext() // Add special (context) for each log line 
-            .WriteTo.Console()
-            .WriteTo.File(
-            path: "Logs/log-.txt",// Replace .txt to date
-            rollingInterval: RollingInterval.Day,   // ملف جديد كل يوم
-            retainedFileCountLimit: 30,             // احتفظ بآخر 30 يوم بس
-            outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u3}] {Message:lj} {Properties:j}{NewLine}{Exception}"
-            ));
 
-            // Add services to the container.
+            // 0. SERILOG — أول شي قبل أي خدمة
+            builder.Host.UseSerilog((context, services, configuration) => configuration
+                .ReadFrom.Configuration(context.Configuration)
+                .Enrich.FromLogContext()
+                .WriteTo.Console()
+                .WriteTo.File(
+                    path: "Logs/log-.txt",
+                    rollingInterval: RollingInterval.Day,
+                    retainedFileCountLimit: 30,
+                    outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u3}] {Message:lj} {Properties:j}{NewLine}{Exception}"
+                ));
 
+            // 1. CONTROLLERS
             builder.Services.AddControllers();
-            
 
             // 2. SWAGGER
-
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(options =>
             {
-                // Add JWT to swagger to check the endpoint
                 options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
                 {
                     Name = "Authorization",
@@ -53,70 +64,49 @@ namespace Sehatak.API
                 });
 
                 options.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
-    {
-        {
-            new Microsoft.OpenApi.Models.OpenApiSecurityScheme
-            {
-                Reference = new Microsoft.OpenApi.Models.OpenApiReference
                 {
-                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
-                    Id   = "Bearer"
-                }
-            },
-            Array.Empty<string>()
-        }
-    });
+                    {
+                        new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+                        {
+                            Reference = new Microsoft.OpenApi.Models.OpenApiReference
+                            {
+                                Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+                                Id   = "Bearer"
+                            }
+                        },
+                        Array.Empty<string>()
+                    }
+                });
             });
 
             // 3. LOCALIZATION
-            // عشان الرسائل تطلع باللغة اللي يختارها المستخدم
-
-            builder.Services.AddLocalization(options =>
-                options.ResourcesPath = "Resources"
-            );
+            builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
 
             builder.Services.Configure<RequestLocalizationOptions>(options =>
             {
                 var supportedCultures = new[] { "en", "ar" };
-
                 options.SetDefaultCulture("en")
                        .AddSupportedCultures(supportedCultures)
                        .AddSupportedUICultures(supportedCultures);
             });
 
             // 4. SHARED DATABASE
-            // بيتصل بداتا بيس المنصة الرئيسية — Singleton
-            
             builder.Services.AddDbContext<SharedDbContext>(options =>
                 options.UseMySql(
                     builder.Configuration.GetConnectionString("SharedDb"),
-                    ServerVersion.AutoDetect(
-                        builder.Configuration.GetConnectionString("SharedDb")
-                    )
+                    ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("SharedDb"))
                 )
             );
 
             // 5. TENANT DATABASE
-            // بيتصل بداتا بيس المركز الصح لكل request — Scoped
-            // ============================================================
-
-            // بنضيف IHttpContextAccessor عشان نقرأ الـ JWT Token
             builder.Services.AddHttpContextAccessor();
+            builder.Services.AddSingleton<TenantDbContextFactory>();   // بيبني TenantDbContext لمركز معين، يدوياً
+            builder.Services.AddScoped<TenantDbContextAccessor>();     // بيجيب TenantDbContext للمركز الحالي من JWT
 
-            // Factory — لإنشاء داتا بيس لمراكز جديدة
-            // Singleton لأنه ما بيعتمد على الـ Request
-            builder.Services.AddSingleton<TenantDbContextFactory>();
-
-            // Accessor — للوصول لداتا بيس المركز الحالي
-            // Scoped لأنه بيعتمد على الـ Request الحالي
-            builder.Services.AddScoped<TenantDbContextAccessor>();
-
-            
-            // 6. SIGNALR — chat between staff  
+            // 6. SIGNALR
             builder.Services.AddSignalR();
 
             // 7. CORS
-            // Determine how can call the API ! ... only FrontEnd when i determine it in appsitting
             var allowedOrigins = builder.Configuration
                 .GetSection("Cors:AllowedOrigins")
                 .Get<string[]>() ?? [];
@@ -125,41 +115,28 @@ namespace Sehatak.API
             {
                 options.AddPolicy("SehatakPolicy", policy =>
                 {
-                    policy
-                        .WithOrigins(allowedOrigins)
-                        .AllowAnyHeader()
-                        .AllowAnyMethod()
-                        .AllowCredentials();
+                    policy.WithOrigins(allowedOrigins)
+                          .AllowAnyHeader()
+                          .AllowAnyMethod()
+                          .AllowCredentials();
                 });
             });
 
-
             // 8. RATE LIMITING
-
             builder.Services.AddRateLimiter(options =>
             {
                 options.AddFixedWindowLimiter("LoginPolicy", limiterOptions =>
                 {
-                    limiterOptions.PermitLimit = builder.Configuration
-                        .GetValue<int>("RateLimiting:LoginPermitLimit");
-
-                    limiterOptions.Window = TimeSpan.FromSeconds(
-                        builder.Configuration.GetValue<int>("RateLimiting:LoginWindowSeconds")
-                    );
-
+                    limiterOptions.PermitLimit = builder.Configuration.GetValue<int>("RateLimiting:LoginPermitLimit");
+                    limiterOptions.Window = TimeSpan.FromSeconds(builder.Configuration.GetValue<int>("RateLimiting:LoginWindowSeconds"));
                     limiterOptions.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
                     limiterOptions.QueueLimit = 0;
                 });
 
                 options.AddFixedWindowLimiter("GeneralPolicy", limiterOptions =>
                 {
-                    limiterOptions.PermitLimit = builder.Configuration
-                        .GetValue<int>("RateLimiting:GeneralPermitLimit");
-
-                    limiterOptions.Window = TimeSpan.FromSeconds(
-                        builder.Configuration.GetValue<int>("RateLimiting:GeneralWindowSeconds")
-                    );
-
+                    limiterOptions.PermitLimit = builder.Configuration.GetValue<int>("RateLimiting:GeneralPermitLimit");
+                    limiterOptions.Window = TimeSpan.FromSeconds(builder.Configuration.GetValue<int>("RateLimiting:GeneralWindowSeconds"));
                     limiterOptions.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
                     limiterOptions.QueueLimit = 0;
                 });
@@ -176,7 +153,6 @@ namespace Sehatak.API
             });
 
             // 9. JWT AUTHENTICATION
-            
             var jwtKey = builder.Configuration["Jwt:SecretKey"]!;
             var jwtIssuer = builder.Configuration["Jwt:Issuer"]!;
             var jwtAudience = builder.Configuration["Jwt:Audience"]!;
@@ -213,7 +189,6 @@ namespace Sehatak.API
                             message = "Unauthorized. Please login first."
                         });
                     },
-
                     OnForbidden = async context =>
                     {
                         context.Response.StatusCode = 403;
@@ -230,80 +205,47 @@ namespace Sehatak.API
             // 10. AUTHORIZATION — ROLES
             builder.Services.AddAuthorization(options =>
             {
-                //  SuperAdmin
-                options.AddPolicy("SuperAdminOnly",
-                    policy => policy.RequireRole("SuperAdmin"));
-
-                // SuperAdmin or Admin
-                options.AddPolicy("AdminOrAbove",
-                    policy => policy.RequireRole("SuperAdmin", "Admin"));
-
-                // Staff
-                options.AddPolicy("MedicalStaff",
-                    policy => policy.RequireRole("Admin", "Doctor", "Receptionist", "LabTechnician"));
-
-                // Only Doctor
-                options.AddPolicy("DoctorOnly",
-                    policy => policy.RequireRole("Doctor"));
-
-                // only Receptionist
-                options.AddPolicy("ReceptionistOnly",
-                    policy => policy.RequireRole("Receptionist"));
-
-                // Only Patient
-                options.AddPolicy("PatientOnly",
-                    policy => policy.RequireRole("Patient"));
+                options.AddPolicy("SuperAdminOnly", policy => policy.RequireRole("SuperAdmin"));
+                options.AddPolicy("AdminOrAbove", policy => policy.RequireRole("SuperAdmin", "Admin"));
+                options.AddPolicy("MedicalStaff", policy => policy.RequireRole("Admin", "Doctor", "Receptionist", "LabTechnician"));
+                options.AddPolicy("DoctorOnly", policy => policy.RequireRole("Doctor"));
+                options.AddPolicy("ReceptionistOnly", policy => policy.RequireRole("Receptionist"));
+                options.AddPolicy("PatientOnly", policy => policy.RequireRole("Patient"));
             });
 
             // 11. SERVICES
-            
-            // Singleton — ينشأ مرة وحدة طول عمر التطبيق
             builder.Services.AddSingleton<JwtTokenGenerator>();
             builder.Services.AddScoped<IAuditLogService, AuditLogService>();
-            builder.Services.AddSingleton<TenantDbContextFactory>();   
             builder.Services.AddScoped<TenantMigrationRunner>();
+
+            // Auth flow — repositories بدون interface (تستخدم جوا AuthService بس)
+            
+
+            // Auth flow — services مع interface (تُستدعى من API)
+            builder.Services.AddScoped<IEmailSenderService, EmailSenderService>();
+            builder.Services.AddScoped<IAuthService, AuthService>();
 
             var app = builder.Build();
 
             // MIDDLEWARE PIPELINE — الترتيب مهم جداً
-
-            // 1. Exception Middleware — أول شي عشان يمسك كل الأخطاء
             app.UseMiddleware<ExceptionMiddleware>();
 
-            // 2. Swagger — بس بالـ Development
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
 
-            // 3. HTTPS
             app.UseHttpsRedirection();
-
-            // 4. Localization — قبل Authentication عشان رسائل الأخطاء تطلع باللغة الصح
             app.UseRequestLocalization();
-
-            // 5. CORS — قبل Authentication
             app.UseCors("SehatakPolicy");
-
-            // 6. Rate Limiting — قبل Authentication
             app.UseRateLimiter();
-
-            // 7. Authentication — من هو المستخدم
             app.UseAuthentication();
-
-            // 8. Authorization — عنده صلاحية
             app.UseAuthorization();
-
-            // 9. Controllers
             app.MapControllers();
-
-            // 10. SignalR Hub — للشات الداخلي
             app.MapHub<ChatHubs>("/hubs/chat");
 
-            // Access TenantDbContext in Controllers or Services
-            builder.Services.AddScoped<TenantDbContext>();
-
+            app.Lifetime.ApplicationStopping.Register(() => Log.CloseAndFlush());
 
             app.Run();
         }

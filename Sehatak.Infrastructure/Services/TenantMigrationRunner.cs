@@ -2,8 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Sehatak.Infrastructure.Data;
 
-namespace Sehatak.Infrastructure.Services
-{
+namespace Sehatak.Infrastructure.Services;
     public class TenantMigrationRunner
     {
         private readonly SharedDbContext _sharedDb;
@@ -36,4 +35,3 @@ namespace Sehatak.Infrastructure.Services
             return results;
         }
     }
-}
