@@ -13,7 +13,7 @@ namespace Sehatak.API.Controllers
         private readonly IAuthService authService;
         public AuthController(IAuthService authService)
         {
-            authService = authService;
+            this.authService = authService;
             
         }
         

@@ -15,7 +15,7 @@ public class JwtTokenGenerator
         _config = config;
     }
 
-    public string GenerateToken(int userId, string name, string email, string role, int centerId)
+    public string GenerateToken(int userId, string name, string email, string role, int? centerId)
     {
         // المعلومات اللي بنحطها جوا الـ Token
         var claims = new List<Claim>
@@ -32,10 +32,9 @@ public class JwtTokenGenerator
             // الدور — مهم للـ Authorization
             new Claim(ClaimTypes.Role, role),
 
-            // Id المركز — مهم للـ Multi-Tenant
-            new Claim("CenterId", centerId.ToString())
         };
-
+        if (centerId.HasValue)
+            claims.Add(new Claim("CenterId", centerId.Value.ToString()));
         // نجيب الـ Secret Key من الـ appsettings.json
         var key = new SymmetricSecurityKey(
             Encoding.UTF8.GetBytes(_config["Jwt:SecretKey"]!)

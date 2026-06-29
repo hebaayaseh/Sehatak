@@ -17,11 +17,11 @@ namespace Sehatak.Application.DTOs
         public string password { get; set; }
         public string address { get; set; }
         public string city { get; set; }
-        public userRole role { get; set; } = userRole.Patient;
+        public userRole role { get; set; } = (userRole)6;
         public DateTime createdAt { get; set; } = DateTime.UtcNow;
         public DateTime LastLogin { get; set; }
-        public bool isActive { get; set; }
-        public bool isDeleted { get; set; } = false;
+        public bool isActive { get; set; } = false;
+        
 
 
     }

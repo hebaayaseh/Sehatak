@@ -6,7 +6,6 @@ using Sehatak.Application.Interfaces;
 using Sehatak.Domain.Entities;
 using Sehatak.Domain.Enums;
 using Sehatak.Infrastructure.Data;
-using Sehatak.Infrastructure.Repositories;
 using Sehatak.Infrastructure.Security;
 using System;
 using System.Collections.Generic;
@@ -63,8 +62,9 @@ namespace Sehatak.Infrastructure.Services;
             await db.SaveChangesAsync();
 
             await emailSender.SendOtpEmailAsync(user.email!, code);
+        
 
-            return request;
+        return request;
 
         }
 

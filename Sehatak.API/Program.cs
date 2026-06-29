@@ -12,14 +12,14 @@ using Sehatak.API.Middleware;
 using Sehatak.API.Middleware;
 using Sehatak.Application.Interfaces;
 using Sehatak.Application.Interfaces;
+using Sehatak.Application.Interfaces.SuperAdminInterface;
 using Sehatak.Infrastructure.Data;
 using Sehatak.Infrastructure.Data;
-using Sehatak.Infrastructure.Repositories;
-using Sehatak.Infrastructure.Repositories;
 using Sehatak.Infrastructure.Security;
 using Sehatak.Infrastructure.Security;
 using Sehatak.Infrastructure.Services;
 using Sehatak.Infrastructure.Services;
+using Sehatak.Infrastructure.Services.SuperAdminAuth;
 using Serilog;
 using Serilog;
 using System;
@@ -217,9 +217,10 @@ namespace Sehatak.API
             builder.Services.AddSingleton<JwtTokenGenerator>();
             builder.Services.AddScoped<IAuditLogService, AuditLogService>();
             builder.Services.AddScoped<TenantMigrationRunner>();
+            builder.Services.AddScoped<ISuperAdminAuthService, SuperAdminAuthService>();
 
             // Auth flow — repositories بدون interface (تستخدم جوا AuthService بس)
-            
+
 
             // Auth flow — services مع interface (تُستدعى من API)
             builder.Services.AddScoped<IEmailSenderService, EmailSenderService>();

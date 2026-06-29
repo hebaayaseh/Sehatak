@@ -1,84 +1,330 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
-	<resheader name="resmimetype">
-		<value>text/microsoft-resx</value>
-	</resheader>
-	<resheader name="version">
-		<value>2.0</value>
-	</resheader>
-	<resheader name="reader">
-		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-	</resheader>
-	<resheader name="writer">
-		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-	</resheader>
-	<data name="Auth.LoginFailed" xml:space="preserve"><value>الإيميل أو كلمة المرور غير صحيحة.</value></data>
-	<data name="Auth.EmailExists" xml:space="preserve"><value>هذا الإيميل مسجل مسبقاً.</value></data>
-	<data name="Auth.Unauthorized" xml:space="preserve"><value>غير مصرح. الرجاء تسجيل الدخول أولاً.</value></data>
-	<data name="Auth.Forbidden" xml:space="preserve"><value>ليس لديك صلاحية للوصول إلى هذا المورد.</value></data>
-	<data name="Auth.AccountSuspended" xml:space="preserve"><value>تم تعليق حسابك. الرجاء التواصل مع الدعم الفني.</value></data>
-	<data name="Auth.PasswordResetSent" xml:space="preserve"><value>تم إرسال تعليمات إعادة تعيين كلمة المرور إلى إيميلك.</value></data>
-	<data name="Auth.PasswordChanged" xml:space="preserve"><value>تم تغيير كلمة المرور بنجاح.</value></data>
-	<data name="Validation.Required" xml:space="preserve"><value>هذا الحقل مطلوب.</value></data>
-	<data name="Validation.InvalidEmail" xml:space="preserve"><value>الرجاء إدخال إيميل صحيح.</value></data>
-	<data name="Validation.PasswordTooShort" xml:space="preserve"><value>كلمة المرور يجب أن تكون 8 أحرف على الأقل.</value></data>
-	<data name="Validation.InvalidPhone" xml:space="preserve"><value>الرجاء إدخال رقم هاتف صحيح.</value></data>
-	<data name="Validation.InvalidDate" xml:space="preserve"><value>الرجاء إدخال تاريخ صحيح.</value></data>
-	<data name="Center.Created" xml:space="preserve"><value>تم إنشاء المركز الطبي بنجاح.</value></data>
-	<data name="Center.Updated" xml:space="preserve"><value>تم تحديث بيانات المركز الطبي بنجاح.</value></data>
-	<data name="Center.Suspended" xml:space="preserve"><value>تم تعليق المركز الطبي.</value></data>
-	<data name="Center.Activated" xml:space="preserve"><value>تم تفعيل المركز الطبي.</value></data>
-	<data name="Center.NotFound" xml:space="preserve"><value>المركز الطبي غير موجود.</value></data>
-	<data name="Center.SubscriptionExpired" xml:space="preserve"><value>انتهت صلاحية اشتراكك. الرجاء التجديد للمتابعة.</value></data>
-	<data name="Center.UrlExists" xml:space="preserve"><value>هذا الرابط مستخدم مسبقاً. الرجاء اختيار رابط آخر.</value></data>
-	<data name="Subscription.Renewed" xml:space="preserve"><value>تم تجديد الاشتراك بنجاح.</value></data>
-	<data name="Subscription.Cancelled" xml:space="preserve"><value>تم إلغاء الاشتراك بنجاح.</value></data>
-	<data name="Subscription.PlanNotFound" xml:space="preserve"><value>خطة الاشتراك غير موجودة.</value></data>
-	<data name="User.Created" xml:space="preserve"><value>تم إنشاء المستخدم بنجاح.</value></data>
-	<data name="User.Updated" xml:space="preserve"><value>تم تحديث الملف الشخصي بنجاح.</value></data>
-	<data name="User.NotFound" xml:space="preserve"><value>المستخدم غير موجود.</value></data>
-	<data name="User.Deleted" xml:space="preserve"><value>تم حذف المستخدم بنجاح.</value></data>
-	<data name="Doctor.Created" xml:space="preserve"><value>تم إضافة الطبيب بنجاح.</value></data>
-	<data name="Doctor.NotFound" xml:space="preserve"><value>الطبيب غير موجود.</value></data>
-	<data name="Doctor.Updated" xml:space="preserve"><value>تم تحديث بيانات الطبيب بنجاح.</value></data>
-	<data name="Doctor.ScheduleUpdated" xml:space="preserve"><value>تم تحديث جدول الطبيب بنجاح.</value></data>
-	<data name="Doctor.NoAvailableSlots" xml:space="preserve"><value>لا توجد أوقات متاحة لهذا الطبيب.</value></data>
-	<data name="Department.Created" xml:space="preserve"><value>تم إنشاء القسم بنجاح.</value></data>
-	<data name="Department.NotFound" xml:space="preserve"><value>القسم غير موجود.</value></data>
-	<data name="Department.Deleted" xml:space="preserve"><value>تم حذف القسم بنجاح.</value></data>
-	<data name="Patient.Registered" xml:space="preserve"><value>تم تسجيل المريض بنجاح.</value></data>
-	<data name="Patient.NotFound" xml:space="preserve"><value>المريض غير موجود.</value></data>
-	<data name="Patient.SubProfileCreated" xml:space="preserve"><value>تم إضافة ملف أحد أفراد العائلة بنجاح.</value></data>
-	<data name="Appointment.Booked" xml:space="preserve"><value>تم حجز الموعد بنجاح.</value></data>
-	<data name="Appointment.Cancelled" xml:space="preserve"><value>تم إلغاء الموعد بنجاح.</value></data>
-	<data name="Appointment.Confirmed" xml:space="preserve"><value>تم تأكيد الموعد.</value></data>
-	<data name="Appointment.NotFound" xml:space="preserve"><value>الموعد غير موجود.</value></data>
-	<data name="Appointment.SlotTaken" xml:space="preserve"><value>هذا الوقت محجوز مسبقاً. الرجاء اختيار وقت آخر.</value></data>
-	<data name="Appointment.MarkedNoShow" xml:space="preserve"><value>تم تسجيل المريض كغائب.</value></data>
-	<data name="Appointment.DayCancelled" xml:space="preserve"><value>تم إلغاء جميع مواعيد هذا اليوم.</value></data>
-	<data name="Waitlist.Joined" xml:space="preserve"><value>تمت إضافتك إلى قائمة الانتظار بنجاح.</value></data>
-	<data name="Waitlist.AlreadyJoined" xml:space="preserve"><value>أنت مسجل مسبقاً في قائمة انتظار هذا الطبيب.</value></data>
-	<data name="Waitlist.SlotAvailable" xml:space="preserve"><value>أصبح هناك موعد متاح. تم حجزه تلقائياً لك.</value></data>
-	<data name="Payment.Success" xml:space="preserve"><value>تم تسجيل الدفعة بنجاح.</value></data>
-	<data name="Payment.Failed" xml:space="preserve"><value>فشلت عملية الدفع. الرجاء المحاولة مرة أخرى.</value></data>
-	<data name="Payment.Refunded" xml:space="preserve"><value>تمت عملية الاسترداد بنجاح.</value></data>
-	<data name="Payment.NotFound" xml:space="preserve"><value>سجل الدفع غير موجود.</value></data>
-	<data name="MedicalRecord.Created" xml:space="preserve"><value>تم حفظ السجل الطبي بنجاح.</value></data>
-	<data name="MedicalRecord.NotFound" xml:space="preserve"><value>السجل الطبي غير موجود.</value></data>
-	<data name="Lab.ResultAdded" xml:space="preserve"><value>تمت إضافة نتيجة التحليل بنجاح.</value></data>
-	<data name="Lab.ResultNotFound" xml:space="preserve"><value>نتيجة التحليل غير موجودة.</value></data>
-	<data name="Lab.AiAnalysisFailed" xml:space="preserve"><value>التحليل الذكي غير متاح مؤقتاً. تم عرض النتائج بدون ملخص.</value></data>
-	<data name="Consultation.Booked" xml:space="preserve"><value>تم حجز الاستشارة الإلكترونية بنجاح.</value></data>
-	<data name="Consultation.Accepted" xml:space="preserve"><value>تم قبول طلب الاستشارة.</value></data>
-	<data name="Consultation.Rejected" xml:space="preserve"><value>تم رفض طلب الاستشارة. سيتم استرداد المبلغ كاملاً.</value></data>
-	<data name="Consultation.NotFound" xml:space="preserve"><value>الاستشارة غير موجودة.</value></data>
-	<data name="Notification.Sent" xml:space="preserve"><value>تم إرسال الإشعار بنجاح.</value></data>
-	<data name="Notification.AllRead" xml:space="preserve"><value>تم تحديد جميع الإشعارات كمقروءة.</value></data>
-	<data name="Rating.Submitted" xml:space="preserve"><value>تم إرسال تقييمك بنجاح.</value></data>
-	<data name="Rating.NotAllowed" xml:space="preserve"><value>يمكنك تقييم الطبيب فقط بعد إتمام موعد مؤكد.</value></data>
-	<data name="Rating.AlreadySubmitted" xml:space="preserve"><value>لقد قمت بتقييم هذا الموعد مسبقاً.</value></data>
-	<data name="General.ServerError" xml:space="preserve"><value>حدث خطأ غير متوقع. الرجاء المحاولة مرة أخرى لاحقاً.</value></data>
-	<data name="General.NotFound" xml:space="preserve"><value>العنصر المطلوب غير موجود.</value></data>
-	<data name="General.Success" xml:space="preserve"><value>تمت العملية بنجاح.</value></data>
-	<data name="General.TooManyRequests" xml:space="preserve"><value>طلبات كثيرة جداً. الرجاء الانتظار قليلاً والمحاولة مرة أخرى.</value></data>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Auth.LoginFailed" xml:space="preserve">
+    <value>الإيميل أو كلمة المرور غير صحيحة.</value>
+  </data>
+  <data name="Auth.EmailExists" xml:space="preserve">
+    <value>هذا الإيميل مسجل مسبقاً.</value>
+  </data>
+  <data name="Auth.Unauthorized" xml:space="preserve">
+    <value>غير مصرح. الرجاء تسجيل الدخول أولاً.</value>
+  </data>
+  <data name="Auth.Forbidden" xml:space="preserve">
+    <value>ليس لديك صلاحية للوصول إلى هذا المورد.</value>
+  </data>
+  <data name="Auth.AccountSuspended" xml:space="preserve">
+    <value>تم تعليق حسابك. الرجاء التواصل مع الدعم الفني.</value>
+  </data>
+  <data name="Auth.PasswordResetSent" xml:space="preserve">
+    <value>تم إرسال تعليمات إعادة تعيين كلمة المرور إلى إيميلك.</value>
+  </data>
+  <data name="Auth.PasswordChanged" xml:space="preserve">
+    <value>تم تغيير كلمة المرور بنجاح.</value>
+  </data>
+  <data name="Validation.Required" xml:space="preserve">
+    <value>هذا الحقل مطلوب.</value>
+  </data>
+  <data name="Validation.InvalidEmail" xml:space="preserve">
+    <value>الرجاء إدخال إيميل صحيح.</value>
+  </data>
+  <data name="Validation.PasswordTooShort" xml:space="preserve">
+    <value>كلمة المرور يجب أن تكون 8 أحرف على الأقل.</value>
+  </data>
+  <data name="Validation.InvalidPhone" xml:space="preserve">
+    <value>الرجاء إدخال رقم هاتف صحيح.</value>
+  </data>
+  <data name="Validation.InvalidDate" xml:space="preserve">
+    <value>الرجاء إدخال تاريخ صحيح.</value>
+  </data>
+  <data name="Center.Created" xml:space="preserve">
+    <value>تم إنشاء المركز الطبي بنجاح.</value>
+  </data>
+  <data name="Center.Updated" xml:space="preserve">
+    <value>تم تحديث بيانات المركز الطبي بنجاح.</value>
+  </data>
+  <data name="Center.Suspended" xml:space="preserve">
+    <value>تم تعليق المركز الطبي.</value>
+  </data>
+  <data name="Center.Activated" xml:space="preserve">
+    <value>تم تفعيل المركز الطبي.</value>
+  </data>
+  <data name="Center.NotFound" xml:space="preserve">
+    <value>المركز الطبي غير موجود.</value>
+  </data>
+  <data name="Center.SubscriptionExpired" xml:space="preserve">
+    <value>انتهت صلاحية اشتراكك. الرجاء التجديد للمتابعة.</value>
+  </data>
+  <data name="Center.UrlExists" xml:space="preserve">
+    <value>هذا الرابط مستخدم مسبقاً. الرجاء اختيار رابط آخر.</value>
+  </data>
+  <data name="Subscription.Renewed" xml:space="preserve">
+    <value>تم تجديد الاشتراك بنجاح.</value>
+  </data>
+  <data name="Subscription.Cancelled" xml:space="preserve">
+    <value>تم إلغاء الاشتراك بنجاح.</value>
+  </data>
+  <data name="Subscription.PlanNotFound" xml:space="preserve">
+    <value>خطة الاشتراك غير موجودة.</value>
+  </data>
+  <data name="User.Created" xml:space="preserve">
+    <value>تم إنشاء المستخدم بنجاح.</value>
+  </data>
+  <data name="User.Updated" xml:space="preserve">
+    <value>تم تحديث الملف الشخصي بنجاح.</value>
+  </data>
+  <data name="User.NotFound" xml:space="preserve">
+    <value>المستخدم غير موجود.</value>
+  </data>
+  <data name="User.Deleted" xml:space="preserve">
+    <value>تم حذف المستخدم بنجاح.</value>
+  </data>
+  <data name="Doctor.Created" xml:space="preserve">
+    <value>تم إضافة الطبيب بنجاح.</value>
+  </data>
+  <data name="Doctor.NotFound" xml:space="preserve">
+    <value>الطبيب غير موجود.</value>
+  </data>
+  <data name="Doctor.Updated" xml:space="preserve">
+    <value>تم تحديث بيانات الطبيب بنجاح.</value>
+  </data>
+  <data name="Doctor.ScheduleUpdated" xml:space="preserve">
+    <value>تم تحديث جدول الطبيب بنجاح.</value>
+  </data>
+  <data name="Doctor.NoAvailableSlots" xml:space="preserve">
+    <value>لا توجد أوقات متاحة لهذا الطبيب.</value>
+  </data>
+  <data name="Department.Created" xml:space="preserve">
+    <value>تم إنشاء القسم بنجاح.</value>
+  </data>
+  <data name="Department.NotFound" xml:space="preserve">
+    <value>القسم غير موجود.</value>
+  </data>
+  <data name="Department.Deleted" xml:space="preserve">
+    <value>تم حذف القسم بنجاح.</value>
+  </data>
+  <data name="Patient.Registered" xml:space="preserve">
+    <value>تم تسجيل المريض بنجاح.</value>
+  </data>
+  <data name="Patient.NotFound" xml:space="preserve">
+    <value>المريض غير موجود.</value>
+  </data>
+  <data name="Patient.SubProfileCreated" xml:space="preserve">
+    <value>تم إضافة ملف أحد أفراد العائلة بنجاح.</value>
+  </data>
+  <data name="Appointment.Booked" xml:space="preserve">
+    <value>تم حجز الموعد بنجاح.</value>
+  </data>
+  <data name="Appointment.Cancelled" xml:space="preserve">
+    <value>تم إلغاء الموعد بنجاح.</value>
+  </data>
+  <data name="Appointment.Confirmed" xml:space="preserve">
+    <value>تم تأكيد الموعد.</value>
+  </data>
+  <data name="Appointment.NotFound" xml:space="preserve">
+    <value>الموعد غير موجود.</value>
+  </data>
+  <data name="Appointment.SlotTaken" xml:space="preserve">
+    <value>هذا الوقت محجوز مسبقاً. الرجاء اختيار وقت آخر.</value>
+  </data>
+  <data name="Appointment.MarkedNoShow" xml:space="preserve">
+    <value>تم تسجيل المريض كغائب.</value>
+  </data>
+  <data name="Appointment.DayCancelled" xml:space="preserve">
+    <value>تم إلغاء جميع مواعيد هذا اليوم.</value>
+  </data>
+  <data name="Waitlist.Joined" xml:space="preserve">
+    <value>تمت إضافتك إلى قائمة الانتظار بنجاح.</value>
+  </data>
+  <data name="Waitlist.AlreadyJoined" xml:space="preserve">
+    <value>أنت مسجل مسبقاً في قائمة انتظار هذا الطبيب.</value>
+  </data>
+  <data name="Waitlist.SlotAvailable" xml:space="preserve">
+    <value>أصبح هناك موعد متاح. تم حجزه تلقائياً لك.</value>
+  </data>
+  <data name="Payment.Success" xml:space="preserve">
+    <value>تم تسجيل الدفعة بنجاح.</value>
+  </data>
+  <data name="Payment.Failed" xml:space="preserve">
+    <value>فشلت عملية الدفع. الرجاء المحاولة مرة أخرى.</value>
+  </data>
+  <data name="Payment.Refunded" xml:space="preserve">
+    <value>تمت عملية الاسترداد بنجاح.</value>
+  </data>
+  <data name="Payment.NotFound" xml:space="preserve">
+    <value>سجل الدفع غير موجود.</value>
+  </data>
+  <data name="MedicalRecord.Created" xml:space="preserve">
+    <value>تم حفظ السجل الطبي بنجاح.</value>
+  </data>
+  <data name="MedicalRecord.NotFound" xml:space="preserve">
+    <value>السجل الطبي غير موجود.</value>
+  </data>
+  <data name="Lab.ResultAdded" xml:space="preserve">
+    <value>تمت إضافة نتيجة التحليل بنجاح.</value>
+  </data>
+  <data name="Lab.ResultNotFound" xml:space="preserve">
+    <value>نتيجة التحليل غير موجودة.</value>
+  </data>
+  <data name="Lab.AiAnalysisFailed" xml:space="preserve">
+    <value>التحليل الذكي غير متاح مؤقتاً. تم عرض النتائج بدون ملخص.</value>
+  </data>
+  <data name="Consultation.Booked" xml:space="preserve">
+    <value>تم حجز الاستشارة الإلكترونية بنجاح.</value>
+  </data>
+  <data name="Consultation.Accepted" xml:space="preserve">
+    <value>تم قبول طلب الاستشارة.</value>
+  </data>
+  <data name="Consultation.Rejected" xml:space="preserve">
+    <value>تم رفض طلب الاستشارة. سيتم استرداد المبلغ كاملاً.</value>
+  </data>
+  <data name="Consultation.NotFound" xml:space="preserve">
+    <value>الاستشارة غير موجودة.</value>
+  </data>
+  <data name="Notification.Sent" xml:space="preserve">
+    <value>تم إرسال الإشعار بنجاح.</value>
+  </data>
+  <data name="Notification.AllRead" xml:space="preserve">
+    <value>تم تحديد جميع الإشعارات كمقروءة.</value>
+  </data>
+  <data name="Rating.Submitted" xml:space="preserve">
+    <value>تم إرسال تقييمك بنجاح.</value>
+  </data>
+  <data name="Rating.NotAllowed" xml:space="preserve">
+    <value>يمكنك تقييم الطبيب فقط بعد إتمام موعد مؤكد.</value>
+  </data>
+  <data name="Rating.AlreadySubmitted" xml:space="preserve">
+    <value>لقد قمت بتقييم هذا الموعد مسبقاً.</value>
+  </data>
+  <data name="General.ServerError" xml:space="preserve">
+    <value>حدث خطأ غير متوقع. الرجاء المحاولة مرة أخرى لاحقاً.</value>
+  </data>
+  <data name="General.NotFound" xml:space="preserve">
+    <value>العنصر المطلوب غير موجود.</value>
+  </data>
+  <data name="General.Success" xml:space="preserve">
+    <value>تمت العملية بنجاح.</value>
+  </data>
+  <data name="General.TooManyRequests" xml:space="preserve">
+    <value>طلبات كثيرة جداً. الرجاء الانتظار قليلاً والمحاولة مرة أخرى.</value>
+  </data>
+  <data name="Verfiy.Code" xml:space="preserve">
+    <value>الكود غير فعال.</value>
+  </data>
 </root>
