@@ -90,6 +90,7 @@ namespace Sehatak.Infrastructure.Data
                 .IsRequired()
                 .HasMaxLength(20);
             });
+            
 
             //  MedicalCenter 
             modelBuilder.Entity<MedicalCenter>(entity =>

@@ -10,12 +10,12 @@ namespace Sehatak.Application.DTOs.SuperAdminDto
 {
     public class RegisterSuperAdminRequestDto
     {
-        public string name {  get; set; }
-        public string email { get; set; }
-        public string phoneNumber { get; set; }
-        public string SuperAdminKey { get; set; }
+        public string name {  get; set; } = string.Empty;
+        public string email { get; set; } = string.Empty;
+        public string phoneNumber { get; set; } = string.Empty;
+        public string SuperAdminKey { get; set; } = string.Empty;
         public DateTime CreateAt { get; set; } = DateTime.Now;
-        public string password { get; set; }
-        public bool isActive { get; set; } 
+        public string password { get; set; } = string.Empty;
+        
     }
 }

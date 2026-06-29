@@ -1,8 +1,10 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Sehatak.Application.DTOs.Exceptions;
 using Sehatak.Application.DTOs.SuperAdminDto;
 using Sehatak.Application.Interfaces.SuperAdminInterface;
+using Sehatak.Domain.Entities;
 using Sehatak.Domain.Entities.SharedEntities;
 using Sehatak.Domain.Enums;
 using Sehatak.Infrastructure.Data;
@@ -12,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using EmailVerificationCode = Sehatak.Domain.Entities.EmailVerificationCode;
 
 namespace Sehatak.Infrastructure.Services.SuperAdminAuth
 {
@@ -50,15 +53,15 @@ namespace Sehatak.Infrastructure.Services.SuperAdminAuth
         public async Task<RegisterSuperAdminResponseDto> RegisterAsync(RegisterSuperAdminRequestDto request)
         {
             var expectedKey = configuration["SuperAdminSetup:SetupKey"];
-            if(string.IsNullOrEmpty(expectedKey) || expectedKey!= request.SuperAdminKey)
+            if (string.IsNullOrEmpty(expectedKey) || expectedKey != request.SuperAdminKey)
                 throw new UnauthorizedAccessException();
-            var exsitEmail = sharedDbContext.SuperAdmins.AnyAsync(e => e.Email == request.email);
-            if(exsitEmail!=null)
+
+            var emailExists = await sharedDbContext.SuperAdmins.AnyAsync(e => e.Email == request.email);
+            if (emailExists)
                 throw new BusinessException("Auth.Forbidden");
 
             var superAdmin = new SuperAdmin
             {
-
                 Email = request.email,
                 role = (userRole)1,
                 Name = request.name,
@@ -67,9 +70,9 @@ namespace Sehatak.Infrastructure.Services.SuperAdminAuth
                 CreateAt = DateTime.UtcNow,
                 IsActive = true
             };
+
             await sharedDbContext.AddAsync(superAdmin);
             await sharedDbContext.SaveChangesAsync();
-
 
             return new RegisterSuperAdminResponseDto { email = superAdmin.Email };
         }
