@@ -1,4 +1,5 @@
 ﻿using Sehatak.Domain.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace Sehatak.Domain.Entities
 {
@@ -7,8 +8,16 @@ namespace Sehatak.Domain.Entities
         public int Id { get; set; }
         public string firstName {  get; set; }
         public string lastName { get; set; }
+        
+        [EmailAddress]   
+        [MaxLength(150)]
         public string? email { get; set; }
+        [Required]
+        [MinLength(8)]
         public string passwordHash { get; set; } = string.Empty;
+        
+        [Phone]         
+        [MaxLength(20)]
         public string? phoneNumber { get; set; }
         public string address { get; set; }
         public string city { get; set; }

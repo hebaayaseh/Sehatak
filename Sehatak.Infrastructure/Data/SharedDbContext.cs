@@ -73,7 +73,7 @@ namespace Sehatak.Infrastructure.Data
                 entity.HasKey(e => e.Id);
 
                 entity.HasIndex(e => e.Email).IsUnique();
-
+                entity.HasIndex(e => e.phone).IsUnique();
                 entity.Property(e => e.Name)
                       .IsRequired()
                       .HasMaxLength(100);
