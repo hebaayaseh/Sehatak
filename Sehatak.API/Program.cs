@@ -12,6 +12,7 @@ using Sehatak.API.Middleware;
 using Sehatak.API.Middleware;
 using Sehatak.Application.Interfaces;
 using Sehatak.Application.Interfaces;
+using Sehatak.Application.Interfaces.AssignFeatursToPlan;
 using Sehatak.Application.Interfaces.Features;
 using Sehatak.Application.Interfaces.Plans;
 using Sehatak.Application.Interfaces.SuperAdminInterface;
@@ -20,6 +21,7 @@ using Sehatak.Infrastructure.Data;
 using Sehatak.Infrastructure.Security;
 using Sehatak.Infrastructure.Security;
 using Sehatak.Infrastructure.Services;
+using Sehatak.Infrastructure.Services.AssignFeatureToPlan;
 using Sehatak.Infrastructure.Services.FeatureService;
 using Sehatak.Infrastructure.Services.PatientRegisterAuth;
 using Sehatak.Infrastructure.Services.Plans;
@@ -232,7 +234,7 @@ namespace Sehatak.API
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IFeatureService, featureService>();
             builder.Services.AddScoped<ISubscriptionPlan, SubscriptionPlanService>();
-
+            builder.Services.AddScoped<IPlanFeatureService, PlanFeatureService>();
             var app = builder.Build();
 
             // MIDDLEWARE PIPELINE — الترتيب مهم جداً

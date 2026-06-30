@@ -17,7 +17,7 @@ namespace Sehatak.API.Controllers
         }
         [Authorize(Policy = "SuperAdminOnly")]
         [HttpPost("AssignFeature")]
-        public async Task<IActionResult> AssignFeature([FromBody] int planId, AssignFeatureToPlanRequestDto request)
+        public async Task<IActionResult> AssignFeature( int planId, AssignFeatureToPlanRequestDto request)
         {
             var result = await planFeatureService.AssignFeatureAsync(planId, request);
             return Ok(result);
@@ -25,7 +25,7 @@ namespace Sehatak.API.Controllers
 
         [Authorize(Policy = "SuperAdminOnly")]
         [HttpGet("GetFeatures")]
-        public async Task<IActionResult> GetFeatures([FromQuery]int planId)
+        public async Task<IActionResult> GetFeatures(int planId)
         {
             var result = await planFeatureService.GetPlanFeaturesAsync(planId);
             return Ok(result);
