@@ -8,10 +8,10 @@ namespace Sehatak.Domain.Entities
         public int Id { get; set; }
         public string firstName {  get; set; }
         public string lastName { get; set; }
-        
+        [Required]
         [EmailAddress]   
         [MaxLength(150)]
-        public string? email { get; set; }
+        public string email { get; set; }
         [Required]
         [MinLength(8)]
         public string passwordHash { get; set; } = string.Empty;
