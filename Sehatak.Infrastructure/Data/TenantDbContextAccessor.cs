@@ -18,18 +18,18 @@ namespace Sehatak.Infrastructure.Data
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public TenantDbContext GetCurrentTenantDb()
+        public TenantDbContextFactory GetCurrentTenantDb()
         {
             var centerId = GetCenterIdFromToken();
             var connectionString = BuildConnectionString(centerId);
 
-            var optionsBuilder = new DbContextOptionsBuilder<TenantDbContext>();
+            var optionsBuilder = new DbContextOptionsBuilder<TenantDbContextFactory>();
             optionsBuilder.UseMySql(
                 connectionString,
                 ServerVersion.AutoDetect(connectionString)
             );
 
-            return new TenantDbContext(optionsBuilder.Options);
+            return new TenantDbContextFactory(optionsBuilder.Options);
         }
 
         private int GetCenterIdFromToken()

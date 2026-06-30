@@ -10,7 +10,7 @@ using Sehatak.Infrastructure.Data;
 
 namespace Sehatak.Infrastructure.Data.Migrations.TenantMigrations
 {
-    [DbContext(typeof(TenantDbContext))]
+    [DbContext(typeof(TenantDbContextFactory))]
     partial class TenantDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

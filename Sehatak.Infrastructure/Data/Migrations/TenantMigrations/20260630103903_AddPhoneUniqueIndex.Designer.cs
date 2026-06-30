@@ -11,7 +11,7 @@ using Sehatak.Infrastructure.Data;
 
 namespace Sehatak.Infrastructure.Data.Migrations.TenantMigrations
 {
-    [DbContext(typeof(TenantDbContext))]
+    [DbContext(typeof(TenantDbContextFactory))]
     [Migration("20260630103903_AddPhoneUniqueIndex")]
     partial class AddPhoneUniqueIndex
     {

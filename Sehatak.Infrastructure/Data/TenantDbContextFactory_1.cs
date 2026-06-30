@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace Sehatak.Infrastructure.Data
 {
-    public class TenantDbContext : DbContext
+    public class TenantDbContextFactory : DbContext
     {
-        public TenantDbContext(DbContextOptions<TenantDbContext> options)
+        public TenantDbContextFactory(DbContextOptions<TenantDbContextFactory> options)
         : base(options) { }
 
         public DbSet<User> Users => Set<User>();

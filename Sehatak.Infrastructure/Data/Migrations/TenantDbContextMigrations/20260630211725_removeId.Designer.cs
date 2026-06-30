@@ -11,7 +11,7 @@ using Sehatak.Infrastructure.Data;
 
 namespace Sehatak.Infrastructure.Data.Migrations.TenantDbContextMigrations
 {
-    [DbContext(typeof(TenantDbContext))]
+    [DbContext(typeof(TenantDbContextFactory))]
     [Migration("20260630211725_removeId")]
     partial class removeId
     {

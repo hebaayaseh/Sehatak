@@ -11,7 +11,7 @@ using Sehatak.Infrastructure.Data;
 
 namespace Sehatak.Infrastructure.Data.Migrations.TenantMigrations
 {
-    [DbContext(typeof(TenantDbContext))]
+    [DbContext(typeof(TenantDbContextFactory))]
     [Migration("20260629221000_InitialCreate")]
     partial class InitialCreate
     {

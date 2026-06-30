@@ -13,15 +13,15 @@ namespace Sehatak.Infrastructure.Data
             _config = config;
         }
 
-        public TenantDbContext CreateForCenter(int centerId)
+        public TenantDbContextFactory CreateForCenter(int centerId)
         {
             var connectionString = BuildConnectionString(centerId);
-            var optionsBuilder = new DbContextOptionsBuilder<TenantDbContext>();
+            var optionsBuilder = new DbContextOptionsBuilder<TenantDbContextFactory>();
             optionsBuilder.UseMySql(
                 connectionString,
                 ServerVersion.AutoDetect(connectionString)
             );
-            return new TenantDbContext(optionsBuilder.Options);
+            return new TenantDbContextFactory(optionsBuilder.Options);
         }
 
         public async Task CreateTenantDatabaseAsync(int centerId)
