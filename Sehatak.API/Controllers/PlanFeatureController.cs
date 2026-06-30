@@ -10,7 +10,26 @@ namespace Sehatak.API.Controllers
     [Route("api/admin/plans/{planId}/features")]
     public class PlanFeatureController : ControllerBase
     {
-        
+        private readonly IPlanFeatureService planFeatureService;
+        public PlanFeatureController(IPlanFeatureService planFeatureService)
+        {
+            this.planFeatureService = planFeatureService;
+        }
+        [Authorize(Policy = "SuperAdminOnly")]
+        [HttpPost("AssignFeature")]
+        public async Task<IActionResult> AssignFeature([FromBody] int planId, AssignFeatureToPlanRequestDto request)
+        {
+            var result = await planFeatureService.AssignFeatureAsync(planId, request);
+            return Ok(result);
+        }
+
+        [Authorize(Policy = "SuperAdminOnly")]
+        [HttpGet("GetFeatures")]
+        public async Task<IActionResult> GetFeatures([FromQuery]int planId)
+        {
+            var result = await planFeatureService.GetPlanFeaturesAsync(planId);
+            return Ok(result);
+        }
 
     }
 }
