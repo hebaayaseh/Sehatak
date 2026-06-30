@@ -13,6 +13,7 @@ using Sehatak.API.Middleware;
 using Sehatak.Application.Interfaces;
 using Sehatak.Application.Interfaces;
 using Sehatak.Application.Interfaces.Features;
+using Sehatak.Application.Interfaces.Plans;
 using Sehatak.Application.Interfaces.SuperAdminInterface;
 using Sehatak.Infrastructure.Data;
 using Sehatak.Infrastructure.Data;
@@ -21,6 +22,7 @@ using Sehatak.Infrastructure.Security;
 using Sehatak.Infrastructure.Services;
 using Sehatak.Infrastructure.Services.FeatureService;
 using Sehatak.Infrastructure.Services.PatientRegisterAuth;
+using Sehatak.Infrastructure.Services.Plans;
 using Sehatak.Infrastructure.Services.SuperAdminAuth;
 using Serilog;
 using Serilog;
@@ -221,7 +223,7 @@ namespace Sehatak.API
             builder.Services.AddScoped<IAuditLogService, AuditLogService>();
             builder.Services.AddScoped<TenantMigrationRunner>();
             builder.Services.AddScoped<ISuperAdminAuthService, SuperAdminAuthService>();
-
+            
             // Auth flow — repositories بدون interface (تستخدم جوا AuthService بس)
 
 
@@ -229,6 +231,7 @@ namespace Sehatak.API
             builder.Services.AddScoped<IEmailSenderService, EmailSenderService>();
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IFeatureService, featureService>();
+            builder.Services.AddScoped<ISubscriptionPlan, SubscriptionPlanService>();
 
             var app = builder.Build();
 
