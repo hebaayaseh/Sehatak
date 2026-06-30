@@ -25,7 +25,7 @@ namespace Sehatak.Infrastructure.Services.Plans
                 Name = request.Name,
                 DurationDays = request.DurationDays,
                 Price = request.Price,
-                platformFeatureId = request.platformFeatureId,
+                
             };
             await sharedDbContext.SubscriptionPlans.AddAsync(supscriptionPlan);
             await sharedDbContext.SaveChangesAsync();
@@ -35,8 +35,7 @@ namespace Sehatak.Infrastructure.Services.Plans
                 Id = supscriptionPlan.Id,
                 Name = supscriptionPlan.Name,
                 DurationDays = supscriptionPlan.DurationDays,
-                Price = supscriptionPlan.Price,
-                platformFeatureId = supscriptionPlan.platformFeatureId
+                Price = supscriptionPlan.Price
             };
         }
     }

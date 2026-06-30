@@ -14,7 +14,6 @@ namespace Sehatak.Domain.Entities.SharedEntities
 
         public int DurationDays { get; set; }
 
-        public int platformFeatureId { get; set; }
         public bool IsActive { get; set; } = true;
         //  Navigation Properties :
         public ICollection<CenterSubscription> CenterSubscriptions { get; set; } = new List<CenterSubscription>();
