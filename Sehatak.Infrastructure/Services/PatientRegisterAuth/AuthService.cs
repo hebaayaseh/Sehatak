@@ -2,7 +2,7 @@
 using Castle.Core.Smtp;
 using Microsoft.EntityFrameworkCore;
 using Sehatak.Application.DTOs.PatienRegisterDto;
-using Sehatak.Application.Interfaces;
+using Sehatak.Application.Interfaces.AuthPatient;
 using Sehatak.Domain.Entities;
 using Sehatak.Domain.Enums;
 using Sehatak.Infrastructure.Data;

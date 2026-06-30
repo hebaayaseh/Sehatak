@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
-using Sehatak.Application.Interfaces;
+using Sehatak.Application.Interfaces.AuthPatient;
 using System;
 using System.Collections.Generic;
 using System.Linq;

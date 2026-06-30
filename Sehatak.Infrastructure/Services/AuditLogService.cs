@@ -2,7 +2,7 @@
 using System.Security.Claims;
 using System.Text.Json;
 using Microsoft.AspNetCore.Http;
-using Sehatak.Application.Interfaces;
+using Sehatak.Application.Interfaces.AuditLog;
 using Sehatak.Domain.Entities;
 using Sehatak.Infrastructure.Data;
 
