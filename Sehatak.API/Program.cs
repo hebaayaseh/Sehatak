@@ -12,12 +12,14 @@ using Sehatak.API.Middleware;
 using Sehatak.API.Middleware;
 using Sehatak.Application.Interfaces;
 using Sehatak.Application.Interfaces;
+using Sehatak.Application.Interfaces.Features;
 using Sehatak.Application.Interfaces.SuperAdminInterface;
 using Sehatak.Infrastructure.Data;
 using Sehatak.Infrastructure.Data;
 using Sehatak.Infrastructure.Security;
 using Sehatak.Infrastructure.Security;
 using Sehatak.Infrastructure.Services;
+using Sehatak.Infrastructure.Services.FeatureService;
 using Sehatak.Infrastructure.Services.PatientRegisterAuth;
 using Sehatak.Infrastructure.Services.SuperAdminAuth;
 using Serilog;
@@ -102,6 +104,7 @@ namespace Sehatak.API
             builder.Services.AddHttpContextAccessor();
             builder.Services.AddSingleton<TenantDbContextFactory>();   // بيبني TenantDbContext لمركز معين، يدوياً
             builder.Services.AddScoped<TenantDbContextAccessor>();     // بيجيب TenantDbContext للمركز الحالي من JWT
+            
 
             // 6. SIGNALR
             builder.Services.AddSignalR();
@@ -225,6 +228,7 @@ namespace Sehatak.API
             // Auth flow — services مع interface (تُستدعى من API)
             builder.Services.AddScoped<IEmailSenderService, EmailSenderService>();
             builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddScoped<IFeatureService, featureService>();
 
             var app = builder.Build();
 

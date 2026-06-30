@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Sehatak.Application.DTOs.FeatureDto
 {
-    public class FeatureDto
+    public class FeatureResponseDto
     {
-        public string Name { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; } = string.Empty;
         public string? Description { get; set; }
-
     }
 }
