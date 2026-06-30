@@ -8,7 +8,7 @@ using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sehatak.Infrastructure.Services;
+namespace Sehatak.Infrastructure.Services.PatientRegisterAuth;
     public class EmailSenderService : IEmailSenderService
     {
         private readonly IConfiguration _config;

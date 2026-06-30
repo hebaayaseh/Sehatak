@@ -65,6 +65,7 @@ namespace Sehatak.Infrastructure.Data
                       .IsRequired()
                       .HasMaxLength(256);
 
+                entity.HasIndex(e => e.phoneNumber).IsUnique();
                 entity.Property(entity => entity.phoneNumber)
                       .HasMaxLength(20);
 

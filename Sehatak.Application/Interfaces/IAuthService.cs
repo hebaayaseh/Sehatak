@@ -1,4 +1,4 @@
-﻿using Sehatak.Application.DTOs;
+﻿using Sehatak.Application.DTOs.PatienRegisterDto;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -18,7 +18,7 @@ using Sehatak.Infrastructure.Data;
 using Sehatak.Infrastructure.Security;
 using Sehatak.Infrastructure.Security;
 using Sehatak.Infrastructure.Services;
-using Sehatak.Infrastructure.Services;
+using Sehatak.Infrastructure.Services.PatientRegisterAuth;
 using Sehatak.Infrastructure.Services.SuperAdminAuth;
 using Serilog;
 using Serilog;

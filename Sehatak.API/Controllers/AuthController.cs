@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
-using Sehatak.Application.DTOs;
+using Sehatak.Application.DTOs.PatienRegisterDto;
 using Sehatak.Application.Interfaces;
 
 namespace Sehatak.API.Controllers

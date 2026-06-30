@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sehatak.Application.DTOs
+namespace Sehatak.Application.DTOs.PatienRegisterDto
 {
     public class RegisterRequestDto
     {

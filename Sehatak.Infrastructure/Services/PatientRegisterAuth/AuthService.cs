@@ -1,7 +1,7 @@
 ﻿using BCrypt.Net;
 using Castle.Core.Smtp;
 using Microsoft.EntityFrameworkCore;
-using Sehatak.Application.DTOs;
+using Sehatak.Application.DTOs.PatienRegisterDto;
 using Sehatak.Application.Interfaces;
 using Sehatak.Domain.Entities;
 using Sehatak.Domain.Enums;
@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 using Volo.Abp;
 
 
-namespace Sehatak.Infrastructure.Services;
+namespace Sehatak.Infrastructure.Services.PatientRegisterAuth;
     public class AuthService : IAuthService
     {
         private readonly TenantDbContextFactory tenantFactory;
@@ -24,9 +24,9 @@ namespace Sehatak.Infrastructure.Services;
 
         public AuthService(TenantDbContextFactory tenantDbContextFactory, IEmailSenderService emailSenderService, JwtTokenGenerator jwtTokenGenerator)
         {
-            this.tenantFactory = tenantDbContextFactory;
-            this.emailSender = emailSenderService;
-            this.jwtGenerator = jwtTokenGenerator;
+            tenantFactory = tenantDbContextFactory;
+            emailSender = emailSenderService;
+            jwtGenerator = jwtTokenGenerator;
         }
 
         public async Task<RegisterRequestDto> RegisterAsync(RegisterRequestDto request)
