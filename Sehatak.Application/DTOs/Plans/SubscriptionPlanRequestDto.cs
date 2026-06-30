@@ -15,7 +15,6 @@ namespace Sehatak.Application.DTOs.Plans
         public decimal Price { get; set; }
         [Required]
         public int DurationDays { get; set; }
-        [Required]
-        public int platformFeatureId { get; set; }
+        
     }
 }
