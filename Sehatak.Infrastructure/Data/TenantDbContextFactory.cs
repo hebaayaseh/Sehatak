@@ -20,17 +20,18 @@ namespace Sehatak.Infrastructure.Data
             var optionsBuilder = new DbContextOptionsBuilder<TenantDbContext>();
             optionsBuilder.UseMySql(
                 connectionString,
-                ServerVersion.AutoDetect(connectionString)
+                ServerVersion.AutoDetect(connectionString),
+                mySqlOptions => mySqlOptions.MigrationsAssembly("Sehatak.Infrastructure")
             );
             return new TenantDbContext(optionsBuilder.Options);
         }
 
-        // بتنشئ داتا بيس جديد وتطبق كل الجداول تلقائياً
         public async Task CreateTenantDatabaseAsync(int centerId)
         {
             var connectionString = BuildConnectionString(centerId);
             await EnsureDatabaseCreated(connectionString);
             using var context = CreateForCenter(centerId);
+            var pending = await context.Database.GetPendingMigrationsAsync();
             await context.Database.MigrateAsync();
         }
 

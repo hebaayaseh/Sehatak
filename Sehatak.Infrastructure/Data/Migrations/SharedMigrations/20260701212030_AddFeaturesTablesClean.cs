@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Sehatak.Infrastructure.Data.Migrations.SharedMigrations
 {
     /// <inheritdoc />
-    public partial class shared : Migration
+    public partial class AddFeaturesTablesClean : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -42,7 +42,6 @@ namespace Sehatak.Infrastructure.Data.Migrations.SharedMigrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Price = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: false),
                     DurationDays = table.Column<int>(type: "int", nullable: false),
-                    platformFeatureId = table.Column<int>(type: "int", nullable: false),
                     IsActive = table.Column<bool>(type: "tinyint(1)", nullable: false)
                 },
                 constraints: table =>
@@ -153,7 +152,7 @@ namespace Sehatak.Infrastructure.Data.Migrations.SharedMigrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_center_features", x => x.CenterId);
+                    table.PrimaryKey("PK_center_features", x => new { x.CenterId, x.FeatureId });
                     table.ForeignKey(
                         name: "FK_center_features_medical_centers_CenterId",
                         column: x => x.CenterId,
@@ -238,6 +237,12 @@ namespace Sehatak.Infrastructure.Data.Migrations.SharedMigrations
                 name: "IX_super_admins_Email",
                 table: "super_admins",
                 column: "Email",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_super_admins_phone",
+                table: "super_admins",
+                column: "phone",
                 unique: true);
         }
 

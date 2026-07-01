@@ -13,6 +13,8 @@
 
   <ItemGroup>
     <Folder Include="Data\Migrations\" />
+    <Folder Include="Data\Migrations\SharedDbContextMigrations\" />
+    <Folder Include="Data\Migrations\SharedDbContextMigration\" />
     <Folder Include="Data\Migrations\SharedMigrations\" />
     <Folder Include="Data\Migrations\TenantDbContextMigrations\" />
     <Folder Include="Data\Migrations\TenantMigrations\" />

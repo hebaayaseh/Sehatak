@@ -12,8 +12,8 @@ using Sehatak.Infrastructure.Data;
 namespace Sehatak.Infrastructure.Data.Migrations.SharedMigrations
 {
     [DbContext(typeof(SharedDbContext))]
-    [Migration("20260627213241_shared")]
-    partial class shared
+    [Migration("20260701212030_AddFeaturesTablesClean")]
+    partial class AddFeaturesTablesClean
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -36,7 +36,7 @@ namespace Sehatak.Infrastructure.Data.Migrations.SharedMigrations
                     b.Property<bool>("IsEnabled")
                         .HasColumnType("tinyint(1)");
 
-                    b.HasKey("CenterId");
+                    b.HasKey("CenterId", "FeatureId");
 
                     b.HasIndex("FeatureId");
 
@@ -216,9 +216,6 @@ namespace Sehatak.Infrastructure.Data.Migrations.SharedMigrations
                         .HasPrecision(10, 2)
                         .HasColumnType("decimal(10,2)");
 
-                    b.Property<int>("platformFeatureId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.ToTable("subscription_plans", (string)null);
@@ -267,6 +264,9 @@ namespace Sehatak.Infrastructure.Data.Migrations.SharedMigrations
                     b.HasKey("Id");
 
                     b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("phone")
                         .IsUnique();
 
                     b.ToTable("super_admins", (string)null);

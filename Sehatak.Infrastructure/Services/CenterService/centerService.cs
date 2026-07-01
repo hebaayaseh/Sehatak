@@ -86,26 +86,20 @@ namespace Sehatak.Infrastructure.Services.CenterService
             };
 
             await sharedDbContext.CenterSubscriptions.AddAsync(subscription);
+            
 
-
-            var planFeatures = await sharedDbContext.PlanFeatures
-                  .Where(pf => pf.PlanId == request.PlanId)
-                  .Select(pf => pf.FeatureId)   // بس الـ FeatureId
-                  .Distinct()                    // امنعي التكرار
-                  .ToListAsync();
-
-            foreach (var featureId in planFeatures)
+            var planFeatures = await sharedDbContext.PlanFeatures.Where(p=>p.PlanId == request.PlanId).ToListAsync();
+            foreach (var pf in planFeatures)
             {
                 await sharedDbContext.CenterFeatures.AddAsync(new CenterFeature
                 {
                     CenterId = center.Id,
-                    FeatureId = featureId,
+                    FeatureId = pf.FeatureId,
                     IsEnabled = true
                 });
-               
             }
 
-            await sharedDbContext.SaveChangesAsync();
+            
 
             await tenantDbContextFactory.CreateTenantDatabaseAsync(center.Id);
 
