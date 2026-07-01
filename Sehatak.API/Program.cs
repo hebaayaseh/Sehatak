@@ -13,8 +13,10 @@ using Sehatak.API.Middleware;
 using Sehatak.Application.Interfaces.AssignFeatursToPlan;
 using Sehatak.Application.Interfaces.AuditLog;
 using Sehatak.Application.Interfaces.AuthPatient;
+using Sehatak.Application.Interfaces.Centers;
 using Sehatak.Application.Interfaces.Features;
 using Sehatak.Application.Interfaces.MedicalCenter;
+using Sehatak.Application.Interfaces.MedicalCenter;   
 using Sehatak.Application.Interfaces.Plans;
 using Sehatak.Application.Interfaces.SuperAdminInterface;
 using Sehatak.Infrastructure.Data;
@@ -22,14 +24,13 @@ using Sehatak.Infrastructure.Data;
 using Sehatak.Infrastructure.Security;
 using Sehatak.Infrastructure.Security;
 using Sehatak.Infrastructure.Services;
+using Sehatak.Infrastructure.Services;
 using Sehatak.Infrastructure.Services.AssignFeatureToPlan;
 using Sehatak.Infrastructure.Services.CenterService;
 using Sehatak.Infrastructure.Services.FeatureService;
 using Sehatak.Infrastructure.Services.PatientRegisterAuth;
 using Sehatak.Infrastructure.Services.Plans;
 using Sehatak.Infrastructure.Services.SuperAdminAuth;
-using Sehatak.Application.Interfaces.MedicalCenter;   
-using Sehatak.Infrastructure.Services;
 using Serilog;
 using Serilog;
 using System;
@@ -240,6 +241,8 @@ namespace Sehatak.API
             builder.Services.AddScoped<ISubscriptionPlan, SubscriptionPlanService>();
             builder.Services.AddScoped<IPlanFeatureService, PlanFeatureService>();
             builder.Services.AddScoped<ICenterService, centerService>();
+            builder.Services.AddScoped<IListOfCenters, listOfCentersService>();
+
 
             var app = builder.Build();
 
