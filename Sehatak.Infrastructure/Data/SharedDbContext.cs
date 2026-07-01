@@ -149,21 +149,7 @@ namespace Sehatak.Infrastructure.Data
                 entity.Property(e => e.Price)
                       .HasPrecision(10, 2);
             });
-            modelBuilder.Entity<CenterFeature>(entity =>
-            {
-                entity.ToTable("center_features");
-                entity.HasKey(e => e.CenterId);
-
-                entity.HasOne(e => e.Center)
-                      .WithMany(c => c.Features)
-                      .HasForeignKey(e => e.CenterId)
-                      .OnDelete(DeleteBehavior.Cascade);
-
-                    entity.HasOne(e => e.Feature)
-                        .WithMany(f => f.CenterFeatures)
-                        .HasForeignKey(e => e.FeatureId)
-                        .OnDelete(DeleteBehavior.Cascade);
-            });
+            
 
             modelBuilder.Entity<PlatformFeature>(entity =>
             {
