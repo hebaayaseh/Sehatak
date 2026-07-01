@@ -1,4 +1,5 @@
-﻿using Sehatak.Domain.Enums;
+﻿using Microsoft.AspNetCore.Http;
+using Sehatak.Domain.Enums;
 using Sehatak.Domain.Enums.SharedEnums;
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,7 @@ namespace Sehatak.Application.DTOs.CreateCenterRequestDto
 
         [Required]
         public int PlanId { get; set; }
-
+        public IFormFile? Logo { get; set; }
         public bool RequiresPrepayment { get; set; } = false;
         public decimal PrepaymentAmount { get; set; } = 0;
         public int RefundPolicyHours { get; set; } = 24;

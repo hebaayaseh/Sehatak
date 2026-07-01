@@ -25,7 +25,7 @@ namespace Sehatak.Infrastructure.Services.CenterService
 
         public async Task<CenterResponseDto> CreateCenterAsync(createCenterRequestDto request)
         {
-            var plan = await sharedDbContext.PlanFeatures.FirstOrDefaultAsync(p=>p.PlanId == request.PlanId);
+            var plan = await sharedDbContext.SubscriptionPlans.FindAsync(request.PlanId);
             if(plan==null) throw new BusinessException("Subscription.PlanNotFound");
 
             
@@ -50,11 +50,26 @@ namespace Sehatak.Infrastructure.Services.CenterService
                 center.AddedBySuperAdminId = request.AddedBySuperAdminId;
             }
 
+            if(request.Logo == null || request.Logo.Length == 0)
+            {
+                throw new BusinessException("Center.LogoRequired");
+            }
+            var fileName = Guid.NewGuid() + Path.GetExtension(request.Logo.FileName);
+
+            var path = Path.Combine("wwwroot/uploads/logos", fileName);
+
+            using (var stream = new FileStream(path, FileMode.Create))
+            {
+                await request.Logo.CopyToAsync(stream);
+            }
+            center.LogoUrl = $"/uploads/logos/{fileName}";
+
+            // name of domain
             var centerUrl = $"{GenerateSlug(request.Name)}.sehatak.com";
             var urlExists = await sharedDbContext.MedicalCenters
               .AnyAsync(c => c.UniqueUrl == centerUrl);
             if (urlExists)
-                centerUrl = $"{GenerateSlug(request.Name)}-{center.Id}.sehatak.com";
+                throw new BusinessException("Center.UniqueUrlExists");
 
             center.UniqueUrl = centerUrl;
 
@@ -64,14 +79,15 @@ namespace Sehatak.Infrastructure.Services.CenterService
             var subscription = new CenterSubscription
             {
                 CenterId = center.Id,
-                PlanId = plan.PlanId,
+                PlanId = plan.Id,
                 StartDate = DateOnly.FromDateTime(DateTime.UtcNow),
-                EndDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(plan.Plan.DurationDays)),
+                EndDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(plan.DurationDays)),
                 Status = SubscriptionStatus.Active,
-                AmountPaid = plan.Plan.Price
+                AmountPaid = plan.Price
             };
 
             await sharedDbContext.CenterSubscriptions.AddAsync(subscription);
+            
 
             var planFeatures = await sharedDbContext.PlanFeatures.Where(p=>p.PlanId == request.PlanId).ToListAsync();
             foreach (var pf in planFeatures)
@@ -96,6 +112,7 @@ namespace Sehatak.Infrastructure.Services.CenterService
                 .Include(c=>c.Feature)
                 .Select(c=>c.Feature.NameOfFeature)
                 .ToListAsync();
+            
 
             return new CenterResponseDto {
                 Id = center.Id,
@@ -105,6 +122,8 @@ namespace Sehatak.Infrastructure.Services.CenterService
                 EnabledFeatures = enabledFeatureNames
             };
 
+            throw new BusinessException("Center.Activated");
+            throw new BusinessException("Center.Created");
 
         }
         public string GenerateSlug(string name)
