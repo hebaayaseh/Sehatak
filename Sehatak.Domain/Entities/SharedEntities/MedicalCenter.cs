@@ -19,7 +19,7 @@ namespace Sehatak.Domain.Entities.SharedEntities
 
         public string? LogoUrl { get; set; }
 
-        public BookingType BookingType { get; set; } = BookingType.Queue;
+        public BookingType BookingType { get; set; } = BookingType.TimeSlot;
 
         public bool RequiresPrepayment { get; set; } = false;
 

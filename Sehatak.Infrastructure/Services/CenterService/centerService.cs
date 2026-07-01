@@ -25,24 +25,38 @@ namespace Sehatak.Infrastructure.Services.CenterService
 
         public async Task<CenterResponseDto> CreateCenterAsync(createCenterRequestDto request)
         {
-            var plan = await sharedDbContext.PlanFeatures.FindAsync(request.PlanId);
+            var plan = await sharedDbContext.PlanFeatures.FirstOrDefaultAsync(p=>p.PlanId == request.PlanId);
             if(plan==null) throw new BusinessException("Subscription.PlanNotFound");
 
-            var centerUrl = "GenerateSlug(center.Name).sehatak.com";
+            
 
             var center = new MedicalCenter { 
                 Name=request.Name,
-                UniqueUrl = centerUrl,
                 Phone = request.Phone,
                 Address = request.Address,
                 RequiresPrepayment = request.RequiresPrepayment,
                 PrepaymentAmount = request.PrepaymentAmount,
                 RefundPolicyHours = request.RefundPolicyHours,
                 PartialRefundPercent = request.PartialRefundPercent,
-                AdminWhatsappNumber = request.AdminWhatsappNumber,
                 CenterStatus = CenterStatus.Pending,
                 CreatedAt = DateTime.UtcNow
             };
+            if (request.AdminWhatsappNumber != null)
+            {
+                center.AdminWhatsappNumber = request.AdminWhatsappNumber;
+            }
+            if(request.AddedBySuperAdminId != null)
+            {
+                center.AddedBySuperAdminId = request.AddedBySuperAdminId;
+            }
+
+            var centerUrl = $"{GenerateSlug(request.Name)}.sehatak.com";
+            var urlExists = await sharedDbContext.MedicalCenters
+              .AnyAsync(c => c.UniqueUrl == centerUrl);
+            if (urlExists)
+                centerUrl = $"{GenerateSlug(request.Name)}-{center.Id}.sehatak.com";
+
+            center.UniqueUrl = centerUrl;
 
             await sharedDbContext.MedicalCenters.AddAsync(center);
             await sharedDbContext.SaveChangesAsync();
@@ -50,7 +64,7 @@ namespace Sehatak.Infrastructure.Services.CenterService
             var subscription = new CenterSubscription
             {
                 CenterId = center.Id,
-                PlanId = request.PlanId,
+                PlanId = plan.PlanId,
                 StartDate = DateOnly.FromDateTime(DateTime.UtcNow),
                 EndDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(plan.Plan.DurationDays)),
                 Status = SubscriptionStatus.Active,
