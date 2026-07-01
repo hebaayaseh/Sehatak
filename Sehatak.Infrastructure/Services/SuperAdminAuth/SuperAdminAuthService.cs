@@ -59,7 +59,7 @@ namespace Sehatak.Infrastructure.Services.SuperAdminAuth
             var emailExists = await sharedDbContext.SuperAdmins.AnyAsync(e => e.Email == request.email);
             if (emailExists)
                 throw new BusinessException("Auth.Forbidden");
-
+            
             var superAdmin = new SuperAdmin
             {
                 Email = request.email,
@@ -70,11 +70,26 @@ namespace Sehatak.Infrastructure.Services.SuperAdminAuth
                 CreateAt = DateTime.UtcNow,
                 IsActive = true
             };
+            if(request.ProfileImageUrl != null)
+            {
+
+                var fileName = Guid.NewGuid() + Path.GetExtension(request.ProfileImageUrl.FileName);
+
+                var path = Path.Combine("wwwroot/uploads/logos", fileName);
+
+                using (var stream = new FileStream(path, FileMode.Create))
+                {
+                    await request.ProfileImageUrl.CopyToAsync(stream);
+                }
+
+                superAdmin.ProfileImageUrl = $"/uploads/logos/{fileName}";
+            }
 
             await sharedDbContext.AddAsync(superAdmin);
             await sharedDbContext.SaveChangesAsync();
 
             return new RegisterSuperAdminResponseDto { email = superAdmin.Email };
+            throw new BusinessException("GeneralSuccess");
         }
 
     }

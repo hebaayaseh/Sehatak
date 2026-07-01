@@ -1,4 +1,5 @@
-﻿using Sehatak.Domain.Enums;
+﻿using Microsoft.AspNetCore.Http;
+using Sehatak.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -26,11 +27,8 @@ namespace Sehatak.Application.DTOs.PatienRegisterDto
         public string address { get; set; }
         public string city { get; set; }
         public userRole role { get; set; } = (userRole)6;
-        public DateTime createdAt { get; set; } = DateTime.UtcNow;
-        public DateTime LastLogin { get; set; }
-        public bool isActive { get; set; } = false;
         
-
+        public IFormFile? ProfileImage { get; set; }
 
     }
 }

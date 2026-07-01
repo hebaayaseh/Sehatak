@@ -18,7 +18,7 @@ namespace Sehatak.API.Controllers
         }
         
         [HttpPost("RegisterPatient")]
-        public async Task<IActionResult> RegisterPatient ([FromBody] RegisterRequestDto registerRequestDto)
+        public async Task<IActionResult> RegisterPatient ([FromForm] RegisterRequestDto registerRequestDto)
         {
             var result = await authService.RegisterAsync(registerRequestDto);
             return Ok(result);

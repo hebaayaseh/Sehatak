@@ -50,20 +50,19 @@ namespace Sehatak.Infrastructure.Services.CenterService
                 center.AddedBySuperAdminId = request.AddedBySuperAdminId;
             }
 
-            if(request.Logo == null || request.Logo.Length == 0)
+            if (request.Logo != null)
             {
-                throw new BusinessException("Center.LogoRequired");
+
+                var fileName = Guid.NewGuid() + Path.GetExtension(request.Logo.FileName);
+
+                var path = Path.Combine("wwwroot/uploads/logos", fileName);
+
+                using (var stream = new FileStream(path, FileMode.Create))
+                {
+                    await request.Logo.CopyToAsync(stream);
+                }
+                center.LogoUrl = $"/uploads/logos/{fileName}";
             }
-            var fileName = Guid.NewGuid() + Path.GetExtension(request.Logo.FileName);
-
-            var path = Path.Combine("wwwroot/uploads/logos", fileName);
-
-            using (var stream = new FileStream(path, FileMode.Create))
-            {
-                await request.Logo.CopyToAsync(stream);
-            }
-            center.LogoUrl = $"/uploads/logos/{fileName}";
-
             // name of domain
             var centerUrl = $"{GenerateSlug(request.Name)}.sehatak.com";
             var urlExists = await sharedDbContext.MedicalCenters

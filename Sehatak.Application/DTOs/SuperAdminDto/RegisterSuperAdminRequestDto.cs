@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
@@ -27,7 +28,8 @@ namespace Sehatak.Application.DTOs.SuperAdminDto
         public DateTime CreateAt { get; set; } = DateTime.Now;
         [Required]
         [MinLength(8)]
-        public string password { get; set; } 
-        
+        public string password { get; set; }
+        public IFormFile? ProfileImageUrl { get; set; }
+
     }
 }

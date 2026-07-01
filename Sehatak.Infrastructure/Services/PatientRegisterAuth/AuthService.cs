@@ -49,6 +49,20 @@ namespace Sehatak.Infrastructure.Services.PatientRegisterAuth;
                 isActive = false,
                 createdAt = DateTime.UtcNow
             };
+        if(request.ProfileImage != null)
+        {
+
+            var fileName = Guid.NewGuid() + Path.GetExtension(request.ProfileImage.FileName);
+
+            var path = Path.Combine("wwwroot/uploads/logos", fileName);
+
+            using (var stream = new FileStream(path, FileMode.Create))
+            {
+                await request.ProfileImage.CopyToAsync(stream);
+            }
+
+            user.ProfileImageUrl = $"/uploads/logos/{fileName}";
+        }
             await db.Users.AddAsync(user);
             await db.SaveChangesAsync();
 
@@ -65,6 +79,7 @@ namespace Sehatak.Infrastructure.Services.PatientRegisterAuth;
         
 
         return request;
+
 
         }
 
@@ -97,6 +112,7 @@ namespace Sehatak.Infrastructure.Services.PatientRegisterAuth;
             );
 
             return new VerifyOtpResponseDto { Token = token };
+        throw new BusinessException("GeneralSuccess");
         }
 
     
