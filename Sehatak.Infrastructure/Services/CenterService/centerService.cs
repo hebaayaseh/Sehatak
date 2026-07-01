@@ -91,12 +91,13 @@ namespace Sehatak.Infrastructure.Services.CenterService
             var planFeatures = await sharedDbContext.PlanFeatures.Where(p=>p.PlanId == request.PlanId).ToListAsync();
             foreach (var pf in planFeatures)
             {
-                sharedDbContext.CenterFeatures.Add(new CenterFeature
+                await sharedDbContext.CenterFeatures.AddAsync(new CenterFeature
                 {
                     CenterId = center.Id,
                     FeatureId = pf.FeatureId,
                     IsEnabled = true
                 });
+               
             }
 
             await sharedDbContext.SaveChangesAsync();
@@ -112,7 +113,6 @@ namespace Sehatak.Infrastructure.Services.CenterService
                 .Select(c=>c.Feature.NameOfFeature)
                 .ToListAsync();
             
-
             return new CenterResponseDto {
                 Id = center.Id,
                 Name = center.Name,

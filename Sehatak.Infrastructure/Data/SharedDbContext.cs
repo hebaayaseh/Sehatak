@@ -37,7 +37,8 @@ namespace Sehatak.Infrastructure.Data
             modelBuilder.Entity<PlanFeature>(entity =>
             {
                 entity.ToTable("plan_features");
-                entity.HasKey(e => new { e.PlanId, e.FeatureId }); 
+
+                entity.HasKey(e => new { e.PlanId, e.FeatureId });   
 
                 entity.HasOne(e => e.Plan)
                       .WithMany(p => p.PlanFeatures)
@@ -49,12 +50,14 @@ namespace Sehatak.Infrastructure.Data
                       .HasForeignKey(e => e.FeatureId)
                       .OnDelete(DeleteBehavior.Cascade);
             });
+
             // CenterFeature
 
             modelBuilder.Entity<CenterFeature>(entity =>
             {
                 entity.ToTable("center_features");
-                entity.HasKey(e => new { e.CenterId, e.FeatureId }); 
+
+                entity.HasKey(e => new { e.CenterId, e.FeatureId });   
 
                 entity.HasOne(e => e.Center)
                       .WithMany(c => c.Features)
