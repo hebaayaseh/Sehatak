@@ -14,8 +14,13 @@
   <ItemGroup>
     <Folder Include="Data\Migrations\" />
     <Folder Include="Data\Migrations\SharedMigrations\" />
+    <Folder Include="Data\Migrations\TenantDbContextMigrations\" />
     <Folder Include="Data\Migrations\TenantMigrations\" />
     <Folder Include="Repositories\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Data\TenantDbContext.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,6 +1,6 @@
-﻿// Sehatak.Infrastructure/Data/TenantDbContextFactory.cs
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using MySqlConnector;
 
 namespace Sehatak.Infrastructure.Data
 {
@@ -13,17 +13,19 @@ namespace Sehatak.Infrastructure.Data
             _config = config;
         }
 
-        public TenantDbContextFactory CreateForCenter(int centerId)
+        // بتبني TenantDbContext لمركز معين بناءً على الـ CenterId
+        public TenantDbContext CreateForCenter(int centerId)
         {
             var connectionString = BuildConnectionString(centerId);
-            var optionsBuilder = new DbContextOptionsBuilder<TenantDbContextFactory>();
+            var optionsBuilder = new DbContextOptionsBuilder<TenantDbContext>();
             optionsBuilder.UseMySql(
                 connectionString,
                 ServerVersion.AutoDetect(connectionString)
             );
-            return new TenantDbContextFactory(optionsBuilder.Options);
+            return new TenantDbContext(optionsBuilder.Options);
         }
 
+        // بتنشئ داتا بيس جديد وتطبق كل الجداول تلقائياً
         public async Task CreateTenantDatabaseAsync(int centerId)
         {
             var connectionString = BuildConnectionString(centerId);
@@ -32,6 +34,7 @@ namespace Sehatak.Infrastructure.Data
             await context.Database.MigrateAsync();
         }
 
+        // بتطبق الميجريشن على مركز واحد وترجع نتيجة واضحة
         public async Task<TenantMigrationResult> MigrateSingleTenantAsync(int centerId)
         {
             try
@@ -40,9 +43,7 @@ namespace Sehatak.Infrastructure.Data
                 await EnsureDatabaseCreated(connectionString);
 
                 using var context = CreateForCenter(centerId);
-
                 var pending = (await context.Database.GetPendingMigrationsAsync()).ToList();
-
                 await context.Database.MigrateAsync();
 
                 return new TenantMigrationResult
@@ -74,10 +75,10 @@ namespace Sehatak.Infrastructure.Data
 
         private async Task EnsureDatabaseCreated(string connectionString)
         {
-            var builder = new MySqlConnector.MySqlConnectionStringBuilder(connectionString);
+            var builder = new MySqlConnectionStringBuilder(connectionString);
             var databaseName = builder.Database;
             builder.Database = "";
-            using var connection = new MySqlConnector.MySqlConnection(builder.ConnectionString);
+            using var connection = new MySqlConnection(builder.ConnectionString);
             await connection.OpenAsync();
             var command = connection.CreateCommand();
             command.CommandText = $"CREATE DATABASE IF NOT EXISTS `{databaseName}`;";

@@ -26,12 +26,12 @@ namespace Sehatak.Infrastructure.Services.AssignFeatureToPlan
             if(plan == null) 
                 throw new BusinessException("Subscription.PlanNotFound");
 
-            var feature = await sharedDbContext.PlatformFeatures.FindAsync(request.featureId);
+            var feature = await sharedDbContext.PlatformFeatures.FindAsync(request.featureId,planId);
             if (feature == null)
                 throw new BusinessException("General.NotFound");
 
-            var alreadyLinke = await sharedDbContext.PlanFeatures.FirstOrDefaultAsync(p=> p.PlanId == planId && p.FeatureId == request.featureId);
-            if(alreadyLinke != null)
+            var alreadyLinked = await sharedDbContext.PlanFeatures.FirstOrDefaultAsync(p=> p.PlanId == planId && p.FeatureId == request.featureId);
+            if(alreadyLinked != null)
                 throw new BusinessException("General.NotFound");
 
             var planFeature = new PlanFeature

@@ -16,11 +16,11 @@ namespace Sehatak.Infrastructure.Services.CenterService
     public class centerService : ICenterService
     {
         private readonly SharedDbContext sharedDbContext;
-        private readonly TenantDbContextFactory tenantDbContext;
-        public centerService(SharedDbContext sharedDbContext , TenantDbContextFactory tenantDbContext)
+        private readonly TenantDbContextFactory tenantDbContextFactory;
+        public centerService(SharedDbContext sharedDbContext , TenantDbContextFactory tenantDbContextFactory)
         {
             this.sharedDbContext = sharedDbContext;
-            this.tenantDbContext = tenantDbContext;
+            this.tenantDbContextFactory = tenantDbContextFactory;
         }
 
         public async Task<CenterResponseDto> CreateCenterAsync(createCenterRequestDto request)
@@ -72,7 +72,7 @@ namespace Sehatak.Infrastructure.Services.CenterService
 
             await sharedDbContext.SaveChangesAsync();
 
-            await tenantDbContext.CreateTenantDatabaseAsync(center.Id);
+            await tenantDbContextFactory.CreateTenantDatabaseAsync(center.Id);
 
             center.CenterStatus = CenterStatus.Active;
             await sharedDbContext.SaveChangesAsync();

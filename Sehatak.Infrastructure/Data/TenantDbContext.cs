@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace Sehatak.Infrastructure.Data
 {
-    public class TenantDbContextFactory : DbContext
+    public class TenantDbContext : DbContext
     {
-        public TenantDbContextFactory(DbContextOptions<TenantDbContextFactory> options)
+        public TenantDbContext(DbContextOptions<TenantDbContext> options)
         : base(options) { }
 
         public DbSet<User> Users => Set<User>();
@@ -72,7 +72,7 @@ namespace Sehatak.Infrastructure.Data
                 entity.Property(entity => entity.address)
                       .HasMaxLength(500);
 
-                entity.Property(e=>e.ProfileImageUrl)
+                entity.Property(e => e.ProfileImageUrl)
                         .HasMaxLength(500);
 
                 entity.Property(e => e.role)
@@ -176,7 +176,7 @@ namespace Sehatak.Infrastructure.Data
                 entity.Property(e => e.DayOfWeek)
                       .HasConversion<string>();
 
-                entity.Property(e=>e.ShiftName)
+                entity.Property(e => e.ShiftName)
                       .HasMaxLength(100);
 
                 entity.HasOne(e => e.User)
@@ -441,7 +441,7 @@ namespace Sehatak.Infrastructure.Data
                       .HasForeignKey(e => e.AppointmentId)
                       .OnDelete(DeleteBehavior.SetNull);
 
-                
+
                 entity.HasOne(e => e.Consultation)
                       .WithMany()
                       .HasForeignKey(e => e.ConsultationId)
@@ -600,7 +600,7 @@ namespace Sehatak.Infrastructure.Data
             });
             // Email Verification Code
             modelBuilder.Entity<EmailVerificationCode>(e =>
-            { 
+            {
                 e.ToTable("email_verification_codes");
                 e.HasKey("Id");
 
@@ -617,3 +617,4 @@ namespace Sehatak.Infrastructure.Data
         }
     }
 }
+
