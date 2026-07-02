@@ -24,6 +24,13 @@ namespace Sehatak.API.Controllers.SuperAdmin
         }
 
 
+        [Authorize(Policy = "SuperAdminOnly")]
+        [HttpPatch("active-center/{centerId}")]
+        public async Task<IActionResult> ActiveCenter(int centerId)
+        {
+            var result = await centerStatusService.CenterStatusAsync(centerId);
+            return Ok(result);
+        }
 
     }
 }

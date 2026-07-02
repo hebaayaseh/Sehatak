@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using Sehatak.Application.DTOs.Exceptions;
 using Sehatak.Domain.Enums.SharedEnums;
 using Sehatak.Infrastructure.Data;
@@ -20,7 +21,7 @@ namespace Sehatak.Infrastructure.Services.CenterService
 
         public async Task<CenterStatus> SuspendedCenter(int centerId)
         {
-            var center = await sharedDbContext.MedicalCenters.FirstOrDefaultAsync(c=>c.Id == centerId);
+            var center = await sharedDbContext.MedicalCenters.FirstOrDefaultAsync(c=>c.Id == centerId && c.CenterStatus == CenterStatus.Active);
             if(center == null)
                 throw new BusinessException("Center.NotFound");
 
@@ -38,7 +39,27 @@ namespace Sehatak.Infrastructure.Services.CenterService
             return center.CenterStatus;
             
         }
-        
-       
+        public async Task<CenterStatus> CenterStatusAsync(int centerId)
+        {
+            var center = await sharedDbContext.MedicalCenters.FirstOrDefaultAsync(c => c.Id == centerId && c.CenterStatus == CenterStatus.Suspended);
+            if (center == null)
+                throw new BusinessException("Center.NotFound");
+
+            var subscription = await sharedDbContext.CenterSubscriptions
+                .FirstOrDefaultAsync(s => s.Center.Id == centerId && s.Status == SubscriptionStatus.Cancelled);
+
+            if (subscription == null)
+                throw new BusinessException("Subscription.PlanNotFound");
+
+            if (subscription.EndDate < DateOnly.FromDateTime(DateTime.UtcNow))
+                throw new BusinessException("Center.SubscriptionExpired");
+
+            center.CenterStatus = CenterStatus.Active;
+            subscription.Status = SubscriptionStatus.Active;
+            await sharedDbContext.SaveChangesAsync();
+
+            return center.CenterStatus;
+        }
+
     }
 }
