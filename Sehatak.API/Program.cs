@@ -242,8 +242,8 @@ namespace Sehatak.API
             builder.Services.AddScoped<IPlanFeatureService, PlanFeatureService>();
             builder.Services.AddScoped<ICenterService, centerService>();
             builder.Services.AddScoped<IListOfCenters, listOfCentersService>();
-
-
+            builder.Services.AddScoped<ISpasificCenter, SpasificCenterService>();
+            builder.Services.AddScoped<CenterStatusService>();
             var app = builder.Build();
 
             // MIDDLEWARE PIPELINE — الترتيب مهم جداً

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Sehatak.Application.Interfaces.Centers;
 
-namespace Sehatak.API.Controllers
+namespace Sehatak.API.Controllers.SuperAdmin
 {
     [ApiController]
     [Route("api/centers")]

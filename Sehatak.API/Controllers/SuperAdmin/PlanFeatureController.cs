@@ -4,7 +4,7 @@ using Sehatak.Application.DTOs.AssignFeaturesWithPlan;
 using Sehatak.Application.Interfaces.AssignFeatursToPlan;
 using Sehatak.Infrastructure.Services.AssignFeatureToPlan;
 
-namespace Sehatak.API.Controllers
+namespace Sehatak.API.Controllers.SuperAdmin
 {
     [ApiController]
     [Route("api/admin/plans/{planId}/features")]

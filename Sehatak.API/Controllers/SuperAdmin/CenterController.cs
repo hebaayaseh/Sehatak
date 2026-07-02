@@ -4,7 +4,7 @@ using Sehatak.Application.DTOs.CreateCenterRequestDto;
 using Sehatak.Application.Interfaces.MedicalCenter;
 using Sehatak.Infrastructure.Services.CenterService;
 
-namespace Sehatak.API.Controllers
+namespace Sehatak.API.Controllers.SuperAdmin
 {
     [ApiController]
     [Route("api/centers")]
