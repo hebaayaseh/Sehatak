@@ -17,9 +17,11 @@ using Sehatak.Application.Interfaces.AuthPatient;
 using Sehatak.Application.Interfaces.Centers;
 using Sehatak.Application.Interfaces.CentersStatus;
 using Sehatak.Application.Interfaces.Features;
-using Sehatak.Application.Interfaces.MedicalCenter;
 using Sehatak.Application.Interfaces.MedicalCenter;   
+using Sehatak.Application.Interfaces.MedicalCenter;
+using Sehatak.Application.Interfaces.MedicalCenter;
 using Sehatak.Application.Interfaces.Plans;
+using Sehatak.Application.Interfaces.RemoveFeatureFromCenter;
 using Sehatak.Application.Interfaces.SuperAdminInterface;
 using Sehatak.Infrastructure.Data;
 using Sehatak.Infrastructure.Data;
@@ -33,6 +35,7 @@ using Sehatak.Infrastructure.Services.CenterService;
 using Sehatak.Infrastructure.Services.FeatureService;
 using Sehatak.Infrastructure.Services.PatientRegisterAuth;
 using Sehatak.Infrastructure.Services.Plans;
+using Sehatak.Infrastructure.Services.RemoveFeatureFromCenter;
 using Sehatak.Infrastructure.Services.SuperAdminAuth;
 using Serilog;
 using Serilog;
@@ -248,7 +251,8 @@ namespace Sehatak.API
             builder.Services.AddScoped<ISpasificCenter, SpasificCenterService>();
             builder.Services.AddScoped<IAddFeatureToCenter, AddFeatureToCenterService>();
             builder.Services.AddScoped<ICentersStatus,CenterStatusService>();
-            
+            builder.Services.AddScoped<IRemoveFeatureFromCenter, RemoveFeatureFromCenterService>();
+
 
             var app = builder.Build();
 
