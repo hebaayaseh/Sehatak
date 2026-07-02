@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using Sehatak.Application.DTOs.Exceptions;
+using Sehatak.Application.Interfaces.CentersStatus;
 using Sehatak.Domain.Enums.SharedEnums;
 using Sehatak.Infrastructure.Data;
 using System;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Sehatak.Infrastructure.Services.CenterService
 {
-    public class CenterStatusService
+    public class CenterStatusService : ICentersStatus
     {
         private readonly SharedDbContext sharedDbContext;
         public CenterStatusService(SharedDbContext sharedDbContext)
@@ -19,7 +20,7 @@ namespace Sehatak.Infrastructure.Services.CenterService
             this.sharedDbContext = sharedDbContext;
         }
 
-        public async Task<CenterStatus> SuspendedCenter(int centerId)
+        public async Task<bool> SuspendedCenter(int centerId)
         {
             var center = await sharedDbContext.MedicalCenters.FirstOrDefaultAsync(c=>c.Id == centerId && c.CenterStatus == CenterStatus.Active);
             if(center == null)
@@ -36,10 +37,10 @@ namespace Sehatak.Infrastructure.Services.CenterService
             subscription.Status = SubscriptionStatus.Cancelled;
 
             await sharedDbContext.SaveChangesAsync();
-            return center.CenterStatus;
+            return true;
             
         }
-        public async Task<CenterStatus> CenterStatusAsync(int centerId)
+        public async Task<bool> ActiveCenter(int centerId)
         {
             var center = await sharedDbContext.MedicalCenters.FirstOrDefaultAsync(c => c.Id == centerId && c.CenterStatus == CenterStatus.Suspended);
             if (center == null)
@@ -58,8 +59,9 @@ namespace Sehatak.Infrastructure.Services.CenterService
             subscription.Status = SubscriptionStatus.Active;
             await sharedDbContext.SaveChangesAsync();
 
-            return center.CenterStatus;
+            return true;
         }
 
+        
     }
 }

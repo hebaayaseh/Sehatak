@@ -28,7 +28,7 @@ namespace Sehatak.API.Controllers.SuperAdmin
         [HttpPatch("active-center/{centerId}")]
         public async Task<IActionResult> ActiveCenter(int centerId)
         {
-            var result = await centerStatusService.CenterStatusAsync(centerId);
+            var result = await centerStatusService.ActiveCenter(centerId);
             return Ok(result);
         }
 

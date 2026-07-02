@@ -10,10 +10,12 @@ using Sehatak.API.Hubs;
 using Sehatak.API.Hubs;
 using Sehatak.API.Middleware;
 using Sehatak.API.Middleware;
+using Sehatak.Application.Interfaces.AddFeatureToCenter;
 using Sehatak.Application.Interfaces.AssignFeatursToPlan;
 using Sehatak.Application.Interfaces.AuditLog;
 using Sehatak.Application.Interfaces.AuthPatient;
 using Sehatak.Application.Interfaces.Centers;
+using Sehatak.Application.Interfaces.CentersStatus;
 using Sehatak.Application.Interfaces.Features;
 using Sehatak.Application.Interfaces.MedicalCenter;
 using Sehatak.Application.Interfaces.MedicalCenter;   
@@ -25,6 +27,7 @@ using Sehatak.Infrastructure.Security;
 using Sehatak.Infrastructure.Security;
 using Sehatak.Infrastructure.Services;
 using Sehatak.Infrastructure.Services;
+using Sehatak.Infrastructure.Services.AddFeatureToCenter;
 using Sehatak.Infrastructure.Services.AssignFeatureToPlan;
 using Sehatak.Infrastructure.Services.CenterService;
 using Sehatak.Infrastructure.Services.FeatureService;
@@ -243,7 +246,10 @@ namespace Sehatak.API
             builder.Services.AddScoped<ICenterService, centerService>();
             builder.Services.AddScoped<IListOfCenters, listOfCentersService>();
             builder.Services.AddScoped<ISpasificCenter, SpasificCenterService>();
-            builder.Services.AddScoped<CenterStatusService>();
+            builder.Services.AddScoped<IAddFeatureToCenter, AddFeatureToCenterService>();
+            builder.Services.AddScoped<ICentersStatus,CenterStatusService>();
+            
+
             var app = builder.Build();
 
             // MIDDLEWARE PIPELINE — الترتيب مهم جداً
