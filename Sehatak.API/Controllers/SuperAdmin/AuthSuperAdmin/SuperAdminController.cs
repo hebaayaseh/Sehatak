@@ -4,7 +4,7 @@ using Sehatak.Application.DTOs.SuperAdminDto;
 using Sehatak.Application.Interfaces.SuperAdminInterface;
 using Sehatak.Infrastructure.Services.SuperAdminAuth;
 
-namespace Sehatak.API.Controllers.SuperAdmin
+namespace Sehatak.API.Controllers.SuperAdmin.AuthSuperAdmin
 {
     [ApiController]
     [Route("api/superadmin")]

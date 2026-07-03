@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Sehatak.Application.DTOs.FeatureCenterDto;
 using Sehatak.Application.Interfaces.AddFeatureToCenter;
 
-namespace Sehatak.API.Controllers.SuperAdmin
+namespace Sehatak.API.Controllers.SuperAdmin.FeatureOperation
 {
     [ApiController]
     [Route("api/add-feature-to-center")]

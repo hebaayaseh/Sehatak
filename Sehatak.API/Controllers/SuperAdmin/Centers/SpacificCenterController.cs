@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Sehatak.Application.Interfaces.Centers;
 using Sehatak.Application.Interfaces.MedicalCenter;
 
-namespace Sehatak.API.Controllers.SuperAdmin
+namespace Sehatak.API.Controllers.SuperAdmin.Centers
 {
     [ApiController]
     [Route("api/spacific-center")]

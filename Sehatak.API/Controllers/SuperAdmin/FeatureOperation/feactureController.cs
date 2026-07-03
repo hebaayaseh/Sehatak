@@ -5,7 +5,7 @@ using Sehatak.Application.Interfaces.Features;
 using Sehatak.Domain.Entities.SharedEntities;
 using Sehatak.Infrastructure.Services.FeatureService;
 
-namespace Sehatak.API.Controllers.SuperAdmin
+namespace Sehatak.API.Controllers.SuperAdmin.FeatureOperation
 {
     [ApiController]
     [Route("api/feature")]

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Sehatak.Application.DTOs.FeatureCenterDto;
 using Sehatak.Application.Interfaces.RemoveFeatureFromCenter;
 
-namespace Sehatak.API.Controllers.SuperAdmin
+namespace Sehatak.API.Controllers.SuperAdmin.FeatureOperation
 {
     [ApiController]
     [Route("api/remove-feature-from-center")]
@@ -22,5 +22,6 @@ namespace Sehatak.API.Controllers.SuperAdmin
             var result = await removeFeatureFromCenterService.RemoveFeatureFromCenterAsync(centerId, featureId);
             return Ok(result);
         }
+
     }
 }

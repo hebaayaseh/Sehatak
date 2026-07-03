@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Sehatak.Domain.Enums.SharedEnums;
 using Sehatak.Infrastructure.Services.CenterService;
 
-namespace Sehatak.API.Controllers.SuperAdmin
+namespace Sehatak.API.Controllers.SuperAdmin.CenterStatus
 {
     [ApiController]
     [Route("api/center-status")]

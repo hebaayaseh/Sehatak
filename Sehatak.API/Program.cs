@@ -10,6 +10,7 @@ using Sehatak.API.Hubs;
 using Sehatak.API.Hubs;
 using Sehatak.API.Middleware;
 using Sehatak.API.Middleware;
+using Sehatak.Application.Interfaces;
 using Sehatak.Application.Interfaces.AddFeatureToCenter;
 using Sehatak.Application.Interfaces.AssignFeatursToPlan;
 using Sehatak.Application.Interfaces.AuditLog;
@@ -252,7 +253,7 @@ namespace Sehatak.API
             builder.Services.AddScoped<IAddFeatureToCenter, AddFeatureToCenterService>();
             builder.Services.AddScoped<ICentersStatus,CenterStatusService>();
             builder.Services.AddScoped<IRemoveFeatureFromCenter, RemoveFeatureFromCenterService>();
-
+            builder.Services.AddScoped<IActiveFeature, ActiveFeatureService>();
 
             var app = builder.Build();
 
