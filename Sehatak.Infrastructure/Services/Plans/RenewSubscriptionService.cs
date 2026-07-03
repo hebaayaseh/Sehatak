@@ -31,20 +31,22 @@ namespace Sehatak.Infrastructure.Services.Plans
                 throw new BusinessException("Center.NotFound");
 
             var currentSubscription = await sharedDbContext.CenterSubscriptions
-                .FirstOrDefaultAsync(c => c.CenterId == centerId
+                .Where(c => c.CenterId == centerId
                                        && (c.Status == SubscriptionStatus.Active
-                                           || c.Status == SubscriptionStatus.Expired));
+                                           || c.Status == SubscriptionStatus.Expired))
+                .ToListAsync();
 
             if (currentSubscription == null)
                 throw new BusinessException("Subscription.PlanNotFound");
 
-           
+            foreach (var sub in currentSubscription)
+            {
+                sub.Status = SubscriptionStatus.Expired;
+            }
+
             var newPlan = await sharedDbContext.SubscriptionPlans.FindAsync(request.newPlanId);
             if (newPlan == null)
                 throw new BusinessException("Subscription.PlanNotFound");
-
-           
-            currentSubscription.Status = SubscriptionStatus.Expired;
 
             
             var currentFeatures = await sharedDbContext.CenterFeatures

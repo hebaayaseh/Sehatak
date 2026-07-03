@@ -256,6 +256,8 @@ namespace Sehatak.API
             builder.Services.AddScoped<IRemoveFeatureFromCenter, RemoveFeatureFromCenterService>();
             builder.Services.AddScoped<IActiveFeature, ActiveFeatureService>();
             builder.Services.AddScoped<IRenewSubscription, RenewSubscriptionService>();
+            builder.Services.AddScoped<IGetAllFeature, GetAllFeatureService>();
+
 
             var app = builder.Build();
 
