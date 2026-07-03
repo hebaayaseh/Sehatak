@@ -1,48 +1,46 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Sehatak.Application.DTOs.Exceptions;
 using Sehatak.Application.DTOs.FeatureCenterDto;
-using Sehatak.Application.Interfaces.RemoveFeatureFromCenter;
+using Sehatak.Application.Interfaces;
 using Sehatak.Domain.Entities.SharedEntities;
 using Sehatak.Infrastructure.Data;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sehatak.Infrastructure.Services.RemoveFeatureFromCenter
+namespace Sehatak.Infrastructure.Services.Features.AddFeatureToCenter
 {
-    public class RemoveFeatureFromCenterService : IRemoveFeatureFromCenter
+    public class ActiveFeatureService : IActiveFeature
     {
         private readonly SharedDbContext sharedDbContext;
-        public RemoveFeatureFromCenterService(SharedDbContext sharedDbContext)
+        public ActiveFeatureService (SharedDbContext sharedDbContext)
         {
             this.sharedDbContext = sharedDbContext;
         }
-        public async Task<bool> RemoveFeatureFromCenterAsync(int centerId, RemoveFeatureFromCenterRequest request)
+        public async Task<bool> ActiveFeaturAsync(int centerId,ActiveFetureRequest request)
         {
             var center = await sharedDbContext.MedicalCenters.FindAsync(centerId);
-
             if (center == null)
             {
                 throw new BusinessException("Center.NotFound");
             }
-
-            var feature = await sharedDbContext.PlatformFeatures.FirstOrDefaultAsync(f=> f.Id == request.featureId);
+            var feature = await sharedDbContext.PlatformFeatures.FirstOrDefaultAsync(f => f.Id == request.FetureId);
             if (feature == null)
             {
                 throw new BusinessException("General.NotFound");
             }
 
-            var centerFeature = await sharedDbContext.CenterFeatures.FirstOrDefaultAsync(cf => cf.CenterId == centerId 
-            && cf.FeatureId == request.featureId);
-            if (centerFeature == null)
+            var existingCenterFeature = await sharedDbContext.CenterFeatures
+                .FirstOrDefaultAsync(cf => cf.CenterId == centerId && cf.FeatureId == request.FetureId && cf.IsEnabled==false);
+            if(existingCenterFeature == null)
             {
                 throw new BusinessException("General.NotFound");
             }
 
-            centerFeature.IsEnabled = false;
-
+            existingCenterFeature.IsEnabled = true;
             await sharedDbContext.SaveChangesAsync();
 
             return true;

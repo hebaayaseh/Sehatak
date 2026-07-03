@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sehatak.Infrastructure.Services.AddFeatureToCenter
+namespace Sehatak.Infrastructure.Services.Features.AddFeatureToCenter
 {
     public class AddFeatureToCenterService : IAddFeatureToCenter
     {

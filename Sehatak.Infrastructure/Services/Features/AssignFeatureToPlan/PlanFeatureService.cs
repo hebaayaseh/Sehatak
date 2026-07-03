@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sehatak.Infrastructure.Services.AssignFeatureToPlan
+namespace Sehatak.Infrastructure.Services.Features.AssignFeatureToPlan
 {
     public class PlanFeatureService : IPlanFeatureService
     {

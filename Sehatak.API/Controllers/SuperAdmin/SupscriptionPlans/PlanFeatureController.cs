@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Sehatak.Application.DTOs.AssignFeaturesWithPlan;
 using Sehatak.Application.Interfaces.AssignFeatursToPlan;
-using Sehatak.Infrastructure.Services.AssignFeatureToPlan;
 
 namespace Sehatak.API.Controllers.SuperAdmin.SupscriptionPlans
 {

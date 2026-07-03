@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sehatak.Infrastructure.Services.FeatureService
+namespace Sehatak.Infrastructure.Services.Features.FeatureService
 {
     public class featureService : IFeatureService
     {
