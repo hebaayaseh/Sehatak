@@ -238,7 +238,7 @@ namespace Sehatak.API
             builder.Services.AddScoped<IAuditLogService, AuditLogService>();
             builder.Services.AddScoped<TenantMigrationRunner>();
             builder.Services.AddScoped<ISuperAdminAuthService, SuperAdminAuthService>();
-            
+            builder.Services.AddScoped<TenantDbContextFactory>();
             // Auth flow — repositories بدون interface (تستخدم جوا AuthService بس)
 
 
