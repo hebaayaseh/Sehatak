@@ -25,12 +25,14 @@ using Sehatak.Application.Interfaces.Plans;
 using Sehatak.Application.Interfaces.RemoveFeatureFromCenter;
 using Sehatak.Application.Interfaces.RenewSubscription;
 using Sehatak.Application.Interfaces.SuperAdminInterface;
+using Sehatak.Domain.Enums.SharedEnums;
 using Sehatak.Infrastructure.Data;
 using Sehatak.Infrastructure.Data;
 using Sehatak.Infrastructure.Security;
 using Sehatak.Infrastructure.Security;
 using Sehatak.Infrastructure.Services;
 using Sehatak.Infrastructure.Services;
+using Sehatak.Infrastructure.Services.Background;
 using Sehatak.Infrastructure.Services.CenterService;
 using Sehatak.Infrastructure.Services.Features.AddFeatureToCenter;
 using Sehatak.Infrastructure.Services.Features.AssignFeatureToPlan;
@@ -239,6 +241,7 @@ namespace Sehatak.API
             builder.Services.AddScoped<TenantMigrationRunner>();
             builder.Services.AddScoped<ISuperAdminAuthService, SuperAdminAuthService>();
             builder.Services.AddScoped<TenantDbContextFactory>();
+            
             // Auth flow — repositories بدون interface (تستخدم جوا AuthService بس)
 
 
@@ -257,7 +260,9 @@ namespace Sehatak.API
             builder.Services.AddScoped<IActiveFeature, ActiveFeatureService>();
             builder.Services.AddScoped<IRenewSubscription, RenewSubscriptionService>();
             builder.Services.AddScoped<IGetAllFeature, GetAllFeatureService>();
+            
 
+            builder.Services.AddHostedService<SubscriptionActivationService>();
 
             var app = builder.Build();
 

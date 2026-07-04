@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Sehatak.Application.Interfaces.CentersStatus;
 using Sehatak.Domain.Enums.SharedEnums;
 using Sehatak.Infrastructure.Services.CenterService;
 
@@ -9,8 +10,8 @@ namespace Sehatak.API.Controllers.SuperAdmin.CenterStatus
     [Route("api/center-status")]
     public class CenterStatusController : ControllerBase
     {
-        private readonly CenterStatusService centerStatusService;
-        public CenterStatusController(CenterStatusService centerStatusService)
+        private readonly ICentersStatus centerStatusService;
+        public CenterStatusController(ICentersStatus centerStatusService)
         {
             this.centerStatusService = centerStatusService;
         }
