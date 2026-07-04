@@ -21,6 +21,7 @@ namespace Sehatak.Infrastructure.Services.Features.RemoveFeatureFromCenter
         }
         public async Task<bool> RemoveFeatureFromCenterAsync(int centerId, RemoveFeatureFromCenterRequest request)
         {
+            
             var center = await sharedDbContext.MedicalCenters.FindAsync(centerId);
 
             if (center == null)

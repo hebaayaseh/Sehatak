@@ -3,6 +3,7 @@ using Sehatak.Application.DTOs.Exceptions;
 using Sehatak.Application.DTOs.RenewSubscription;
 using Sehatak.Application.Interfaces.MedicalCenter;
 using Sehatak.Application.Interfaces.RenewSubscription;
+using Sehatak.Domain.Entities;
 using Sehatak.Domain.Entities.SharedEntities;
 using Sehatak.Domain.Enums.SharedEnums;
 using Sehatak.Infrastructure.Data;
@@ -23,69 +24,61 @@ namespace Sehatak.Infrastructure.Services.Plans
             this.sharedDbContext = sharedDbContext;
         }
 
-        public async Task<bool> RenewSubscriptionAsync(int centerId, RenewSubscriptionRequest request)
+        public async Task<bool> RenewActiveSubscriptionAsync(int centerId, RenewSubscriptionRequest request)
         {
-            var center = await sharedDbContext.MedicalCenters.FirstOrDefaultAsync(c => c.Id == centerId);
-
+            var center = await sharedDbContext.MedicalCenters.FindAsync(centerId);
             if (center == null)
                 throw new BusinessException("Center.NotFound");
 
             var currentSubscription = await sharedDbContext.CenterSubscriptions
-                .Where(c => c.CenterId == centerId
-                                       && (c.Status == SubscriptionStatus.Active
-                                           || c.Status == SubscriptionStatus.Expired))
-                .ToListAsync();
+                .FirstOrDefaultAsync(c => c.CenterId == centerId
+                                       && c.Status == SubscriptionStatus.Active);
 
             if (currentSubscription == null)
                 throw new BusinessException("Subscription.PlanNotFound");
 
-            foreach (var sub in currentSubscription)
-            {
-                sub.Status = SubscriptionStatus.Expired;
-            }
+            var pendingExists = await sharedDbContext.CenterSubscriptions
+                .AnyAsync(c => c.CenterId == centerId && c.Status == SubscriptionStatus.Pending);
+            if (pendingExists)
+                throw new BusinessException("Subscription.Renewed"); 
+
 
             var newPlan = await sharedDbContext.SubscriptionPlans.FindAsync(request.newPlanId);
             if (newPlan == null)
                 throw new BusinessException("Subscription.PlanNotFound");
 
             
-            var currentFeatures = await sharedDbContext.CenterFeatures
-                .Where(cf => cf.CenterId == centerId)
-                .ToListAsync();
-            sharedDbContext.CenterFeatures.RemoveRange(currentFeatures);   
-
-           
             var newSubscription = new CenterSubscription
             {
                 CenterId = centerId,
                 PlanId = request.newPlanId,
-                Status = SubscriptionStatus.Active,
-                StartDate = DateOnly.FromDateTime(DateTime.UtcNow),
-                EndDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(newPlan.DurationDays)),
-                AmountPaid = newPlan.Price
+                Status = SubscriptionStatus.Pending,
+                StartDate = currentSubscription.EndDate,
+                EndDate = currentSubscription.EndDate.AddDays(newPlan.DurationDays),
+                AmountPaid = newPlan.Price,
+                
             };
-            await sharedDbContext.CenterSubscriptions.AddAsync(newSubscription);
 
-            
-            var newPlanFeatureIds = await sharedDbContext.PlanFeatures
-                .Where(pf => pf.PlanId == request.newPlanId)
-                .Select(pf => pf.FeatureId)
-                .ToListAsync();
-
-            foreach (var featureId in newPlanFeatureIds)
+            if (request.PaymentReference != null)
             {
-                await sharedDbContext.CenterFeatures.AddAsync(new CenterFeature
-                {
-                    CenterId = centerId,
-                    FeatureId = featureId,
-                    IsEnabled = true
-                });
-            }
 
+                var fileName = Guid.NewGuid() + Path.GetExtension(request.PaymentReference.FileName);
+
+                var path = Path.Combine("wwwroot/uploads/logos", fileName);
+
+                using (var stream = new FileStream(path, FileMode.Create))
+                {
+                    await request.PaymentReference.CopyToAsync(stream);
+                }
+
+                newSubscription.PaymentReference = $"/uploads/logos/{fileName}";
+            }
+            
+            await sharedDbContext.CenterSubscriptions.AddAsync(newSubscription);
             await sharedDbContext.SaveChangesAsync();
             return true;
-
         }
+        
     }
 }
 

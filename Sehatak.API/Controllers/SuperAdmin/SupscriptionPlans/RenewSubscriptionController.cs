@@ -16,10 +16,10 @@ namespace Sehatak.API.Controllers.SuperAdmin.SupscriptionPlans
         }
 
         [Authorize(Policy = "SuperAdminOnly")]
-        [HttpPost("renew-subscription/{centerId}")]
-        public async Task<IActionResult> RenewSubscription(int centerId, [FromBody] RenewSubscriptionRequest request)
+        [HttpPost("renew-active-subscription/{centerId}")]
+        public async Task<IActionResult> RenewActiveSubscription(int centerId, [FromBody] RenewSubscriptionRequest request)
         {
-            var result = await renewSubscriptionService.RenewSubscriptionAsync(centerId, request);
+            var result = await renewSubscriptionService.RenewActiveSubscriptionAsync(centerId, request);
             return Ok(result);
         }
     }

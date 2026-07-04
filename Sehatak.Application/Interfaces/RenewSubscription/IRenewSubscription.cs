@@ -9,6 +9,6 @@ namespace Sehatak.Application.Interfaces.RenewSubscription
 {
     public interface IRenewSubscription
     {
-        Task<bool> RenewSubscriptionAsync(int centerId,RenewSubscriptionRequest request);
+        Task<bool> RenewActiveSubscriptionAsync(int centerId,RenewSubscriptionRequest request);
     }
 }
