@@ -18,6 +18,7 @@ using Sehatak.Application.Interfaces.AuthPatient;
 using Sehatak.Application.Interfaces.Centers;
 using Sehatak.Application.Interfaces.CentersStatus;
 using Sehatak.Application.Interfaces.Features;
+using Sehatak.Application.Interfaces.ISuperDaminProfile;
 using Sehatak.Application.Interfaces.MedicalCenter;
 using Sehatak.Application.Interfaces.MedicalCenter;
 using Sehatak.Application.Interfaces.MedicalCenter;
@@ -260,7 +261,7 @@ namespace Sehatak.API
             builder.Services.AddScoped<IActiveFeature, ActiveFeatureService>();
             builder.Services.AddScoped<IRenewSubscription, RenewSubscriptionService>();
             builder.Services.AddScoped<IGetAllFeature, GetAllFeatureService>();
-            
+            builder.Services.AddScoped<IProfile, SuperAdminProfileService>();
 
             builder.Services.AddHostedService<SubscriptionActivationService>();
 
