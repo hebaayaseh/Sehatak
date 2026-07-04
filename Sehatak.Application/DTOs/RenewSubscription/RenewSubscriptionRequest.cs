@@ -11,7 +11,7 @@ namespace Sehatak.Application.DTOs.RenewSubscription
     {
         public int oldPlanId { get; set; }
         public int newPlanId { get; set; }
-        public IFormFile? PaymentReference { get; set; }
+        
 
     }
 }
