@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Sehatak.Application.DTOs.EditProfile;
 using Sehatak.Application.DTOs.SuperAdminProfile;
 using Sehatak.Application.Interfaces.ISuperDaminProfile;
 
@@ -25,12 +26,35 @@ namespace Sehatak.API.Controllers.SuperAdmin.SuperAdminProfile
         }
 
         [Authorize(Policy = "SuperAdminOnly")]
-        [HttpGet("super-admin-edit-profile/{superAdminId}")]
-
-        public async Task<IActionResult> superAdminEditEmail(int superAdminId,[FromBody]EditEmailRequest request)
+        [HttpGet("super-admin-edit-email/{superAdminId}")]
+        public async Task<IActionResult> EditEmail(int superAdminId , EditEmailRequest request)
         {
-            var reault = await profile.EditProfile(superAdminId,request);
-            return Ok(reault);
+            var result = await profile.EditEmail(superAdminId, request);
+            return Ok(result);
+        }
+
+        [Authorize(Policy = "SuperAdminOnly")]
+        [HttpGet("super-admin-edit-password/{superAdminId}")]
+        public async Task<IActionResult> EditPassword(int superAdminId, EditPasswordRequest request)
+        {
+            var result = await profile.EditPassword(superAdminId, request);
+            return Ok(result);
+        }
+
+        [Authorize(Policy = "SuperAdminOnly")]
+        [HttpGet("super-admin-edit-name/{superAdminId}")]
+        public async Task<IActionResult> EditName(int superAdminId, EditNameRequest request)
+        {
+            var result = await profile.EditName(superAdminId, request);
+            return Ok(result);
+        }
+
+        [Authorize(Policy = "SuperAdminOnly")]
+        [HttpGet("super-admin-edit-profile-image/{superAdminId}")]
+        public async Task<IActionResult> EditProfileImage(int superAdminId, EditProfileImageRequest request)
+        {
+            var result = await profile.EditProfileImage(superAdminId, request);
+            return Ok(result);
         }
 
     }
