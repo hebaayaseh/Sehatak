@@ -10,7 +10,6 @@ using Sehatak.API.Hubs;
 using Sehatak.API.Hubs;
 using Sehatak.API.Middleware;
 using Sehatak.API.Middleware;
-using Sehatak.Application.Interfaces;
 using Sehatak.Application.Interfaces.AddFeatureToCenter;
 using Sehatak.Application.Interfaces.AssignFeatursToPlan;
 using Sehatak.Application.Interfaces.AuditLog;

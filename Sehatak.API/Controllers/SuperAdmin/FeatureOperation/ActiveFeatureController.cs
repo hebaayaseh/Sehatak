@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Sehatak.Application.DTOs.FeatureCenterDto;
-using Sehatak.Application.Interfaces;
+using Sehatak.Application.Interfaces.Features;
 
 namespace Sehatak.API.Controllers.SuperAdmin.FeatureOperation
 {

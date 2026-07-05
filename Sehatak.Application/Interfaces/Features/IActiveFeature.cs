@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sehatak.Application.Interfaces
+namespace Sehatak.Application.Interfaces.Features
 {
     public interface IActiveFeature
     {

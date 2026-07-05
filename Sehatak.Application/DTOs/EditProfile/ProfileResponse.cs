@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Sehatak.Application.DTOs.SuperAdminProfile
 {
-    public class SuperAdminProfileResponse
+    public class ProfileResponse
     {
         public string Name { get; set; }
         public string Phone { get; set; }
