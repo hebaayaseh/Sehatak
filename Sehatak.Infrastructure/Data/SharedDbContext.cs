@@ -19,6 +19,7 @@ namespace Sehatak.Infrastructure.Data
         public DbSet<PlatformFeature> PlatformFeatures => Set<PlatformFeature>();
         public DbSet<PlanFeature> PlanFeatures => Set<PlanFeature>();
         public DbSet<CenterFeature> CenterFeatures => Set<CenterFeature>();
+        public DbSet<SubscriptionPayment> subscriptionPayments=> Set<SubscriptionPayment>();
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -189,6 +190,33 @@ namespace Sehatak.Infrastructure.Data
                 entity.Property(e => e.Status)
                       .HasConversion<string>();
             });
+            // SubscriptionPayment 
+            modelBuilder.Entity<SubscriptionPayment>(entity =>
+            {
+                entity.ToTable("subscription_payments");
+                entity.HasKey(entity => entity.Id);
+
+                entity.Property(e => e.Amount).HasPrecision(10, 2);
+                entity.Property(e => e.PaymentMethod).IsRequired().HasMaxLength(50);
+                entity.Property(e => e.ReferenceNumber).HasMaxLength(100);
+
+                entity.HasOne(e => e.Center)
+                .WithMany()
+                .HasForeignKey(e => e.CenterId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(e => e.Subscription)
+                .WithMany()
+                .HasForeignKey(e => e.SubscriptionId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(e => e.RecordedBy)
+                .WithMany()
+                .HasForeignKey(e => e.RecordedBySuperAdminId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            });
+
         }
     }
 }
