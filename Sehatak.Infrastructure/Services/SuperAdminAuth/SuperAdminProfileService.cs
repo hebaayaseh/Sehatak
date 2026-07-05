@@ -1,4 +1,5 @@
 ﻿using DocumentFormat.OpenXml.Spreadsheet;
+using Microsoft.EntityFrameworkCore;
 using Sehatak.Application.DTOs.EditProfile;
 using Sehatak.Application.DTOs.Exceptions;
 using Sehatak.Application.DTOs.PatienRegisterDto;
@@ -32,19 +33,19 @@ namespace Sehatak.Infrastructure.Services.SuperAdminAuth
             if (superAdmin == null)
                 throw new BusinessException("Auth.Unauthorized");
 
-            if (superAdmin.Email == request.Email)
+            var exists = await sharedDbContext.SuperAdmins
+                .AnyAsync(x => x.Email == request.Email);
+
+            if (exists)
                 throw new BusinessException("General.NotFound");
 
-            var editEmail = new SuperAdmin 
-            { 
-                Email = request.Email,
-            };
+            superAdmin.Email = request.Email;
 
             await sharedDbContext.SaveChangesAsync();
 
             return new EmailResponse
             {
-                Email = editEmail.Email,
+                Email = superAdmin.Email,
             };
 
         }
@@ -54,16 +55,15 @@ namespace Sehatak.Infrastructure.Services.SuperAdminAuth
             var superAdmin = await sharedDbContext.SuperAdmins.FindAsync(superAdminId);
             if (superAdmin == null)
                 throw new BusinessException("Auth.Unauthorized");
+
             if (superAdmin.Name == request.Name)
                 throw new BusinessException("General.NotFound");
 
-            var name = new SuperAdmin
-            {
-                Name = request.Name
-            };
+            superAdmin.Name = request.Name;
 
             await sharedDbContext.SaveChangesAsync();
-            return new NameResponse { Name = name.Name };
+
+            return new NameResponse { Name = superAdmin.Name };
 
 
         }
@@ -73,8 +73,7 @@ namespace Sehatak.Infrastructure.Services.SuperAdminAuth
             var superAdmin = await sharedDbContext.SuperAdmins.FindAsync(superAdminId);
             if (superAdmin == null)
                 throw new BusinessException("Auth.Unauthorized");
-            request.PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.PasswordHash);
-            request.ConfirmPassword = BCrypt.Net.BCrypt.HashPassword(request.ConfirmPassword);
+
 
             if (request.PasswordHash != request.ConfirmPassword)
                 throw new BusinessException("General.NotFound");
@@ -82,10 +81,7 @@ namespace Sehatak.Infrastructure.Services.SuperAdminAuth
             if (superAdmin.PasswordHash == request.PasswordHash)
                 throw new BusinessException("General.NotFound");
 
-            var newPassword = new SuperAdmin
-            {
-                PasswordHash = request.PasswordHash
-            };
+            superAdmin.PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.PasswordHash);
 
             await sharedDbContext.SaveChangesAsync();
             return new PasswordResponse { message = "Password Update Succses" };
@@ -96,6 +92,7 @@ namespace Sehatak.Infrastructure.Services.SuperAdminAuth
             var superAdmin = await sharedDbContext.SuperAdmins.FindAsync(superAdminId);
             if (superAdmin == null)
                 throw new BusinessException("Auth.Unauthorized");
+
             if (request.ImageFile == null)
                 throw new BusinessException("General.NotFound");
 
@@ -110,15 +107,14 @@ namespace Sehatak.Infrastructure.Services.SuperAdminAuth
 
             superAdmin.ProfileImageUrl = $"/uploads/logos/{fileName}";
 
-            var newImage = new SuperAdmin
-            {
-                ProfileImageUrl = superAdmin.ProfileImageUrl
-            };
+
+            superAdmin.ProfileImageUrl = superAdmin.ProfileImageUrl;
+            
             await sharedDbContext.SaveChangesAsync();
 
             return new ProfileImageResponse
             {
-                profileImage = newImage.ProfileImageUrl
+                profileImage = superAdmin.ProfileImageUrl
             };
 
         }
@@ -128,6 +124,7 @@ namespace Sehatak.Infrastructure.Services.SuperAdminAuth
             var superAdmin = await sharedDbContext.SuperAdmins.FindAsync(superAdminId);
             if (superAdmin == null)
                 throw new BusinessException("Auth.Unauthorized");
+
             string? Image = null;
             if (!string.IsNullOrEmpty(superAdmin.ProfileImageUrl))
             {

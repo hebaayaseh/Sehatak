@@ -34,3 +34,80 @@ System.InvalidOperationException: Unable to resolve service for type 'Sehatak.Ap
    at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
    at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
    at Sehatak.API.Middleware.ExceptionMiddleware.InvokeAsync(HttpContext context) in C:\Users\hebah\source\repos\Sehatak_TenantClinic\Sehatak.API\Middleware\ExceptionMiddleware.cs:line 26
+2026-07-05 03:51:48 [ERR] Unhandled exception occurred. Path: /super-admin-profile/super-admin-edit-password/1, Method: POST {"SourceContext":"Sehatak.API.Middleware.ExceptionMiddleware","RequestId":"0HNMQ5TIOEII5:0000000F","RequestPath":"/super-admin-profile/super-admin-edit-password/1","ConnectionId":"0HNMQ5TIOEII5"}
+Sehatak.Application.DTOs.Exceptions.BusinessException: General.NotFound
+   at Sehatak.Infrastructure.Services.SuperAdminAuth.SuperAdminProfileService.EditPassword(Int32 superAdminId, EditPasswordRequest request) in C:\Users\hebah\source\repos\Sehatak_TenantClinic\Sehatak.Infrastructure\Services\SuperAdminAuth\SuperAdminProfileService.cs:line 80
+   at Sehatak.API.Controllers.SuperAdmin.SuperAdminProfile.SuperAdminProfileController.EditPassword(Int32 superAdminId, EditPasswordRequest request) in C:\Users\hebah\source\repos\Sehatak_TenantClinic\Sehatak.API\Controllers\SuperAdmin\SuperAdminProfile\SuperAdminProfileController.cs:line 40
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Localization.RequestLocalizationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Sehatak.API.Middleware.ExceptionMiddleware.InvokeAsync(HttpContext context) in C:\Users\hebah\source\repos\Sehatak_TenantClinic\Sehatak.API\Middleware\ExceptionMiddleware.cs:line 26
+2026-07-05 03:51:56 [ERR] Unhandled exception occurred. Path: /super-admin-profile/super-admin-edit-password/1, Method: POST {"SourceContext":"Sehatak.API.Middleware.ExceptionMiddleware","RequestId":"0HNMQ5TIOEII5:00000011","RequestPath":"/super-admin-profile/super-admin-edit-password/1","ConnectionId":"0HNMQ5TIOEII5"}
+Sehatak.Application.DTOs.Exceptions.BusinessException: General.NotFound
+   at Sehatak.Infrastructure.Services.SuperAdminAuth.SuperAdminProfileService.EditPassword(Int32 superAdminId, EditPasswordRequest request) in C:\Users\hebah\source\repos\Sehatak_TenantClinic\Sehatak.Infrastructure\Services\SuperAdminAuth\SuperAdminProfileService.cs:line 80
+   at Sehatak.API.Controllers.SuperAdmin.SuperAdminProfile.SuperAdminProfileController.EditPassword(Int32 superAdminId, EditPasswordRequest request) in C:\Users\hebah\source\repos\Sehatak_TenantClinic\Sehatak.API\Controllers\SuperAdmin\SuperAdminProfile\SuperAdminProfileController.cs:line 40
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Localization.RequestLocalizationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Sehatak.API.Middleware.ExceptionMiddleware.InvokeAsync(HttpContext context) in C:\Users\hebah\source\repos\Sehatak_TenantClinic\Sehatak.API\Middleware\ExceptionMiddleware.cs:line 26
+2026-07-05 03:52:15 [ERR] Unhandled exception occurred. Path: /super-admin-profile/super-admin-edit-password/1, Method: POST {"SourceContext":"Sehatak.API.Middleware.ExceptionMiddleware","RequestId":"0HNMQ5TIOEII5:00000013","RequestPath":"/super-admin-profile/super-admin-edit-password/1","ConnectionId":"0HNMQ5TIOEII5"}
+Sehatak.Application.DTOs.Exceptions.BusinessException: General.NotFound
+   at Sehatak.Infrastructure.Services.SuperAdminAuth.SuperAdminProfileService.EditPassword(Int32 superAdminId, EditPasswordRequest request) in C:\Users\hebah\source\repos\Sehatak_TenantClinic\Sehatak.Infrastructure\Services\SuperAdminAuth\SuperAdminProfileService.cs:line 80
+   at Sehatak.API.Controllers.SuperAdmin.SuperAdminProfile.SuperAdminProfileController.EditPassword(Int32 superAdminId, EditPasswordRequest request) in C:\Users\hebah\source\repos\Sehatak_TenantClinic\Sehatak.API\Controllers\SuperAdmin\SuperAdminProfile\SuperAdminProfileController.cs:line 40
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Localization.RequestLocalizationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Sehatak.API.Middleware.ExceptionMiddleware.InvokeAsync(HttpContext context) in C:\Users\hebah\source\repos\Sehatak_TenantClinic\Sehatak.API\Middleware\ExceptionMiddleware.cs:line 26
+2026-07-05 04:05:07 [ERR] Unhandled exception occurred. Path: /super-admin-profile/super-admin-edit-password/1, Method: POST {"SourceContext":"Sehatak.API.Middleware.ExceptionMiddleware","RequestId":"0HNMQ6508Q0UP:0000000F","RequestPath":"/super-admin-profile/super-admin-edit-password/1","ConnectionId":"0HNMQ6508Q0UP"}
+Sehatak.Application.DTOs.Exceptions.BusinessException: General.NotFound
+   at Sehatak.Infrastructure.Services.SuperAdminAuth.SuperAdminProfileService.EditPassword(Int32 superAdminId, EditPasswordRequest request) in C:\Users\hebah\source\repos\Sehatak_TenantClinic\Sehatak.Infrastructure\Services\SuperAdminAuth\SuperAdminProfileService.cs:line 79
+   at Sehatak.API.Controllers.SuperAdmin.SuperAdminProfile.SuperAdminProfileController.EditPassword(Int32 superAdminId, EditPasswordRequest request) in C:\Users\hebah\source\repos\Sehatak_TenantClinic\Sehatak.API\Controllers\SuperAdmin\SuperAdminProfile\SuperAdminProfileController.cs:line 40
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Localization.RequestLocalizationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Sehatak.API.Middleware.ExceptionMiddleware.InvokeAsync(HttpContext context) in C:\Users\hebah\source\repos\Sehatak_TenantClinic\Sehatak.API\Middleware\ExceptionMiddleware.cs:line 26
