@@ -24,7 +24,7 @@ namespace Sehatak.Infrastructure.Services.Plans
             this.sharedDbContext = sharedDbContext;
         }
 
-        public async Task<bool> RenewActiveSubscriptionAsync(int centerId, RenewSubscriptionRequest request)
+        public async Task<RenewSubscriptionResponseDto> RenewActiveSubscriptionAsync(int centerId, RenewSubscriptionRequest request)
         {
             var center = await sharedDbContext.MedicalCenters.FindAsync(centerId);
             if (center == null)
@@ -59,70 +59,63 @@ namespace Sehatak.Infrastructure.Services.Plans
                 
             };
 
-            
-            
             await sharedDbContext.CenterSubscriptions.AddAsync(newSubscription);
             await sharedDbContext.SaveChangesAsync();
-            return true;
+
+            return new RenewSubscriptionResponseDto
+            {
+                SubscriptionId = newSubscription.Id,
+                CenterId = centerId,
+                PlanName = newPlan.Name,
+                Amount = newPlan.Price,
+                StartDate = newSubscription.StartDate,
+                EndDate = newSubscription.EndDate,
+                Status = newSubscription.Status,
+                Message = "Subscription.RenewedPendingPayment"
+            };
         }
-        public async Task<bool> RenewExpiredSubscriptionAsync(int centerId, RenewSubscriptionRequest request)
+
+        public async Task<RenewSubscriptionResponseDto> RenewExpiredSubscriptionAsync(int centerId, RenewSubscriptionRequest request)
         {
+          
             var center = await sharedDbContext.MedicalCenters.FindAsync(centerId);
             if (center == null)
                 throw new BusinessException("Center.NotFound");
 
-            var currentSubscription = await sharedDbContext.CenterSubscriptions
-                .FirstOrDefaultAsync(c => c.CenterId == centerId && 
-                c.PlanId == request.oldPlanId&& c.Status == SubscriptionStatus.Expired);
-
-            if (currentSubscription == null)
+            var expiredSubscription = await sharedDbContext.CenterSubscriptions
+                .FirstOrDefaultAsync(c => c.CenterId == centerId
+                                       && c.Status == SubscriptionStatus.Expired);
+            if (expiredSubscription == null)
                 throw new BusinessException("Subscription.PlanNotFound");
 
             var newPlan = await sharedDbContext.SubscriptionPlans.FindAsync(request.newPlanId);
-            if (newPlan == null)
+            if (newPlan == null || !newPlan.IsActive)
                 throw new BusinessException("Subscription.PlanNotFound");
-
-            if (request.newPlanId != request.oldPlanId)
-            {
-                var oldFeatures = await sharedDbContext.CenterFeatures
-                    .Where(c => c.CenterId == centerId)
-                    .ToListAsync();
-
-                sharedDbContext.CenterFeatures.RemoveRange(oldFeatures);
-
-                var newFeatures = await sharedDbContext.PlanFeatures
-                    .Where(p => p.PlanId == request.newPlanId)
-                    .Select(p => p.FeatureId)
-                    .ToListAsync();
-
-                foreach (var featureId in newFeatures)
-                {
-                    sharedDbContext.CenterFeatures.Add(new CenterFeature
-                    {
-                        CenterId = centerId,
-                        FeatureId = featureId,
-                        IsEnabled = true
-                    });
-                }
-            }
 
             var newSubscription = new CenterSubscription
             {
                 CenterId = centerId,
                 PlanId = request.newPlanId,
-                Status = SubscriptionStatus.Active,
-                StartDate = DateOnly.FromDateTime(DateTime.Now),
-                EndDate = DateOnly.FromDateTime(DateTime.Now.AddDays(newPlan.DurationDays)),
-                AmountPaid = newPlan.Price,
+                Status = SubscriptionStatus.Pending,  
+                StartDate = DateOnly.FromDateTime(DateTime.UtcNow),
+                EndDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(newPlan.DurationDays)),
+                AmountPaid = newPlan.Price
             };
-            
-            if (center.CenterStatus == CenterStatus.Suspended)
-                center.CenterStatus = CenterStatus.Active;
 
             await sharedDbContext.CenterSubscriptions.AddAsync(newSubscription);
             await sharedDbContext.SaveChangesAsync();
-            return true;
 
+            return new RenewSubscriptionResponseDto
+            {
+                SubscriptionId = newSubscription.Id,
+                CenterId = centerId,
+                PlanName = newPlan.Name,
+                Amount = newPlan.Price,
+                StartDate = newSubscription.StartDate,
+                EndDate = newSubscription.EndDate,
+                Status = newSubscription.Status,
+                Message = "Subscription.RenewedPendingPayment"
+            };
 
         }
     }
