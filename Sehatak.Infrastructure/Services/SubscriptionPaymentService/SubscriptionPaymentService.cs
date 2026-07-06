@@ -75,6 +75,38 @@ namespace Sehatak.Infrastructure.Services.SubscriptionPaymentService
 
         }
 
+        public async Task<List<PaymentResponseDto>> GetCenterPaymentsAsync(int centerId)
+        {
+            var center = await sharedDbContext.MedicalCenters.FirstOrDefaultAsync(c => c.Id == centerId);
+            if (center == null)
+                throw new BusinessException("Center.NotFound");
+
+            return await sharedDbContext.subscriptionPayments
+                .Include(c => c.Center)
+                .Include(s => s.RecordedBy)
+                .Where(c => c.CenterId == centerId)
+                .OrderByDescending(p => p.PaidAt)
+                .Select(p => new PaymentResponseDto
+                {
+                    Id = p.Id,
+                    CenterId = p.CenterId,
+                    CenterName = p.Center.Name,
+                    SubscriptionId = p.SubscriptionId,
+                    Amount = p.Amount,
+                    PaymentMethod = p.PaymentMethod,
+                    ReferenceNumber = p.ReferenceNumber,
+                    ReceiptImageUrl = p.ReceiptImageUrl,
+                    PaidAt = p.PaidAt,
+                    RecordedBy = p.RecordedBy != null ? p.RecordedBy.Name : "Pending",
+                    Notes = p.Notes,
+                    IsConfirmed = p.RecordedBySuperAdminId != null
+
+                }).ToListAsync();
+
+        }
+
+        
+
 
         }
     }
