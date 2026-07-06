@@ -131,7 +131,81 @@ namespace Sehatak.Infrastructure.Services.SubscriptionPaymentService
             
         }
 
-       
+        public async Task<PaymentResponseDto> RecordPaymentAsync(recordPaymentRequestDto request, int centerId)
+        {
+            var center = await sharedDbContext.MedicalCenters.FindAsync(centerId);
+            if (center == null)
+                throw new BusinessException("Center.NotFound");
+
+            var supscriptionCenter = await sharedDbContext.CenterSubscriptions
+                .FirstOrDefaultAsync(c => c.Id == request.SubscriptionId 
+                                     && c.CenterId == centerId
+                                     && c.Status == SubscriptionStatus.Pending);
+            if (supscriptionCenter == null)
+                throw new BusinessException("Subscription.NotFound");
+
+            var paymentExists = await sharedDbContext.subscriptionPayments
+           .AnyAsync(p => p.SubscriptionId == request.SubscriptionId);
+            if (paymentExists)
+                throw new BusinessException("General.NotFound");
+
+            string? receiptImageUrl = null;
+            if (request.ReceiptImage != null)
+            {
+                var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".pdf" };
+                var extension = Path.GetExtension(request.ReceiptImage.FileName).ToLower();
+                if (!allowedExtensions.Contains(extension))
+                    throw new BusinessException("Validation.InvalidFileType");
+
+                if (request.ReceiptImage.Length > 5 * 1024 * 1024)
+                    throw new BusinessException("Validation.FileTooLarge");
+
+                var webRoot = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+                var uploadsFolder = Path.Combine(webRoot, "uploads", "receipts");
+                Directory.CreateDirectory(uploadsFolder);
+
+                var fileName = $"{Guid.NewGuid()}{Path.GetExtension(request.ReceiptImage.FileName)}";
+                var filePath = Path.Combine(uploadsFolder, fileName);
+
+                using var stream = new FileStream(filePath, FileMode.Create);
+                await request.ReceiptImage.CopyToAsync(stream);
+
+                receiptImageUrl = $"/uploads/receipts/{fileName}";
+            }
+
+            var payment = new SubscriptionPayment
+            {
+                CenterId = centerId,
+                SubscriptionId = request.SubscriptionId,
+                Amount = supscriptionCenter.Plan.Price,  
+                PaymentMethod = request.PaymentMethod,
+                ReferenceNumber = request.ReferenceNumber,
+                ReceiptImageUrl = receiptImageUrl,
+                Notes = request.Notes,
+                PaidAt = DateTime.UtcNow,
+                RecordedBySuperAdminId = null
+
+            };
+
+            await sharedDbContext.subscriptionPayments.AddAsync(payment);
+            await sharedDbContext.SaveChangesAsync();
+
+            return new PaymentResponseDto
+            {
+                Id = payment.Id,
+                CenterId = payment.CenterId,
+                CenterName = center.Name,
+                SubscriptionId = payment.SubscriptionId,
+                Amount = payment.Amount,
+                PaymentMethod = payment.PaymentMethod,
+                ReferenceNumber = payment.ReferenceNumber,
+                ReceiptImageUrl = payment.ReceiptImageUrl,
+                PaidAt = payment.PaidAt,
+                Notes = payment.Notes,
+                IsConfirmed = false
+            };
+
+
         }
     }
 }
