@@ -105,9 +105,33 @@ namespace Sehatak.Infrastructure.Services.SubscriptionPaymentService
 
         }
 
-        
+        public async Task<List<PaymentResponseDto>> GetPendingPaymentsAsync()
+        {
+           
+                return await sharedDbContext.subscriptionPayments
+                .Include(p => p.Center)
+                .Include(p => p.Subscription).ThenInclude(s => s.Plan)
+                .Where(p => p.RecordedBySuperAdminId==null)
+                .OrderByDescending(p => p.PaidAt)
+                .Select(p => new PaymentResponseDto
+                {
+                    Id = p.Id,
+                    CenterId = p.CenterId,
+                    CenterName = p.Center.Name,
+                    SubscriptionId = p.SubscriptionId,
+                    Amount = p.Amount,
+                    PaymentMethod = p.PaymentMethod,
+                    ReferenceNumber = p.ReferenceNumber,
+                    ReceiptImageUrl = p.ReceiptImageUrl,
+                    PaidAt = p.PaidAt,
+                    Notes = p.Notes,
+                    IsConfirmed = false
 
+                }).ToListAsync();
+            
+        }
 
+       
         }
     }
 }
