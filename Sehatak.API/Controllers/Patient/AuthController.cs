@@ -4,7 +4,7 @@ using Microsoft.Extensions.Localization;
 using Sehatak.Application.DTOs.PatienRegisterDto;
 using Sehatak.Application.Interfaces.AuthPatient;
 
-namespace Sehatak.API.Controllers
+namespace Sehatak.API.Controllers.Patient
 {
     [ApiController]
     [Route("api/auth")]

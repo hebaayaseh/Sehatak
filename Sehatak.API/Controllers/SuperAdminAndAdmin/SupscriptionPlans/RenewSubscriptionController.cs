@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Sehatak.Application.DTOs.RenewSubscription;
 using Sehatak.Application.Interfaces.RenewSubscription;
 
-namespace Sehatak.API.Controllers.SuperAdmin.SupscriptionPlans
+namespace Sehatak.API.Controllers.SuperAdminAndAdmin.SupscriptionPlans
 {
     [ApiController]
     [Route("api/renew-subscription")]
@@ -15,7 +15,7 @@ namespace Sehatak.API.Controllers.SuperAdmin.SupscriptionPlans
             this.renewSubscriptionService = renewSubscriptionService;
         }
 
-        [Authorize(Policy = "SuperAdminOnly")]
+        [Authorize(Policy = "AdminOrAbove")]
         [HttpPost("renew-active-subscription/{centerId}")]
         public async Task<IActionResult> RenewActiveSubscription(int centerId, [FromBody] RenewSubscriptionRequest request)
         {
@@ -23,7 +23,7 @@ namespace Sehatak.API.Controllers.SuperAdmin.SupscriptionPlans
             return Ok(result);
         }
 
-        [Authorize(Policy = "SuperAdminOnly")]
+        [Authorize(Policy = "AdminOrAbove")]
         [HttpPost("renew-expird-subscription/{centerId}")]
         public async Task<IActionResult> RenewExpiredSubscription(int centerId, [FromBody] RenewSubscriptionRequest request)
         {

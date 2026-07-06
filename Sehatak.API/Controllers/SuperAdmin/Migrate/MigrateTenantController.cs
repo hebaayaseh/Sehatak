@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Sehatak.Infrastructure.Data;
 using Sehatak.Infrastructure.Services.PatientRegisterAuth;
 
-namespace Sehatak.API.Controllers.SuperAdmin
+namespace Sehatak.API.Controllers.SuperAdmin.Migrate
 {
     [ApiController]
     [Route("api/migrate-tenant")]

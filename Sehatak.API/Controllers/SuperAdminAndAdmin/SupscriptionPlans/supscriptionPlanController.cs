@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Sehatak.Application.DTOs.Plans;
 using Sehatak.Application.Interfaces.Plans;
 
-namespace Sehatak.API.Controllers.SuperAdmin.SupscriptionPlans
+namespace Sehatak.API.Controllers.SuperAdminAndAdmin.SupscriptionPlans
 {
     [ApiController]
     [Route("api/supscriptionPlan")]

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Sehatak.Application.DTOs.AssignFeaturesWithPlan;
 using Sehatak.Application.Interfaces.AssignFeatursToPlan;
 
-namespace Sehatak.API.Controllers.SuperAdmin.SupscriptionPlans
+namespace Sehatak.API.Controllers.SuperAdmin.FeatureOperation
 {
     [ApiController]
     [Route("api/admin/plans/{planId}/features")]
