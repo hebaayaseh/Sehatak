@@ -35,6 +35,14 @@ namespace Sehatak.API.Controllers.SuperAdminAndAdmin.SubscriptionPayment
 
         }
 
+        [Authorize(Policy = "SuperAdminOnly")]
+        [HttpGet("center-payment/{centerId}")]
+        public async Task<IActionResult> GetCenterPayment(int centerId)
+        {
+            var result = await subscriptionPayment.GetCenterPaymentsAsync(centerId);
+            return Ok(result);
+        }
+
         
 
     }
