@@ -17,6 +17,7 @@ using Sehatak.Application.Interfaces.AuthPatient;
 using Sehatak.Application.Interfaces.Centers;
 using Sehatak.Application.Interfaces.CentersStatus;
 using Sehatak.Application.Interfaces.Features;
+using Sehatak.Application.Interfaces.ISubscriptionPaymentService;
 using Sehatak.Application.Interfaces.ISuperDaminProfile;
 using Sehatak.Application.Interfaces.MedicalCenter;
 using Sehatak.Application.Interfaces.MedicalCenter;
@@ -40,6 +41,7 @@ using Sehatak.Infrastructure.Services.Features.FeatureService;
 using Sehatak.Infrastructure.Services.Features.RemoveFeatureFromCenter;
 using Sehatak.Infrastructure.Services.PatientRegisterAuth;
 using Sehatak.Infrastructure.Services.Plans;
+using Sehatak.Infrastructure.Services.SubscriptionPaymentService;
 using Sehatak.Infrastructure.Services.SuperAdminAuth;
 using Serilog;
 using Serilog;
@@ -261,6 +263,9 @@ namespace Sehatak.API
             builder.Services.AddScoped<IRenewSubscription, RenewSubscriptionService>();
             builder.Services.AddScoped<IGetAllFeature, GetAllFeatureService>();
             builder.Services.AddScoped<IProfile, SuperAdminProfileService>();
+            builder.Services.AddScoped<ISubscriptionPayment, SubscriptionPaymentService>();
+
+
 
             builder.Services.AddHostedService<SubscriptionActivationService>();
 
@@ -275,7 +280,9 @@ namespace Sehatak.API
                 app.UseSwaggerUI();
             }
 
+            
             app.UseHttpsRedirection();
+            app.UseStaticFiles();
             app.UseRequestLocalization();
             app.UseCors("SehatakPolicy");
             app.UseRateLimiter();
@@ -283,9 +290,8 @@ namespace Sehatak.API
             app.UseAuthorization();
             app.MapControllers();
             app.MapHub<ChatHubs>("/hubs/chat");
-
             app.Lifetime.ApplicationStopping.Register(() => Log.CloseAndFlush());
-
+            
             app.Run();
         }
     }

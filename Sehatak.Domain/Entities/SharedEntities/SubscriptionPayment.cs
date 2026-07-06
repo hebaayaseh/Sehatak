@@ -16,7 +16,7 @@ namespace Sehatak.Domain.Entities.SharedEntities
         public string? ReferenceNumber { get; set; }    
         public string? ReceiptImageUrl { get; set; }    
         public DateTime PaidAt { get; set; } = DateTime.UtcNow;
-        public int RecordedBySuperAdminId { get; set; } 
+        public int? RecordedBySuperAdminId { get; set; } 
         public string? Notes { get; set; }
 
         // Navigation Probarity : 

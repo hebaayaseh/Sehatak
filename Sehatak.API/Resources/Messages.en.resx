@@ -327,4 +327,10 @@
   <data name="Verfiy.Code" xml:space="preserve">
     <value>Not Valid Code.</value>
   </data>
+  <data name="Validation.FileTooLarge" xml:space="preserve">
+    <value>Can not add this data</value>
+  </data>
+  <data name="Validation.InvalidFileType" xml:space="preserve">
+    <value>Can not add this data</value>
+  </data>
 </root>
