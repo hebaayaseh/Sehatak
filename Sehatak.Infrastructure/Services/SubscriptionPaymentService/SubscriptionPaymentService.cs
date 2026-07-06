@@ -30,12 +30,14 @@ namespace Sehatak.Infrastructure.Services.SubscriptionPaymentService
         public async Task<bool> ConfirmPaymentAsync(int paymentId, int superAdminId)
         {
             var payment = await sharedDbContext.subscriptionPayments
-                .FirstOrDefaultAsync(p=>p.Id== paymentId);
+                .Include(p => p.Subscription)
+                .FirstOrDefaultAsync(p => p.Id == paymentId);
 
             if (payment == null)
                 throw new BusinessException("Payment.NotFound");
+
             if(payment.RecordedBySuperAdminId!=null)
-                throw new BusinessException("Payment.Success");
+                throw new BusinessException("Payment.AlreadyConfirmed");
 
             var subscription = payment.Subscription;
             
@@ -138,6 +140,7 @@ namespace Sehatak.Infrastructure.Services.SubscriptionPaymentService
                 throw new BusinessException("Center.NotFound");
 
             var supscriptionCenter = await sharedDbContext.CenterSubscriptions
+                .Include(c => c.Plan)
                 .FirstOrDefaultAsync(c => c.Id == request.SubscriptionId 
                                      && c.CenterId == centerId
                                      && c.Status == SubscriptionStatus.Pending);

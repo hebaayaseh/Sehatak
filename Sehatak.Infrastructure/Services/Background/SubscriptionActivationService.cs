@@ -31,8 +31,15 @@ namespace Sehatak.Infrastructure.Services.Background
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                await CheckAndActivateSubscriptions();
-                await Task.Delay(TimeSpan.FromHours(24), stoppingToken); // بيشتغل كل 24 ساعة
+                try
+                {
+                    await CheckAndActivateSubscriptions();
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error in SubscriptionActivationService");
+                }
+                await Task.Delay(TimeSpan.FromHours(24), stoppingToken);
             }
         }
 

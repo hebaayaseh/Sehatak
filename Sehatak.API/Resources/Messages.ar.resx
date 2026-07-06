@@ -333,4 +333,7 @@
   <data name="Validation.InvalidFileType" xml:space="preserve">
     <value>لا يمكن ادخال البيانات</value>
   </data>
+  <data name="Payment.AlreadyConfirmed" xml:space="preserve">
+    <value>تم تسجيل الدفع مسبقأ</value>
+  </data>
 </root>

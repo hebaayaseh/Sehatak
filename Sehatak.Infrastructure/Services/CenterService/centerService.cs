@@ -120,9 +120,6 @@ namespace Sehatak.Infrastructure.Services.CenterService
                 EnabledFeatures = enabledFeatureNames
             };
 
-            throw new BusinessException("Center.Activated");
-            throw new BusinessException("Center.Created");
-
         }
         public string GenerateSlug(string name)
         {

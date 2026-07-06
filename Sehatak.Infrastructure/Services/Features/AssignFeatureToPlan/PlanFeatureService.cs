@@ -22,8 +22,8 @@ namespace Sehatak.Infrastructure.Services.Features.AssignFeatureToPlan
 
         public async Task<PlanFeatureResponseDto> AssignFeatureAsync(int planId, AssignFeatureToPlanRequestDto request)
         {
-            var plan = await sharedDbContext.PlatformFeatures.FirstOrDefaultAsync(p=>p.Id == planId);
-            if(plan == null) 
+            var plan = await sharedDbContext.SubscriptionPlans.FindAsync(planId);
+            if (plan == null) 
                 throw new BusinessException("Subscription.PlanNotFound");
 
             var feature = await sharedDbContext.PlatformFeatures.FindAsync(request.featureId);

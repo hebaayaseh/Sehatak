@@ -23,7 +23,7 @@ namespace Sehatak.Domain.Entities.SharedEntities
         [Phone]          
         [MaxLength(20)]
         public string phone {  get; set; }
-        public userRole role { get; set; }
+        public userRole role { get; set; } 
         public string? ProfileImageUrl { get; set; }
         [Required]
         [MinLength(8)]

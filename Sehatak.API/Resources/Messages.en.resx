@@ -333,4 +333,7 @@
   <data name="Validation.InvalidFileType" xml:space="preserve">
     <value>Can not add this data</value>
   </data>
+  <data name="Payment.AlreadyConfirmed" xml:space="preserve">
+    <value>The payment has been recorded</value>
+  </data>
 </root>

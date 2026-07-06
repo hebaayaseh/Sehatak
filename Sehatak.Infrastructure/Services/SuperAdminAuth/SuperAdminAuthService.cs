@@ -63,7 +63,7 @@ namespace Sehatak.Infrastructure.Services.SuperAdminAuth
             var superAdmin = new SuperAdmin
             {
                 Email = request.email,
-                role = (userRole)1,
+                role = userRole.SuperAdmin,
                 Name = request.name,
                 phone = request.phoneNumber,
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.password),
@@ -89,7 +89,7 @@ namespace Sehatak.Infrastructure.Services.SuperAdminAuth
             await sharedDbContext.SaveChangesAsync();
 
             return new RegisterSuperAdminResponseDto { email = superAdmin.Email };
-            throw new BusinessException("GeneralSuccess");
+            
         }
 
     }

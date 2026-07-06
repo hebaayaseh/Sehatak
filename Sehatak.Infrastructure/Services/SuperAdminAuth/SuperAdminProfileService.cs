@@ -37,7 +37,7 @@ namespace Sehatak.Infrastructure.Services.SuperAdminAuth
                 .AnyAsync(x => x.Email == request.Email);
 
             if (exists)
-                throw new BusinessException("General.NotFound");
+                throw new BusinessException("Auth.EmailExists");
 
             superAdmin.Email = request.Email;
 
@@ -78,7 +78,8 @@ namespace Sehatak.Infrastructure.Services.SuperAdminAuth
             if (request.PasswordHash != request.ConfirmPassword)
                 throw new BusinessException("General.NotFound");
 
-            if (superAdmin.PasswordHash == request.PasswordHash)
+            var isSamePassword = BCrypt.Net.BCrypt.Verify(request.PasswordHash, superAdmin.PasswordHash);
+            if (isSamePassword)
                 throw new BusinessException("General.NotFound");
 
             superAdmin.PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.PasswordHash);
@@ -108,7 +109,6 @@ namespace Sehatak.Infrastructure.Services.SuperAdminAuth
             superAdmin.ProfileImageUrl = $"/uploads/logos/{fileName}";
 
 
-            superAdmin.ProfileImageUrl = superAdmin.ProfileImageUrl;
             
             await sharedDbContext.SaveChangesAsync();
 
