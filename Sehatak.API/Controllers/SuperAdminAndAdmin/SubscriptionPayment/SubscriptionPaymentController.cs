@@ -23,6 +23,19 @@ namespace Sehatak.API.Controllers.SuperAdminAndAdmin.SubscriptionPayment
             return Ok(result);
         }
 
+        [Authorize(Policy = "SuperAdminOnly")]
+        [HttpPost("confirm-payment/{paymentId}")]
+        public async Task<IActionResult> ConfirmPayment(int paymentId)
+        {
+            var superAdminId = int.Parse(
+                User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+
+            var result = await subscriptionPayment.ConfirmPaymentAsync(paymentId, superAdminId);
+            return Ok(new { message = "Payment confirmed successfully" });
+
+        }
+
         
+
     }
 }
