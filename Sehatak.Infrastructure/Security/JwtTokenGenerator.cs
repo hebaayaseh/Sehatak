@@ -17,33 +17,31 @@ public class JwtTokenGenerator
 
     public string GenerateToken(int userId, string name, string email, string role, int? centerId)
     {
-        // المعلومات اللي بنحطها جوا الـ Token
         var claims = new List<Claim>
         {
-            // Id المستخدم
             new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
 
-            // الاسم
+            
             new Claim(ClaimTypes.Name, name),
 
-            // الإيميل
+           
             new Claim(ClaimTypes.Email, email),
 
-            // الدور — مهم للـ Authorization
+            
             new Claim(ClaimTypes.Role, role),
 
         };
         if (centerId.HasValue)
             claims.Add(new Claim("CenterId", centerId.Value.ToString()));
-        // نجيب الـ Secret Key من الـ appsettings.json
+        
         var key = new SymmetricSecurityKey(
             Encoding.UTF8.GetBytes(_config["Jwt:SecretKey"]!)
         );
 
-        // خوارزمية التوقيع
+        
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-        // ننشئ الـ Token
+        
         var token = new JwtSecurityToken(
             issuer: _config["Jwt:Issuer"],
             audience: _config["Jwt:Audience"],

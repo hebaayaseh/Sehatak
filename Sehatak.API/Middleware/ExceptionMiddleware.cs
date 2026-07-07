@@ -27,7 +27,7 @@ public class ExceptionMiddleware
         }
         catch (Exception ex)
         {
-            // Add errors 
+
             _logger.LogError(ex,
              "Unhandled exception occurred. Path: {Path}, Method: {Method}",
              context.Request.Path,
@@ -50,10 +50,9 @@ public class ExceptionMiddleware
         context.Response.ContentType = "application/json";
 
 
-        // نحدد الـ status code حسب نوع الخطأ
         var (statusCode, messageKey) = ex switch
         {
-            BusinessException be => (StatusCodes.Status400BadRequest, be.Message), // جديد — يستخدم Resources
+            BusinessException be => (StatusCodes.Status400BadRequest, be.Message), 
             UnauthorizedAccessException => (StatusCodes.Status401Unauthorized, "Auth.Unauthorized"),
             KeyNotFoundException => (StatusCodes.Status404NotFound, "General.NotFound"),
             ArgumentException => (StatusCodes.Status400BadRequest, ex.Message),
@@ -62,7 +61,6 @@ public class ExceptionMiddleware
 
         context.Response.StatusCode = statusCode;
 
-        // نجيب الرسالة باللغة الصح
         var message = (statusCode == 400 && ex is ArgumentException)
         ? ex.Message
     :   localizer[messageKey].Value;

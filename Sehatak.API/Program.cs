@@ -17,6 +17,7 @@ using Sehatak.Application.Interfaces.AuthPatient;
 using Sehatak.Application.Interfaces.Centers;
 using Sehatak.Application.Interfaces.CentersStatus;
 using Sehatak.Application.Interfaces.Features;
+using Sehatak.Application.Interfaces.IEmail;
 using Sehatak.Application.Interfaces.ISubscriptionPaymentService;
 using Sehatak.Application.Interfaces.ISuperDaminProfile;
 using Sehatak.Application.Interfaces.MedicalCenter;
@@ -33,16 +34,16 @@ using Sehatak.Infrastructure.Security;
 using Sehatak.Infrastructure.Security;
 using Sehatak.Infrastructure.Services;
 using Sehatak.Infrastructure.Services;
-using Sehatak.Infrastructure.Services.Background;
-using Sehatak.Infrastructure.Services.CenterService;
-using Sehatak.Infrastructure.Services.Features.AddFeatureToCenter;
-using Sehatak.Infrastructure.Services.Features.AssignFeatureToPlan;
-using Sehatak.Infrastructure.Services.Features.FeatureService;
-using Sehatak.Infrastructure.Services.Features.RemoveFeatureFromCenter;
-using Sehatak.Infrastructure.Services.PatientRegisterAuth;
-using Sehatak.Infrastructure.Services.Plans;
-using Sehatak.Infrastructure.Services.SubscriptionPaymentService;
-using Sehatak.Infrastructure.Services.SuperAdminAuth;
+using Sehatak.Infrastructure.Services.Patient.PatientRegisterAuth;
+using Sehatak.Infrastructure.Services.SuperAdmin.Background;
+using Sehatak.Infrastructure.Services.SuperAdmin.CenterService;
+using Sehatak.Infrastructure.Services.SuperAdmin.Features.AddFeatureToCenter;
+using Sehatak.Infrastructure.Services.SuperAdmin.Features.AssignFeatureToPlan;
+using Sehatak.Infrastructure.Services.SuperAdmin.Features.FeatureService;
+using Sehatak.Infrastructure.Services.SuperAdmin.Features.RemoveFeatureFromCenter;
+using Sehatak.Infrastructure.Services.SuperAdmin.Plans;
+using Sehatak.Infrastructure.Services.SuperAdmin.SubscriptionPaymentService;
+using Sehatak.Infrastructure.Services.SuperAdmin.SuperAdminAuth;
 using Serilog;
 using Serilog;
 using System;
@@ -231,7 +232,7 @@ namespace Sehatak.API
             {
                 options.AddPolicy("SuperAdminOnly", policy => policy.RequireRole("SuperAdmin"));
                 options.AddPolicy("AdminOrAbove", policy => policy.RequireRole("SuperAdmin", "Admin"));
-                options.AddPolicy("Admin", policy => policy.RequireRole("Admin"));
+                options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
                 options.AddPolicy("MedicalStaff", policy => policy.RequireRole("Admin", "Doctor", "Receptionist", "LabTechnician"));
                 options.AddPolicy("DoctorOnly", policy => policy.RequireRole("Doctor"));
                 options.AddPolicy("ReceptionistOnly", policy => policy.RequireRole("Receptionist"));
@@ -244,12 +245,9 @@ namespace Sehatak.API
             builder.Services.AddScoped<TenantMigrationRunner>();
             builder.Services.AddScoped<ISuperAdminAuthService, SuperAdminAuthService>();
             builder.Services.AddScoped<TenantDbContextFactory>();
-            
-            // Auth flow — repositories بدون interface (تستخدم جوا AuthService بس)
 
 
-            // Auth flow — services مع interface (تُستدعى من API)
-            builder.Services.AddScoped<IEmailSenderService, EmailSenderService>();
+            builder.Services.AddScoped<IEmailService, EmailService>();
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IFeatureService, featureService>();
             builder.Services.AddScoped<ISubscriptionPlan, SubscriptionPlanService>();
@@ -267,12 +265,12 @@ namespace Sehatak.API
             builder.Services.AddScoped<ISubscriptionPayment, SubscriptionPaymentService>();
 
 
-
             builder.Services.AddHostedService<SubscriptionActivationService>();
 
             var app = builder.Build();
 
-            // MIDDLEWARE PIPELINE — الترتيب مهم جداً
+            // MIDDLEWARE PIPELINE 
+
             app.UseMiddleware<ExceptionMiddleware>();
 
             if (app.Environment.IsDevelopment())

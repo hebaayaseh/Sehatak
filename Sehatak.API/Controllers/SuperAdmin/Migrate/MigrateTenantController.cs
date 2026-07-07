@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Sehatak.Infrastructure.Data;
-using Sehatak.Infrastructure.Services.PatientRegisterAuth;
+using Sehatak.Infrastructure.Services.Patient.PatientRegisterAuth;
 
 namespace Sehatak.API.Controllers.SuperAdmin.Migrate
 {

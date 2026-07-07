@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Sehatak.Domain.Entities;
+using Sehatak.Domain.Entities.General;
+using Sehatak.Domain.Entities.TenantEntities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
