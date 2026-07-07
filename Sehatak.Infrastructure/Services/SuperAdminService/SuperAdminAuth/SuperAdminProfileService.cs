@@ -5,8 +5,10 @@ using Sehatak.Application.DTOs.Exceptions;
 using Sehatak.Application.DTOs.PatienRegisterDto;
 using Sehatak.Application.DTOs.SuperAdminProfile;
 using Sehatak.Application.Interfaces.AuthPatient;
+using Sehatak.Application.Interfaces.IEmail;
 using Sehatak.Application.Interfaces.ISuperDaminProfile;
 using Sehatak.Domain.Entities;
+using Sehatak.Domain.Entities.General;
 using Sehatak.Domain.Entities.SharedEntities;
 using Sehatak.Infrastructure.Data;
 using Sehatak.Infrastructure.Security;
@@ -21,33 +23,18 @@ namespace Sehatak.Infrastructure.Services.SuperAdminService.SuperAdminAuth
     public class SuperAdminProfileService : IProfile 
     {
         private readonly SharedDbContext sharedDbContext;
-        public SuperAdminProfileService(SharedDbContext sharedDbContext)
+        private readonly EmailService emailService;
+        public SuperAdminProfileService(SharedDbContext sharedDbContext , EmailService emailService)
         {
             this.sharedDbContext = sharedDbContext;
+            this.emailService = emailService;
         }
 
-        public async Task<EmailResponse> EditEmail(int superAdminId, EditEmailRequest request)
+        public Task<PasswordResponse> ConfirmEditPassword(int superAdminId, ConfirmEditPasswordRequest request)
         {
-            var superAdmin = await sharedDbContext.SuperAdmins.FindAsync(superAdminId);
-            if (superAdmin == null)
-                throw new BusinessException("Auth.Unauthorized");
-
-            var exists = await sharedDbContext.SuperAdmins
-                .AnyAsync(x => x.Email == request.Email);
-
-            if (exists)
-                throw new BusinessException("Auth.EmailExists");
-
-            superAdmin.Email = request.Email;
-
-            await sharedDbContext.SaveChangesAsync();
-
-            return new EmailResponse
-            {
-                Email = superAdmin.Email,
-            };
-
+            throw new NotImplementedException();
         }
+
 
         public async Task<NameResponse> EditName(int superAdminId, EditNameRequest request)
         {
@@ -64,29 +51,8 @@ namespace Sehatak.Infrastructure.Services.SuperAdminService.SuperAdminAuth
 
             return new NameResponse { Name = superAdmin.Name };
 
-
         }
-
-        public async Task<PasswordResponse> EditPassword(int superAdminId, EditPasswordRequest request)
-        {
-            var superAdmin = await sharedDbContext.SuperAdmins.FindAsync(superAdminId);
-            if (superAdmin == null)
-                throw new BusinessException("Auth.Unauthorized");
-
-
-            if (request.PasswordHash != request.ConfirmPassword)
-                throw new BusinessException("General.NotFound");
-
-            var isSamePassword = BCrypt.Net.BCrypt.Verify(request.PasswordHash, superAdmin.PasswordHash);
-            if (isSamePassword)
-                throw new BusinessException("General.NotFound");
-
-            superAdmin.PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.PasswordHash);
-
-            await sharedDbContext.SaveChangesAsync();
-            return new PasswordResponse { message = "Password Update Succses" };
-        }
-
+        
         public async Task<ProfileImageResponse> EditProfileImage(int superAdminId, EditProfileImageRequest request)
         {
             var superAdmin = await sharedDbContext.SuperAdmins.FindAsync(superAdminId);
@@ -116,6 +82,68 @@ namespace Sehatak.Infrastructure.Services.SuperAdminService.SuperAdminAuth
                 profileImage = superAdmin.ProfileImageUrl
             };
 
+        }
+
+        public async Task<bool> RequestEditEmail(int superAdminId, EditEmailRequest request)
+        {
+            var superAdmin = await sharedDbContext.SuperAdmins.FindAsync(superAdminId);
+            if (superAdmin == null)
+                throw new BusinessException("Auth.Unauthorized");
+
+            var exists = await sharedDbContext.SuperAdmins
+                .AnyAsync(x => x.Email == request.Email);
+
+            if (exists)
+                throw new BusinessException("Auth.EmailExists");
+
+            var code = new Random().Next(100000, 999999).ToString();
+
+            sharedDbContext.emailVerificationCodes.Add(new EmailVerificationCode
+            {
+                UserId = superAdmin.Id,
+                Code = code,
+                Purpose = "change-email",
+                PendingValue = request.Email,
+                ExpiresAt = DateTime.UtcNow.AddMinutes(10)
+            });
+
+            await sharedDbContext.SaveChangesAsync();
+
+
+            await emailService.SendOtpAsync(superAdmin.Email, code, "change-email");
+
+            return true;
+        }
+
+        public async Task<EmailResponse> ConfirmEditEmail(int superAdminId, ConfirmEditEmailRequest request)
+        {
+            var superAdmin = await sharedDbContext.SuperAdmins.FindAsync(superAdminId);
+            if (superAdmin == null)
+                throw new BusinessException("Auth.Unauthorized");
+
+            var validCode = await sharedDbContext.emailVerificationCodes
+                .Where(c => c.UserId == superAdminId
+                         && c.Purpose == "change-email"
+                         && c.Code == request.Code
+                         && !c.IsUsed
+                         && c.ExpiresAt > DateTime.UtcNow)
+                .OrderByDescending(c => c.CreatedAt)
+                .FirstOrDefaultAsync();
+
+            if (validCode == null || string.IsNullOrEmpty(validCode.PendingValue))
+                throw new BusinessException("Auth.InvalidOrExpiredCode");
+
+            superAdmin.Email = validCode.PendingValue;
+            validCode.IsUsed = true;
+
+            await sharedDbContext.SaveChangesAsync();
+
+            return new EmailResponse { Email = superAdmin.Email };
+        }
+
+        public Task<bool> RequestEditPassword(int superAdminId, EditPasswordRequest request)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<ProfileResponse> ViewProfile(int superAdminId)

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Sehatak.Domain.Entities.General;
 using Sehatak.Domain.Entities.SharedEntities;
 using System;
 using System.Collections.Generic;
@@ -20,7 +21,7 @@ namespace Sehatak.Infrastructure.Data
         public DbSet<PlanFeature> PlanFeatures => Set<PlanFeature>();
         public DbSet<CenterFeature> CenterFeatures => Set<CenterFeature>();
         public DbSet<SubscriptionPayment> subscriptionPayments=> Set<SubscriptionPayment>();
-
+        public DbSet<EmailVerificationCode> emailVerificationCodes => Set<EmailVerificationCode>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
