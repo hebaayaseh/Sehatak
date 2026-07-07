@@ -336,4 +336,11 @@
   <data name="Payment.AlreadyConfirmed" xml:space="preserve">
     <value>تم تسجيل الدفع مسبقأ</value>
   </data>
+  <data name="Validation.PasswordMismatch" xml:space="preserve">
+    <value>لا يوجد تطابق </value>
+    <comment>Dont Match password</comment>
+  </data>
+  <data name="Validation.SamePassword&quot;" xml:space="preserve">
+    <value>نفس كلمة المرور الاصلية</value>
+  </data>
 </root>

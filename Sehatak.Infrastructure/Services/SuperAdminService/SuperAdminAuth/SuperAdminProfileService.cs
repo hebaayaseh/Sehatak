@@ -30,12 +30,6 @@ namespace Sehatak.Infrastructure.Services.SuperAdminService.SuperAdminAuth
             this.emailService = emailService;
         }
 
-        public Task<PasswordResponse> ConfirmEditPassword(int superAdminId, ConfirmEditPasswordRequest request)
-        {
-            throw new NotImplementedException();
-        }
-
-
         public async Task<NameResponse> EditName(int superAdminId, EditNameRequest request)
         {
             var superAdmin = await sharedDbContext.SuperAdmins.FindAsync(superAdminId);
@@ -131,7 +125,7 @@ namespace Sehatak.Infrastructure.Services.SuperAdminService.SuperAdminAuth
                 .FirstOrDefaultAsync();
 
             if (validCode == null || string.IsNullOrEmpty(validCode.PendingValue))
-                throw new BusinessException("Auth.InvalidOrExpiredCode");
+                throw new BusinessException("Verfiy.Code");
 
             superAdmin.Email = validCode.PendingValue;
             validCode.IsUsed = true;
@@ -141,9 +135,64 @@ namespace Sehatak.Infrastructure.Services.SuperAdminService.SuperAdminAuth
             return new EmailResponse { Email = superAdmin.Email };
         }
 
-        public Task<bool> RequestEditPassword(int superAdminId, EditPasswordRequest request)
+        public async Task<bool> RequestEditPassword(int superAdminId, EditPasswordRequest request)
         {
-            throw new NotImplementedException();
+            var superAdmin = await sharedDbContext.SuperAdmins.FindAsync(superAdminId);
+            if (superAdmin == null)
+                throw new BusinessException("Auth.Unauthorized");
+
+            if (request.PasswordHash != request.ConfirmPassword)
+                throw new BusinessException("Validation.PasswordMismatch");
+
+            var isSamePassword = BCrypt.Net.BCrypt.Verify(request.PasswordHash, superAdmin.PasswordHash);
+            if (isSamePassword)
+                throw new BusinessException("Validation.SamePassword");
+
+
+            var code = new Random().Next(100000, 999999).ToString();
+
+            sharedDbContext.emailVerificationCodes.Add(new EmailVerificationCode
+            {
+                UserId = superAdminId,
+                Code = code,
+                Purpose = "change-password",
+                PendingValue = BCrypt.Net.BCrypt.HashPassword(request.PasswordHash),
+                ExpiresAt = DateTime.UtcNow.AddMinutes(10)
+            });
+
+            await sharedDbContext.SaveChangesAsync();
+
+            await emailService.SendOtpAsync(superAdmin.Email, code, "change-password");
+
+            return true;
+
+        }
+
+        public async Task<PasswordResponse> ConfirmEditPassword(int superAdminId, ConfirmEditPasswordRequest request)
+        {
+            var superAdmin = await sharedDbContext.SuperAdmins
+                .FindAsync(superAdminId);
+
+            if (superAdmin == null)
+                throw new BusinessException("Auth.Unauthorized");
+
+            var validCode = await sharedDbContext.emailVerificationCodes
+                .Where(c => c.UserId == superAdminId
+                       && c.Purpose == "change-password"
+                       && !c.IsUsed
+                       && c.Code == request.Code
+                       && c.ExpiresAt > DateTime.UtcNow)
+                .OrderByDescending(c => c.CreatedAt)
+                .FirstOrDefaultAsync();
+            if(validCode == null || string.IsNullOrEmpty(validCode.PendingValue))
+                throw new BusinessException("Verfiy.Code");
+
+            superAdmin.PasswordHash = validCode.PendingValue;
+            validCode.IsUsed = true;
+
+            await sharedDbContext.SaveChangesAsync();
+            return new PasswordResponse { message = "Password Update Succses" };
+
         }
 
         public async Task<ProfileResponse> ViewProfile(int superAdminId)
