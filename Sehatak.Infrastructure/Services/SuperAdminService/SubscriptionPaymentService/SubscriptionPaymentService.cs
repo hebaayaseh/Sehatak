@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Microsoft.Extensions.Hosting;
 using Sehatak.Application.DTOs.Exceptions;
 using Sehatak.Application.DTOs.RecordPaymentRequestDto;
+using Sehatak.Application.Interfaces.IEmail;
 using Sehatak.Application.Interfaces.ISubscriptionPaymentService;
 using Sehatak.Domain.Entities.SharedEntities;
 using Sehatak.Domain.Enums.SharedEnums;
@@ -21,11 +22,13 @@ namespace Sehatak.Infrastructure.Services.SuperAdminService.SubscriptionPaymentS
     {
         private readonly SharedDbContext sharedDbContext;
         private readonly IHostEnvironment _env;
-        
-        public SubscriptionPaymentService(SharedDbContext sharedDb, IHostEnvironment env)
+        private readonly IEmailService _emailService;
+
+        public SubscriptionPaymentService(SharedDbContext sharedDb, IHostEnvironment env,IEmailService emailService)
         {
             sharedDbContext = sharedDb;
             _env = env;
+            _emailService = emailService;
         }
         public async Task<bool> ConfirmPaymentAsync(int paymentId, int superAdminId)
         {
@@ -69,10 +72,20 @@ namespace Sehatak.Infrastructure.Services.SuperAdminService.SubscriptionPaymentS
                 });
             }
 
-            if(center!=null&&center.CenterStatus==CenterStatus.Suspended)
+            if (center != null && center.CenterStatus == CenterStatus.Suspended)
                 center.CenterStatus = CenterStatus.Active;
 
             await sharedDbContext.SaveChangesAsync();
+
+            if (!string.IsNullOrEmpty(center?.AdminEmail))
+            {
+                await _emailService.SendPaymentConfirmedAsync(
+                    center.AdminEmail,
+                    center.Name,
+                    payment.Amount
+                );
+            }
+
             return true;
 
         }

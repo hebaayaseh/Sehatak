@@ -12,9 +12,9 @@ namespace Sehatak.Infrastructure.Services
     public class EmailService : IEmailService
     {
         private readonly IConfiguration _config;
-        private readonly Microsoft.Extensions.Logging.ILogger _logger;
+        private readonly Microsoft.Extensions.Logging.ILogger<EmailService> _logger;
 
-        public EmailService(IConfiguration config,Microsoft.Extensions.Logging.ILogger logger)
+        public EmailService(IConfiguration config, Microsoft.Extensions.Logging.ILogger<EmailService> logger)
         {
             _config = config;
             _logger = logger;

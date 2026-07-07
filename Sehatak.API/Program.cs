@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.AspNetCore.RateLimiting;
@@ -264,6 +265,7 @@ namespace Sehatak.API
             builder.Services.AddScoped<IProfile, SuperAdminProfileService>();
             builder.Services.AddScoped<ISubscriptionPayment, SubscriptionPaymentService>();
             builder.Services.AddHostedService<SubscriptionActivationService>();
+            builder.Services.AddScoped<IAdminBulkEmailService, AdminBulkEmailService>();
 
             var app = builder.Build();
 

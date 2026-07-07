@@ -49,6 +49,10 @@ namespace Sehatak.Infrastructure.Services.SuperAdminService.CenterService
                 center.AddedBySuperAdminId = request.AddedBySuperAdminId;
             }
 
+            if (request.AdminEmail != null)
+            {
+                center.AdminEmail = request.AdminEmail;
+            }
             if (request.Logo != null)
             {
 

@@ -112,7 +112,7 @@ namespace Sehatak.Infrastructure.Data
                       .IsRequired()
                       .HasMaxLength(100);
 
-                entity.Property(e => e.AdminEmail).HasMaxLength(150);
+                
 
                 entity.Property(e=>e.Phone)
                       .IsRequired()
@@ -138,6 +138,7 @@ namespace Sehatak.Infrastructure.Data
 
                 entity.Property(e => e.BookingType)
                       .HasConversion<string>();
+
             });
 
             modelBuilder.Entity<SubscriptionPlan>(entity =>

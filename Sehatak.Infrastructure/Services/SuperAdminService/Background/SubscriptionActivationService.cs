@@ -88,10 +88,10 @@ namespace Sehatak.Infrastructure.Services.SuperAdminService.Background
                         });
                     }
 
-                    if (!string.IsNullOrEmpty(expired.Center?.AdminWhatsappNumber))
+                    if (!string.IsNullOrEmpty(expired.Center?.AdminEmail))
                     {
                         await emailService.SendPaymentConfirmedAsync(
-                            expired.Center.AdminWhatsappNumber,
+                            expired.Center.AdminEmail,
                             expired.Center.Name,
                             pending.AmountPaid
                         );
@@ -107,9 +107,14 @@ namespace Sehatak.Infrastructure.Services.SuperAdminService.Background
                     {
                         center.CenterStatus = CenterStatus.Suspended;
 
-                        // ← إيميل إشعار التعليق
-                        // هنا بتحتاجي إيميل الأدمن
-                        // بتجيبيه من الـ Tenant DB لاحقاً
+                        if (!string.IsNullOrEmpty(center.AdminEmail))
+                        {
+                            await emailService.SendCustomMessageAsync(
+                                center.AdminEmail,
+                                $"تعليق حساب {center.Name}",
+                                $"تم تعليق حساب مركز {center.Name} بسبب انتهاء الاشتراك دون تجديد. يرجى التواصل مع الإدارة لإعادة التفعيل."
+                            );
+                        }
                     }
 
                     _logger.LogWarning(
@@ -138,10 +143,10 @@ namespace Sehatak.Infrastructure.Services.SuperAdminService.Background
 
             foreach (var subscription in expiringSubscriptions)
             {
-                if (subscription.Center?.AdminWhatsappNumber != null)
+                if (subscription.Center?.AdminEmail != null)
                 {
                     await emailService.SendSubscriptionRenewalReminderAsync(
-                        subscription.Center.AdminWhatsappNumber,
+                        subscription.Center.AdminEmail,
                         subscription.Center.Name,
                         subscription.EndDate
                     );
