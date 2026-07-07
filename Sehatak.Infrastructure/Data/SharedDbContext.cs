@@ -21,7 +21,7 @@ namespace Sehatak.Infrastructure.Data
         public DbSet<PlanFeature> PlanFeatures => Set<PlanFeature>();
         public DbSet<CenterFeature> CenterFeatures => Set<CenterFeature>();
         public DbSet<SubscriptionPayment> subscriptionPayments=> Set<SubscriptionPayment>();
-        public DbSet<EmailVerificationCode> emailVerificationCodes => Set<EmailVerificationCode>();
+        public DbSet<emailVerificationCode> emailVerificationCodes => Set<emailVerificationCode>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -218,6 +218,20 @@ namespace Sehatak.Infrastructure.Data
                 .WithMany()
                 .HasForeignKey(e => e.RecordedBySuperAdminId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            });
+            // Email Verification Code
+            modelBuilder.Entity<emailVerificationCode>(e =>
+            {
+                e.ToTable("email_verification_codes");
+                e.HasKey("Id");
+
+                e.HasOne(e => e.superAdmin)
+                .WithMany()
+                .HasForeignKey(e => e.SuperAdminId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+                e.HasIndex(e => e.SuperAdminId);
 
             });
 

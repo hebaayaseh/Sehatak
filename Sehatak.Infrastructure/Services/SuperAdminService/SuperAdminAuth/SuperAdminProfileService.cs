@@ -23,8 +23,8 @@ namespace Sehatak.Infrastructure.Services.SuperAdminService.SuperAdminAuth
     public class SuperAdminProfileService : IProfile 
     {
         private readonly SharedDbContext sharedDbContext;
-        private readonly EmailService emailService;
-        public SuperAdminProfileService(SharedDbContext sharedDbContext , EmailService emailService)
+        private readonly IEmailService emailService;
+        public SuperAdminProfileService(SharedDbContext sharedDbContext , IEmailService emailService)
         {
             this.sharedDbContext = sharedDbContext;
             this.emailService = emailService;
@@ -92,9 +92,9 @@ namespace Sehatak.Infrastructure.Services.SuperAdminService.SuperAdminAuth
 
             var code = new Random().Next(100000, 999999).ToString();
 
-            sharedDbContext.emailVerificationCodes.Add(new EmailVerificationCode
+            sharedDbContext.emailVerificationCodes.Add(new emailVerificationCode
             {
-                UserId = superAdmin.Id,
+                SuperAdminId = superAdmin.Id,
                 Code = code,
                 Purpose = "change-email",
                 PendingValue = request.Email,
@@ -116,7 +116,7 @@ namespace Sehatak.Infrastructure.Services.SuperAdminService.SuperAdminAuth
                 throw new BusinessException("Auth.Unauthorized");
 
             var validCode = await sharedDbContext.emailVerificationCodes
-                .Where(c => c.UserId == superAdminId
+                .Where(c => c.SuperAdminId == superAdminId
                          && c.Purpose == "change-email"
                          && c.Code == request.Code
                          && !c.IsUsed
@@ -151,9 +151,9 @@ namespace Sehatak.Infrastructure.Services.SuperAdminService.SuperAdminAuth
 
             var code = new Random().Next(100000, 999999).ToString();
 
-            sharedDbContext.emailVerificationCodes.Add(new EmailVerificationCode
+            sharedDbContext.emailVerificationCodes.Add(new emailVerificationCode
             {
-                UserId = superAdminId,
+                SuperAdminId = superAdminId,
                 Code = code,
                 Purpose = "change-password",
                 PendingValue = BCrypt.Net.BCrypt.HashPassword(request.PasswordHash),
@@ -177,7 +177,7 @@ namespace Sehatak.Infrastructure.Services.SuperAdminService.SuperAdminAuth
                 throw new BusinessException("Auth.Unauthorized");
 
             var validCode = await sharedDbContext.emailVerificationCodes
-                .Where(c => c.UserId == superAdminId
+                .Where(c => c.SuperAdminId == superAdminId
                        && c.Purpose == "change-password"
                        && !c.IsUsed
                        && c.Code == request.Code

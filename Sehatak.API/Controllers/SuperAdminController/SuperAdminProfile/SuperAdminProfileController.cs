@@ -27,17 +27,34 @@ namespace Sehatak.API.Controllers.SuperAdminController.SuperAdminProfile
 
         [Authorize(Policy = "SuperAdminOnly")]
         [HttpPost("super-admin-edit-email/{superAdminId}")]
-        public async Task<IActionResult> EditEmail(int superAdminId , [FromBody]EditEmailRequest request)
+        public async Task<IActionResult> RequestEditEmail(int superAdminId, [FromBody] EditEmailRequest request)
         {
-            var result = await profile.EditEmail(superAdminId, request);
-            return Ok(result);
+            await profile.RequestEditEmail(superAdminId, request);
+            return Ok(new { message = "Verification code sent" });
         }
 
         [Authorize(Policy = "SuperAdminOnly")]
-        [HttpPost("super-admin-edit-password/{superAdminId}")]
-        public async Task<IActionResult> EditPassword(int superAdminId, [FromBody] EditPasswordRequest request)
+        [HttpPost("super-admin-confirm-edit-email/{superAdminId}")]
+        public async Task<IActionResult> ConfirmEditEmail(int superAdminId, [FromBody] ConfirmEditEmailRequest request)
         {
-            var result = await profile.EditPassword(superAdminId, request);
+            var result = await profile.ConfirmEditEmail(superAdminId, request);
+            return Ok(result);
+        }
+
+
+        [Authorize(Policy = "SuperAdminOnly")]
+        [HttpPost("super-admin-edit-password/{superAdminId}")]
+        public async Task<IActionResult> RequestEditPassword(int superAdminId, [FromBody] EditPasswordRequest request)
+        {
+            await profile.RequestEditPassword(superAdminId, request);
+            return Ok(new { message = "Verification code sent" });
+        }
+
+        [Authorize(Policy = "SuperAdminOnly")]
+        [HttpPost("super-admin-confirm-edit-password/{superAdminId}")]
+        public async Task<IActionResult> ConfirmEditPassword(int superAdminId, [FromBody] ConfirmEditPasswordRequest request)
+        {
+            var result = await profile.ConfirmEditPassword(superAdminId, request);
             return Ok(result);
         }
 
