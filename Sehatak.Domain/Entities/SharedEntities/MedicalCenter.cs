@@ -35,6 +35,7 @@ namespace Sehatak.Domain.Entities.SharedEntities
         public int? AddedBySuperAdminId { get; set; }
         // The notifications sent contain subscription information : 
         public string? AdminWhatsappNumber { get; set; }
+        public string? AdminEmail { get; set; }
 
         // Navigation Properties :
         public ICollection<CenterSubscription> Subscriptions { get; set; } = new List<CenterSubscription>();

@@ -1,5 +1,7 @@
 ﻿// Sehatak.Infrastructure/Services/EmailService.cs
+using Castle.Core.Logging;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Sehatak.Application.Interfaces;
 using Sehatak.Application.Interfaces.IEmail;
 using System.Net;
@@ -10,10 +12,12 @@ namespace Sehatak.Infrastructure.Services
     public class EmailService : IEmailService
     {
         private readonly IConfiguration _config;
+        private readonly Microsoft.Extensions.Logging.ILogger _logger;
 
-        public EmailService(IConfiguration config)
+        public EmailService(IConfiguration config,Microsoft.Extensions.Logging.ILogger logger)
         {
             _config = config;
+            _logger = logger;
         }
 
         private async Task SendAsync(string toEmail, string subject, string body)
@@ -96,6 +100,33 @@ namespace Sehatak.Infrastructure.Services
                 </div>";
 
             await SendAsync(toEmail, $"تأكيد دفع - {centerName}", body);
+        }
+
+        public async Task SendCustomMessageAsync(string toEmail, string subject, string message)
+        {
+            var body = $@"
+        <div dir='rtl' style='font-family:Arial;padding:20px'>
+            <p>{message}</p>
+            <hr/>
+            <small>منصة Sehatak</small>
+        </div>";
+
+            await SendAsync(toEmail, subject, body);
+        }
+
+        public async Task SendBulkAsync(List<string> emails, string subject, string message)
+        {
+            foreach (var email in emails)
+            {
+                try
+                {
+                    await SendCustomMessageAsync(email, subject, message);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Failed to send email to {Email}", email);
+                }
+            }
         }
     }
 }

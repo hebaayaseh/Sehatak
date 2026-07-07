@@ -22,7 +22,6 @@ namespace Sehatak.Domain.Entities.SharedEntities
         // Special for the super admin
         public string? PaymentReference { get; set; }
 
-
         // Navigation Properties 
         public MedicalCenter Center { get; set; } = null!;
         public SubscriptionPlan Plan { get; set; } = null!;

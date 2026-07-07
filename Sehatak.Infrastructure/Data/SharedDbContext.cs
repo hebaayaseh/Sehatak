@@ -112,6 +112,8 @@ namespace Sehatak.Infrastructure.Data
                       .IsRequired()
                       .HasMaxLength(100);
 
+                entity.Property(e => e.AdminEmail).HasMaxLength(150);
+
                 entity.Property(e=>e.Phone)
                       .IsRequired()
                       .HasMaxLength(20);

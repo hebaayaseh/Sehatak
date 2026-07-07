@@ -4,6 +4,7 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Http;
 using Sehatak.Application.Interfaces.AuditLog;
 using Sehatak.Domain.Entities;
+using Sehatak.Domain.Entities.General;
 using Sehatak.Infrastructure.Data;
 
 

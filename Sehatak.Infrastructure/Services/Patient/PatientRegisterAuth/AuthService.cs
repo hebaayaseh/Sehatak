@@ -1,10 +1,13 @@
 ﻿using BCrypt.Net;
 using Castle.Core.Smtp;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Win32;
 using Sehatak.Application.DTOs.PatienRegisterDto;
 using Sehatak.Application.Interfaces.AuthPatient;
 using Sehatak.Application.Interfaces.IEmail;
 using Sehatak.Domain.Entities;
+using Sehatak.Domain.Entities.General;
+using Sehatak.Domain.Entities.TenantEntities;
 using Sehatak.Domain.Enums;
 using Sehatak.Infrastructure.Data;
 using Sehatak.Infrastructure.Security;
@@ -37,20 +40,21 @@ namespace Sehatak.Infrastructure.Services.Patient.PatientRegisterAuth;
             if (existing != null)
                 throw new BusinessException("Auth.EmailExists");
 
-            var user = new User
-            {
-                firstName = request.firstName,
-                lastName = request.lastName,
-                email = request.email,
-                passwordHash = BCrypt.Net.BCrypt.HashPassword(request.password),
-                phoneNumber = request.phoneNumber,
-                address = request.address,
-                city = request.city,
-                role = userRole.Patient,
-                isActive = false,
-                createdAt = DateTime.UtcNow
-            };
-        if(request.ProfileImage != null)
+        var user = new User
+        {
+            firstName = request.firstName,
+            lastName = request.lastName,
+            email = request.email,
+            passwordHash = BCrypt.Net.BCrypt.HashPassword(request.password),
+            phoneNumber = request.phoneNumber,
+            address = request.address,
+            city = request.city,
+            role = userRole.Patient,
+            isActive = false,
+            createdAt = DateTime.UtcNow
+        };
+
+        if (request.ProfileImage != null)
         {
 
             var fileName = Guid.NewGuid() + Path.GetExtension(request.ProfileImage.FileName);
@@ -76,12 +80,10 @@ namespace Sehatak.Infrastructure.Services.Patient.PatientRegisterAuth;
             });
             await db.SaveChangesAsync();
 
-            await emailSender.SendOtpEmailAsync(user.email!, code);
-        
+            await emailSender.SendOtpAsync(user.email!, code, "register");
+
 
         return request;
-
-
         }
 
         public async Task<VerifyOtpResponseDto?> VerifyOtpAsync(VerifyOtpRequestDto request)
@@ -113,7 +115,6 @@ namespace Sehatak.Infrastructure.Services.Patient.PatientRegisterAuth;
             );
 
             return new VerifyOtpResponseDto { Token = token };
-        throw new BusinessException("GeneralSuccess");
         }
 
     
