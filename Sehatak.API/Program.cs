@@ -19,14 +19,15 @@ using Sehatak.Application.Interfaces.Centers;
 using Sehatak.Application.Interfaces.CentersStatusDto;
 using Sehatak.Application.Interfaces.Features;
 using Sehatak.Application.Interfaces.IEmail;
-using Sehatak.Application.Interfaces.ISubscriptionPaymentService;
 using Sehatak.Application.Interfaces.IProfileInterface;
+using Sehatak.Application.Interfaces.ISubscriptionPaymentService;
 using Sehatak.Application.Interfaces.MedicalCenter;
 using Sehatak.Application.Interfaces.MedicalCenter;
 using Sehatak.Application.Interfaces.MedicalCenter;
 using Sehatak.Application.Interfaces.Plans;
 using Sehatak.Application.Interfaces.RemoveFeatureFromCenter;
 using Sehatak.Application.Interfaces.RenewSubscription;
+using Sehatak.Application.Interfaces.StaffLogin;
 using Sehatak.Application.Interfaces.SuperAdminInterface;
 using Sehatak.Domain.Enums.SharedEnums;
 using Sehatak.Infrastructure.Data;
@@ -36,6 +37,7 @@ using Sehatak.Infrastructure.Security;
 using Sehatak.Infrastructure.Services;
 using Sehatak.Infrastructure.Services;
 using Sehatak.Infrastructure.Services.Patient.PatientRegisterAuth;
+using Sehatak.Infrastructure.Services.StaffLogin;
 using Sehatak.Infrastructure.Services.SuperAdminService.Background;
 using Sehatak.Infrastructure.Services.SuperAdminService.CenterService;
 using Sehatak.Infrastructure.Services.SuperAdminService.Features.AddFeatureToCenter;
@@ -267,7 +269,7 @@ namespace Sehatak.API
             builder.Services.AddHostedService<SubscriptionActivationService>();
             builder.Services.AddScoped<IAdminBulkEmailService, AdminBulkEmailService>();
             builder.Services.AddScoped<ICreateAdminService, CreateAdminService>();
-
+            builder.Services.AddScoped<IStaffLogin, StaffAuthService>();
             var app = builder.Build();
 
             // MIDDLEWARE PIPELINE 
