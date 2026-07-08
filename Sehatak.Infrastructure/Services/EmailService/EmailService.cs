@@ -89,6 +89,7 @@ namespace Sehatak.Infrastructure.Services
             await SendAsync(toEmail, $"تنبيه: اشتراك {centerName} سينتهي قريباً", body);
         }
 
+
         public async Task SendPaymentConfirmedAsync(string toEmail, string centerName, decimal amount)
         {
             var body = $@"

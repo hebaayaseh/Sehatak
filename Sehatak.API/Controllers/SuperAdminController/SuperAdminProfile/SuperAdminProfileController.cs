@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Sehatak.Application.DTOs.EditProfile;
 using Sehatak.Application.DTOs.SuperAdminProfile;
-using Sehatak.Application.Interfaces.ISuperDaminProfile;
+using Sehatak.Application.Interfaces.IProfileInterface;
 
 namespace Sehatak.API.Controllers.SuperAdminController.SuperAdminProfile
 {

@@ -6,7 +6,7 @@ using Sehatak.Application.DTOs.PatienRegisterDto;
 using Sehatak.Application.DTOs.SuperAdminProfile;
 using Sehatak.Application.Interfaces.AuthPatient;
 using Sehatak.Application.Interfaces.IEmail;
-using Sehatak.Application.Interfaces.ISuperDaminProfile;
+using Sehatak.Application.Interfaces.IProfileInterface;
 using Sehatak.Domain.Entities;
 using Sehatak.Domain.Entities.General;
 using Sehatak.Domain.Entities.SharedEntities;
@@ -58,15 +58,14 @@ namespace Sehatak.Infrastructure.Services.SuperAdminService.SuperAdminAuth
 
             var fileName = Guid.NewGuid() + Path.GetExtension(request.ImageFile.FileName);
 
-            var path = Path.Combine("wwwroot/uploads/logos", fileName);
+            var path = Path.Combine("wwwroot/uploads/receipts", fileName);
 
             using (var stream = new FileStream(path, FileMode.Create))
             {
                 await request.ImageFile.CopyToAsync(stream);
             }
 
-            superAdmin.ProfileImageUrl = $"/uploads/logos/{fileName}";
-
+            superAdmin.ProfileImageUrl = $"/uploads/receipts/{fileName}";
 
             
             await sharedDbContext.SaveChangesAsync();

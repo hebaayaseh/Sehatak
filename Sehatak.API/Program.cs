@@ -20,7 +20,7 @@ using Sehatak.Application.Interfaces.CentersStatusDto;
 using Sehatak.Application.Interfaces.Features;
 using Sehatak.Application.Interfaces.IEmail;
 using Sehatak.Application.Interfaces.ISubscriptionPaymentService;
-using Sehatak.Application.Interfaces.ISuperDaminProfile;
+using Sehatak.Application.Interfaces.IProfileInterface;
 using Sehatak.Application.Interfaces.MedicalCenter;
 using Sehatak.Application.Interfaces.MedicalCenter;
 using Sehatak.Application.Interfaces.MedicalCenter;

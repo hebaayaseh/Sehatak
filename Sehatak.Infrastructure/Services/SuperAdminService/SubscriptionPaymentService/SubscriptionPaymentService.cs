@@ -206,6 +206,7 @@ namespace Sehatak.Infrastructure.Services.SuperAdminService.SubscriptionPaymentS
 
             };
 
+            
             await sharedDbContext.subscriptionPayments.AddAsync(payment);
             await sharedDbContext.SaveChangesAsync();
 
@@ -223,7 +224,6 @@ namespace Sehatak.Infrastructure.Services.SuperAdminService.SubscriptionPaymentS
                 Notes = payment.Notes,
                 IsConfirmed = false
             };
-
 
         }
     }
