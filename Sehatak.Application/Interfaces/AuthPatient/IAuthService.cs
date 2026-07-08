@@ -9,7 +9,7 @@ namespace Sehatak.Application.Interfaces.AuthPatient
 {
     public interface IAuthService
     {
-        Task<RegisterRequestDto> RegisterAsync(RegisterRequestDto request);
-        Task<VerifyOtpResponseDto> VerifyOtpAsync(VerifyOtpRequestDto request);
+        Task<RegisterResponseDto> RegisterAsync(int centerId,RegisterRequestDto request);
+        Task<VerifyOtpResponseDto> VerifyOtpAsync(int centerId, VerifyOtpRequestDto request);
     }
 }

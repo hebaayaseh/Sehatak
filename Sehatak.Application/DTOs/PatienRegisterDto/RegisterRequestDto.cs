@@ -11,7 +11,6 @@ namespace Sehatak.Application.DTOs.PatienRegisterDto
 {
     public class RegisterRequestDto
     {
-        public int CenterId { get; set; }
         public string firstName { get; set; }
         public string lastName { get; set; }
         [Required]
@@ -26,7 +25,6 @@ namespace Sehatak.Application.DTOs.PatienRegisterDto
         public string password { get; set; }
         public string address { get; set; }
         public string city { get; set; }
-        public userRole role { get; set; } = (userRole)6;
         
         public IFormFile? ProfileImage { get; set; }
 

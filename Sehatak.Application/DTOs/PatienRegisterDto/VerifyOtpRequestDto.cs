@@ -9,8 +9,7 @@ namespace Sehatak.Application.DTOs.PatienRegisterDto
     public class VerifyOtpRequestDto
     {
 
-        public string Email { get; set; } = string.Empty;
+        public int UserId { get; set; }
         public string code { get; set; } = string.Empty;
-        public int CenterId { get; set; }
     }
 }

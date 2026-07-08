@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace Sehatak.Application.DTOs.PatienRegisterDto
 {
-   public class RegisterResponseDto
+    public class RegisterResponseDto
     {
-        public string message { get; set; } = string.Empty;
-        public string email { get; set; } = string.Empty;
+        public int UserId { get; set; }
+        public string Email { get; set; } = string.Empty;
+        public string Message { get; set; } = "تم التسجيل، يرجى إدخال كود التحقق المرسل على إيميلك.";
+
     }
 }

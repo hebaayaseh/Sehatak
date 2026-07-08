@@ -17,17 +17,17 @@ namespace Sehatak.API.Controllers.Patient
             
         }
         
-        [HttpPost("RegisterPatient")]
-        public async Task<IActionResult> RegisterPatient ([FromForm] RegisterRequestDto registerRequestDto)
+        [HttpPost("RegisterPatient{centerId}")]
+        public async Task<IActionResult> RegisterPatient (int centerId,[FromForm] RegisterRequestDto registerRequestDto)
         {
-            var result = await authService.RegisterAsync(registerRequestDto);
+            var result = await authService.RegisterAsync(centerId,registerRequestDto);
             return Ok(result);
         }
         
-        [HttpPost("verify-code")]
-        public async Task<IActionResult> VerifyCode([FromBody] VerifyOtpRequestDto request)
+        [HttpPost("verify-code{centerId}")]
+        public async Task<IActionResult> VerifyCode(int centerId,[FromBody] VerifyOtpRequestDto request)
         {
-            var result = await authService.VerifyOtpAsync(request);
+            var result = await authService.VerifyOtpAsync(centerId,request);
 
             if (result == null)
                 throw new ArgumentException("الكود غير صحيح أو منتهي الصلاحية.");

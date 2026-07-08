@@ -7,6 +7,7 @@ using Sehatak.Application.Interfaces.AuthPatient;
 using Sehatak.Application.Interfaces.IEmail;
 using Sehatak.Domain.Entities;
 using Sehatak.Domain.Entities.General;
+using Sehatak.Domain.Entities.SharedEntities;
 using Sehatak.Domain.Entities.TenantEntities;
 using Sehatak.Domain.Enums;
 using Sehatak.Infrastructure.Data;
@@ -25,7 +26,6 @@ namespace Sehatak.Infrastructure.Services.Patient.PatientRegisterAuth;
         private readonly TenantDbContextFactory tenantFactory;
         private readonly IEmailService emailSender;
         private readonly JwtTokenGenerator jwtGenerator;
-
         public AuthService(TenantDbContextFactory tenantDbContextFactory, IEmailService emailSenderService, JwtTokenGenerator jwtTokenGenerator)
         {
             tenantFactory = tenantDbContextFactory;
@@ -33,90 +33,121 @@ namespace Sehatak.Infrastructure.Services.Patient.PatientRegisterAuth;
             jwtGenerator = jwtTokenGenerator;
         }
 
-        public async Task<RegisterRequestDto> RegisterAsync(RegisterRequestDto request)
-        {
-            var db = tenantFactory.CreateForCenter(request.CenterId);
-            var existing = await db.Users.FirstOrDefaultAsync(u => u.email == request.email);
-            if (existing != null)
-                throw new BusinessException("Auth.EmailExists");
+    public async Task<RegisterResponseDto> RegisterAsync(int CenterId, RegisterRequestDto request)
+    {
+        var db = tenantFactory.CreateForCenter(CenterId);
+        var existing = await db.Users.FirstOrDefaultAsync(u => u.email == request.email);
 
-        var user = new User
-        {
-            firstName = request.firstName,
-            lastName = request.lastName,
-            email = request.email,
-            passwordHash = BCrypt.Net.BCrypt.HashPassword(request.password),
-            phoneNumber = request.phoneNumber,
-            address = request.address,
-            city = request.city,
-            role = userRole.Patient,
-            isActive = false,
-            createdAt = DateTime.UtcNow
-        };
+        if (existing != null && existing.isActive)
+            throw new BusinessException("Auth.EmailExists");
 
-        if (request.ProfileImage != null)
+        User user;
+
+        if (existing != null && !existing.isActive)
         {
 
-            var fileName = Guid.NewGuid() + Path.GetExtension(request.ProfileImage.FileName);
+            existing.firstName = request.firstName;
+            existing.lastName = request.lastName;
+            existing.passwordHash = BCrypt.Net.BCrypt.HashPassword(request.password);
+            existing.phoneNumber = request.phoneNumber;
+            existing.address = request.address;
+            existing.city = request.city;
 
-            var path = Path.Combine("wwwroot/uploads/logos", fileName);
-
-            using (var stream = new FileStream(path, FileMode.Create))
+            if (request.ProfileImage != null)
             {
-                await request.ProfileImage.CopyToAsync(stream);
+                var fileName = Guid.NewGuid() + Path.GetExtension(request.ProfileImage.FileName);
+                var path = Path.Combine("wwwroot/uploads/receipts", fileName);
+                using (var stream = new FileStream(path, FileMode.Create))
+                {
+                    await request.ProfileImage.CopyToAsync(stream);
+                }
+                existing.ProfileImageUrl = $"/uploads/receipts/{fileName}";
             }
 
-            user.ProfileImageUrl = $"/uploads/logos/{fileName}";
+            user = existing;
+            await db.SaveChangesAsync();
         }
+        else
+        {
+            user = new User
+            {
+                firstName = request.firstName,
+                lastName = request.lastName,
+                email = request.email,
+                passwordHash = BCrypt.Net.BCrypt.HashPassword(request.password),
+                phoneNumber = request.phoneNumber,
+                address = request.address,
+                city = request.city,
+                role = userRole.Patient,
+                isActive = false,
+                createdAt = DateTime.UtcNow
+            };
+
+            if (request.ProfileImage != null)
+            {
+                var fileName = Guid.NewGuid() + Path.GetExtension(request.ProfileImage.FileName);
+                var path = Path.Combine("wwwroot/uploads/receipts", fileName);
+                using (var stream = new FileStream(path, FileMode.Create))
+                {
+                    await request.ProfileImage.CopyToAsync(stream);
+                }
+                user.ProfileImageUrl = $"/uploads/receipts/{fileName}";
+            }
+
             await db.Users.AddAsync(user);
             await db.SaveChangesAsync();
-
-            var code = new Random().Next(100000, 999999).ToString();
-            db.EmailVerificationCodes.Add(new EmailVerificationCode
-            {
-                UserId = user.Id,
-                Code = code,
-                ExpiresAt = DateTime.UtcNow.AddMinutes(10)
-            });
-            await db.SaveChangesAsync();
-
-            await emailSender.SendOtpAsync(user.email!, code, "register");
-
-
-        return request;
         }
 
-        public async Task<VerifyOtpResponseDto?> VerifyOtpAsync(VerifyOtpRequestDto request)
+        var code = new Random().Next(100000, 999999).ToString();
+        db.EmailVerificationCodes.Add(new EmailVerificationCode
         {
-            using var db = tenantFactory.CreateForCenter(request.CenterId);
+            UserId = user.Id,
+            Code = code,
+            Purpose = "register",
+            ExpiresAt = DateTime.UtcNow.AddMinutes(10)
+        });
+        await db.SaveChangesAsync();
 
-            var user = await db.Users.FirstOrDefaultAsync(u => u.email == request.Email);
-            if (user == null) return null;
+        await emailSender.SendOtpAsync(user.email!, code, "register");
 
-            var validCode = await db.EmailVerificationCodes
-                .Where(c => c.UserId == user.Id
-                         && c.Code == request.code
-                         && !c.IsUsed
-                         && c.ExpiresAt > DateTime.UtcNow)
-                .FirstOrDefaultAsync();
+        return new RegisterResponseDto
+        {
+            UserId = user.Id,
+            Email = user.email!
+        };
+    }
 
-            if (validCode == null) return null;
+    public async Task<VerifyOtpResponseDto?> VerifyOtpAsync(int CenterId,VerifyOtpRequestDto request)
+    {
+        using var db = tenantFactory.CreateForCenter(CenterId);
 
-            user.isActive = true;
-            validCode.IsUsed = true;
-            await db.SaveChangesAsync();
+        var user = await db.Users.FirstOrDefaultAsync(u => u.Id == request.UserId);
+        if (user == null) return null;
 
-            var token = jwtGenerator.GenerateToken(
-                userId: user.Id,
-                name: $"{user.firstName} {user.lastName}",
-                email: user.email!,
-                role: user.role.ToString(),
-                centerId: request.CenterId
-            );
+        var validCode = await db.EmailVerificationCodes
+            .Where(c => c.UserId == user.Id
+                     && c.Code == request.code
+                     && !c.IsUsed
+                     && c.ExpiresAt > DateTime.UtcNow)
+            .FirstOrDefaultAsync();
 
-            return new VerifyOtpResponseDto { Token = token };
-        }
+        if (validCode == null) return null;
 
-    
+        user.isActive = true;
+        validCode.IsUsed = true;
+        await db.SaveChangesAsync();
+
+        var token = jwtGenerator.GenerateToken(
+            userId: user.Id,
+            name: $"{user.firstName} {user.lastName}",
+            email: user.email!,
+            role: user.role.ToString(),
+            centerId:CenterId
+        );
+
+        return new VerifyOtpResponseDto { Token = token };
+    }
+
+
 }
 
