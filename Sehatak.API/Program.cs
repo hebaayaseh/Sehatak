@@ -266,6 +266,7 @@ namespace Sehatak.API
             builder.Services.AddScoped<ISubscriptionPayment, SubscriptionPaymentService>();
             builder.Services.AddHostedService<SubscriptionActivationService>();
             builder.Services.AddScoped<IAdminBulkEmailService, AdminBulkEmailService>();
+            builder.Services.AddScoped<ICreateAdminService, CreateAdminService>();
 
             var app = builder.Build();
 

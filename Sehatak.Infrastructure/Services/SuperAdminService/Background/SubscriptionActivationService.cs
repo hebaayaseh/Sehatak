@@ -60,66 +60,23 @@ namespace Sehatak.Infrastructure.Services.SuperAdminService.Background
             {
                 expired.Status = SubscriptionStatus.Expired;
 
-                var pending = await sharedDb.CenterSubscriptions
-                    .FirstOrDefaultAsync(s => s.CenterId == expired.CenterId
-                                           && s.Status == SubscriptionStatus.Pending);
-
-                if (pending != null)
+                var center = await sharedDb.MedicalCenters.FindAsync(expired.CenterId);
+                if (center != null)
                 {
-                    pending.Status = SubscriptionStatus.Active;
+                    center.CenterStatus = CenterStatus.Suspended;
 
-                    var oldFeatures = await sharedDb.CenterFeatures
-                        .Where(cf => cf.CenterId == expired.CenterId)
-                        .ToListAsync();
-                    sharedDb.CenterFeatures.RemoveRange(oldFeatures);
-
-                    var newPlanFeatureIds = await sharedDb.PlanFeatures
-                        .Where(pf => pf.PlanId == pending.PlanId)
-                        .Select(pf => pf.FeatureId)
-                        .ToListAsync();
-
-                    foreach (var featureId in newPlanFeatureIds)
+                    if (!string.IsNullOrEmpty(center.AdminEmail))
                     {
-                        sharedDb.CenterFeatures.Add(new CenterFeature
-                        {
-                            CenterId = expired.CenterId,
-                            FeatureId = featureId,
-                            IsEnabled = true
-                        });
-                    }
-
-                    if (!string.IsNullOrEmpty(expired.Center?.AdminEmail))
-                    {
-                        await emailService.SendPaymentConfirmedAsync(
-                            expired.Center.AdminEmail,
-                            expired.Center.Name,
-                            pending.AmountPaid
+                        await emailService.SendCustomMessageAsync(
+                            center.AdminEmail,
+                            $"تعليق حساب {center.Name}",
+                            $"تم تعليق حساب مركز {center.Name} بسبب انتهاء الاشتراك. يرجى إتمام الدفع لتفعيل الاشتراك الجديد إن وُجد، أو التواصل مع الإدارة."
                         );
                     }
-
-                    _logger.LogInformation(
-                        "Subscription activated for center {CenterId}", expired.CenterId);
                 }
-                else
-                {
-                    var center = await sharedDb.MedicalCenters.FindAsync(expired.CenterId);
-                    if (center != null)
-                    {
-                        center.CenterStatus = CenterStatus.Suspended;
 
-                        if (!string.IsNullOrEmpty(center.AdminEmail))
-                        {
-                            await emailService.SendCustomMessageAsync(
-                                center.AdminEmail,
-                                $"تعليق حساب {center.Name}",
-                                $"تم تعليق حساب مركز {center.Name} بسبب انتهاء الاشتراك دون تجديد. يرجى التواصل مع الإدارة لإعادة التفعيل."
-                            );
-                        }
-                    }
-
-                    _logger.LogWarning(
-                        "Center {CenterId} suspended", expired.CenterId);
-                }
+                _logger.LogWarning(
+                    "Center {CenterId} suspended after subscription expiry", expired.CenterId);
             }
 
             await sharedDb.SaveChangesAsync();
