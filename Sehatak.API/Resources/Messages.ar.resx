@@ -343,4 +343,10 @@
   <data name="Validation.SamePassword&quot;" xml:space="preserve">
     <value>نفس كلمة المرور الاصلية</value>
   </data>
+  <data name="Validation.InvalidYear" xml:space="preserve">
+    <value>السنة غير موجودة</value>
+  </data>
+  <data name="Validation.InvalidMonth" xml:space="preserve">
+    <value>الشهر غير صحيح </value>
+  </data>
 </root>

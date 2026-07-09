@@ -343,4 +343,10 @@
   <data name="Validation.SamePassword&quot;" xml:space="preserve">
     <value>Same password</value>
   </data>
+  <data name="Validation.InvalidYear" xml:space="preserve">
+    <value>Year Can not valid</value>
+  </data>
+  <data name="Validation.InvalidMonth" xml:space="preserve">
+    <value>Moth is not valid</value>
+  </data>
 </root>
