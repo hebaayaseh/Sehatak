@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Localization;
 using Sehatak.Application.DTOs.PatienRegisterDto;
 using Sehatak.Application.Interfaces.AuthPatient;
@@ -16,7 +17,7 @@ namespace Sehatak.API.Controllers.Patient
             this.authService = authService;
             
         }
-        
+        [EnableRateLimiting("LoginPolicy")]
         [HttpPost("RegisterPatient{centerId}")]
         public async Task<IActionResult> RegisterPatient (int centerId,[FromForm] RegisterRequestDto registerRequestDto)
         {

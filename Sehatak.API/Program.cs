@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.IdentityModel.Tokens;
 using Sehatak.API.Hubs;
+using System.Threading.RateLimiting;
 using Sehatak.API.Hubs;
 using Sehatak.API.Middleware;
 using Sehatak.API.Middleware;
@@ -274,6 +275,8 @@ namespace Sehatak.API
             builder.Services.AddScoped<IStaffLogin, StaffAuthService>();
             builder.Services.AddScoped<IFinancialReport, FinancialReportService>();
 
+            
+
             var app = builder.Build();
 
             // MIDDLEWARE PIPELINE 
@@ -291,6 +294,7 @@ namespace Sehatak.API
             app.UseStaticFiles();
             app.UseRequestLocalization();
             app.UseCors("SehatakPolicy");
+            app.UseRouting();
             app.UseRateLimiter();
             app.UseAuthentication();
             app.UseAuthorization();

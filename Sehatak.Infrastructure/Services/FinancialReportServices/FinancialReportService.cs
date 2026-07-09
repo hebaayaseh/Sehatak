@@ -119,7 +119,7 @@ namespace Sehatak.Infrastructure.Services.FinancialReportServices
 
             }
 
-            subSheet.Cell(row, 1).Value = "Total Amount ";
+            subSheet.Cell(row, 1).Value = "Total Amount";
             subSheet.Cell(row, 1).Style.Font.Bold = true;
             subSheet.Cell(row, 2).Value = subByCenter.Sum(x => x.Total);
             subSheet.Cell(row, 2).Style.Font.Bold = true;
