@@ -19,6 +19,7 @@ using Sehatak.Application.Interfaces.Centers;
 using Sehatak.Application.Interfaces.CentersStatusDto;
 using Sehatak.Application.Interfaces.Features;
 using Sehatak.Application.Interfaces.IEmail;
+using Sehatak.Application.Interfaces.IFinancialReports;
 using Sehatak.Application.Interfaces.IProfileInterface;
 using Sehatak.Application.Interfaces.ISubscriptionPaymentService;
 using Sehatak.Application.Interfaces.MedicalCenter;
@@ -36,6 +37,7 @@ using Sehatak.Infrastructure.Security;
 using Sehatak.Infrastructure.Security;
 using Sehatak.Infrastructure.Services;
 using Sehatak.Infrastructure.Services;
+using Sehatak.Infrastructure.Services.FinancialReportServices;
 using Sehatak.Infrastructure.Services.Patient.PatientRegisterAuth;
 using Sehatak.Infrastructure.Services.StaffLogin;
 using Sehatak.Infrastructure.Services.SuperAdminService.Background;
@@ -270,6 +272,8 @@ namespace Sehatak.API
             builder.Services.AddScoped<IAdminBulkEmailService, AdminBulkEmailService>();
             builder.Services.AddScoped<ICreateAdminService, CreateAdminService>();
             builder.Services.AddScoped<IStaffLogin, StaffAuthService>();
+            builder.Services.AddScoped<IFinancialReport, FinancialReportService>();
+
             var app = builder.Build();
 
             // MIDDLEWARE PIPELINE 

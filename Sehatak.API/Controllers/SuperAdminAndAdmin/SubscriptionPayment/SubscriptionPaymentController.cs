@@ -15,7 +15,7 @@ namespace Sehatak.API.Controllers.SuperAdminAndAdmin.SubscriptionPayment
         {
             this.subscriptionPayment = subscriptionPayment;
         }
-        [Authorize(Policy = "Admin")]
+        [Authorize(Policy = "AdminOrAbove")]
         [HttpPost("record-payment/{centerId}")]
         public async Task<IActionResult> RecordPayment(int centerId, [FromBody] recordPaymentRequestDto request)
         {
