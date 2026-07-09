@@ -74,8 +74,8 @@ namespace Sehatak.Infrastructure.Services.FinancialReportServices
             using var workbook = new XLWorkbook();
             var paymentSheet = workbook.Worksheets.Add("Payment confirmed");
             paymentSheet.RightToLeft = true;
-            paymentSheet.Cell("Center");
-            paymentSheet.Cell("Amount");
+            paymentSheet.Cell(1,1).Value= "Center";
+            paymentSheet.Cell(1,2).Value= "Amount";
             paymentSheet.Range(1, 1, 1, 2).Style.Font.Bold = true;
 
             var paymentByCenter = confirmedPayments
