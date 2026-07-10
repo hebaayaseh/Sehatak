@@ -44,8 +44,8 @@ namespace Sehatak.API.Controllers.SuperAdminAndAdmin.SubscriptionPayment
         }
 
         [Authorize(Policy = "SuperAdminOnly")]
-        [HttpGet("pending-payment/{centerId}")]
-        public async Task<IActionResult> GetPendingPayment(int centerId)
+        [HttpGet("pending-payment")]
+        public async Task<IActionResult> GetPendingPayment()
         {
             var result = await subscriptionPayment.GetPendingPaymentsAsync();
             return Ok(result);
