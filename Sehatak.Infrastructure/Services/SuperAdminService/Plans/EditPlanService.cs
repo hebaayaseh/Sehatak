@@ -31,17 +31,25 @@ namespace Sehatak.Infrastructure.Services.SuperAdminService.Plans
                 throw new BusinessException("Subscription.PlanNotFound");
 
 
-            if(request.price!=null) Plan.Price = (decimal)request.price;
-            if(request.name!=null) Plan.Name = request.name;
-            if (request.DurationDays != null) Plan.DurationDays = (int)request.DurationDays;
+            if (request.price != null)
+                Plan.Price = request.price.Value;
+
+            if (request.name != null)
+                Plan.Name = request.name;
+
+            if (request.DurationDays != null)
+                Plan.DurationDays = request.DurationDays.Value;
+
             await sharedDbContext.SaveChangesAsync();
 
-            var returnPlan = new EditRespondeDto { Id = planId};
-            if (request.price != null) returnPlan.price = (decimal)request.price;
-            if(request.name!=null) returnPlan.name = request.name;
-            if(request.DurationDays!=null) returnPlan.DurationDays = (int)request.DurationDays;
+            return new EditRespondeDto
+            {
+                Id = planId,
+                price = Plan.Price,
+                name = Plan.Name,
+                DurationDays = Plan.DurationDays
+            };
 
-            return returnPlan;
         }
     }
 }

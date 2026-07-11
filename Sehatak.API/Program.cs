@@ -274,7 +274,7 @@ namespace Sehatak.API
             builder.Services.AddScoped<ICreateAdminService, CreateAdminService>();
             builder.Services.AddScoped<IStaffLogin, StaffAuthService>();
             builder.Services.AddScoped<IFinancialReport, FinancialReportService>();
-
+            builder.Services.AddScoped<IEditPlan, EditPlanService>();
             
 
             var app = builder.Build();
