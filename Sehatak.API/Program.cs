@@ -39,7 +39,6 @@ using Sehatak.Infrastructure.Security;
 using Sehatak.Infrastructure.Services;
 using Sehatak.Infrastructure.Services;
 using Sehatak.Infrastructure.Services.FinancialReportServices;
-using Sehatak.Infrastructure.Services.Patient.PatientRegisterAuth;
 using Sehatak.Infrastructure.Services.StaffLogin;
 using Sehatak.Infrastructure.Services.SuperAdminService.Background;
 using Sehatak.Infrastructure.Services.SuperAdminService.CenterService;
@@ -55,6 +54,7 @@ using Serilog;
 using System;
 using System.Text;
 using System.Threading.RateLimiting;
+using Sehatak.Infrastructure.Services.PatientService.PatientRegisterAuth;
 
 namespace Sehatak.API
 {

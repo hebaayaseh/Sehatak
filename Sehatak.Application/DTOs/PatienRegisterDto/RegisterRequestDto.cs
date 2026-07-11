@@ -27,6 +27,9 @@ namespace Sehatak.Application.DTOs.PatienRegisterDto
         public string city { get; set; }
         
         public IFormFile? ProfileImage { get; set; }
+        public Gender gender { get; set; }
+        public BloodType bloodType { get; set; }
+        public DateOnly DateOfBith { get; set; }
 
     }
 }

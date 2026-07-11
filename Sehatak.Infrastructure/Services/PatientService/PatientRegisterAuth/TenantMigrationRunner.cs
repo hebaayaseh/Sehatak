@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Sehatak.Infrastructure.Data;
 
-namespace Sehatak.Infrastructure.Services.Patient.PatientRegisterAuth;
+namespace Sehatak.Infrastructure.Services.PatientService.PatientRegisterAuth;
     public class TenantMigrationRunner
     {
         private readonly SharedDbContext _sharedDb;

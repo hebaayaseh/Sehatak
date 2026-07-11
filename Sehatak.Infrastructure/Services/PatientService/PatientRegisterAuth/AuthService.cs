@@ -20,7 +20,7 @@ using System.Threading.Tasks;
 using Volo.Abp;
 
 
-namespace Sehatak.Infrastructure.Services.Patient.PatientRegisterAuth;
+namespace Sehatak.Infrastructure.Services.PatientService.PatientRegisterAuth;
     public class AuthService : IAuthService
     {
         private readonly TenantDbContextFactory tenantFactory;
@@ -52,6 +52,7 @@ namespace Sehatak.Infrastructure.Services.Patient.PatientRegisterAuth;
             existing.phoneNumber = request.phoneNumber;
             existing.address = request.address;
             existing.city = request.city;
+            
 
             if (request.ProfileImage != null)
             {
@@ -97,6 +98,29 @@ namespace Sehatak.Infrastructure.Services.Patient.PatientRegisterAuth;
             await db.Users.AddAsync(user);
             await db.SaveChangesAsync();
         }
+        var existingPatient = await db.Patients.FirstOrDefaultAsync(p => p.userId == user.Id);
+
+        if (existingPatient != null)
+        {
+            existingPatient.DateOfBith = request.DateOfBith;
+            existingPatient.BloodType = request.bloodType;
+            existingPatient.Gender = request.gender;
+            existingPatient.WhatsappNumber = request.phoneNumber;
+        }
+        else
+        {
+            var patient = new Patient
+            {
+                userId = user.Id,
+                DateOfBith = request.DateOfBith,
+                BloodType = request.bloodType,
+                Gender = request.gender,
+                WhatsappNumber = request.phoneNumber,
+            };
+            await db.Patients.AddAsync(patient);
+        }
+
+        await db.SaveChangesAsync();
 
         var code = new Random().Next(100000, 999999).ToString();
         db.EmailVerificationCodes.Add(new EmailVerificationCode
@@ -136,6 +160,8 @@ namespace Sehatak.Infrastructure.Services.Patient.PatientRegisterAuth;
         user.isActive = true;
         validCode.IsUsed = true;
         await db.SaveChangesAsync();
+
+
 
         var token = jwtGenerator.GenerateToken(
             userId: user.Id,

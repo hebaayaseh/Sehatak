@@ -14,6 +14,7 @@ namespace Sehatak.API.Controllers.SuperAdminController.FeatureOperation
         {
             this.editPlan = editPlan;
         }
+
         [Authorize(Policy = "SuperAdminOnly")]
         [HttpPost("edit-plan/{planId}")]
         public async Task<IActionResult> EditPlan(int planId ,[FromBody] EditPalnRequestDto request)
