@@ -16,6 +16,5 @@ namespace Sehatak.Application.DTOs.Plans
 
         public int DurationDays { get; set; }
 
-        public int platformFeatureId { get; set; }
     }
 }
