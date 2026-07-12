@@ -165,7 +165,7 @@ namespace Sehatak.Infrastructure.Services.SuperAdminService.CenterService
                 }).FirstOrDefaultAsync();
         }
 
-        public async Task<bool> ApproveCenterRequest(int centerId,int superAdminId)
+        public async Task<bool> ApproveCenterRequest(int requestId,int superAdminId)
         {
             var superAdmin = await sharedDbContext.SuperAdmins
                 .FindAsync(superAdminId);
@@ -174,7 +174,7 @@ namespace Sehatak.Infrastructure.Services.SuperAdminService.CenterService
                 throw new BusinessException("Auth.Unauthorized");
 
             var request = await sharedDbContext.centerRegistrationRequests
-                .FirstOrDefaultAsync(r => r.Id == centerId);
+                .FirstOrDefaultAsync(r => r.Id == requestId);
 
             if (request == null)
                 throw new BusinessException("Center.NotFound");
@@ -226,7 +226,7 @@ namespace Sehatak.Infrastructure.Services.SuperAdminService.CenterService
             await sharedDbContext.CenterSubscriptions.AddAsync(subscription);
             await sharedDbContext.SaveChangesAsync();
 
-            await contextFactory.CreateTenantDatabaseAsync(centerId);
+            await contextFactory.CreateTenantDatabaseAsync(newCenter.Id);
             newCenter.CenterStatus = CenterStatus.Active;
 
 
@@ -236,7 +236,7 @@ namespace Sehatak.Infrastructure.Services.SuperAdminService.CenterService
             request.CreatedCenterId = newCenter.Id;
             await sharedDbContext.SaveChangesAsync();
 
-            using var db = contextFactory.CreateForCenter(centerId);
+            using var db = contextFactory.CreateForCenter(newCenter.Id);
             var emailExists = await db.Users.AnyAsync(u => u.email == request.AdminEmail);
             if (emailExists)
                 throw new BusinessException("Auth.EmailExists");
