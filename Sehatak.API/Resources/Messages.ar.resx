@@ -352,4 +352,7 @@
   <data name="CenterRegistration.AlreadyPending" xml:space="preserve">
     <value>الطلب مسجل مسبقا</value>
   </data>
+  <data name="CenterRegistration.AlreadyReviewed" xml:space="preserve">
+    <value>تم مراجعة الطلب</value>
+  </data>
 </root>

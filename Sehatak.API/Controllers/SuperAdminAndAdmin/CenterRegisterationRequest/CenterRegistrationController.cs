@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Sehatak.Application.DTOs.CreateCenterRequestDto;
 using Sehatak.Application.Interfaces.CenterRegistrationRequest;
+using System.Security.Claims;
 
 namespace Sehatak.API.Controllers.SuperAdminAndAdmin.CenterRegisterationRequest
 {
@@ -50,16 +51,18 @@ namespace Sehatak.API.Controllers.SuperAdminAndAdmin.CenterRegisterationRequest
         [HttpPost("{requestId}/approve")]
         public async Task<IActionResult> Approve(int requestId)
         {
-            int CurrentSuperAdminId = int.Parse(User.FindFirst("SuperAdminId")!.Value);
-            await centerRegistration.ApproveCenterRequest(requestId, CurrentSuperAdminId);
+            var superAdminId = int.Parse(
+                 User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            await centerRegistration.ApproveCenterRequest(requestId, superAdminId);
             return Ok(new { message = "Center approved and provisioned successfully." });
         }
 
         [HttpPost("{requestId}/reject")]
         public async Task<IActionResult> Reject(int requestId, [FromBody] RejectCenterRequestDto dto)
         {
-            int CurrentSuperAdminId = int.Parse(User.FindFirst("SuperAdminId")!.Value);
-            await centerRegistration.RejectAsync(requestId, CurrentSuperAdminId, dto.rejectionReason);
+            var superAdminId = int.Parse(
+                User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            await centerRegistration.RejectAsync(requestId, superAdminId, dto.rejectionReason);
             return Ok(new { message = "Center registration rejected." });
         }
 

@@ -19,11 +19,8 @@ namespace Sehatak.Application.DTOs.CreateCenterRequestDto
         public string AdminEmail { get; set; } = string.Empty;
         public string AdminPhone { get; set; } = string.Empty;
         public string PasswordHash { get; set; } = string.Empty;
-        public CenterRegistrationStatus Status { get; set; } = CenterRegistrationStatus.Pending;
         public DateTime RequestedAt { get; set; } = DateTime.UtcNow;
         public IFormFile? LogoUrl { get; set; }
-
-        public BookingType BookingType { get; set; } = BookingType.TimeSlot;
 
         public bool RequiresPrepayment { get; set; } = false;
 

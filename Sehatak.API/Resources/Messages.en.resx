@@ -352,4 +352,7 @@
   <data name="CenterRegistration.AlreadyPending" xml:space="preserve">
     <value>The request already submit  </value>
   </data>
+  <data name="CenterRegistration.AlreadyReviewed" xml:space="preserve">
+    <value>Request already reviewed </value>
+  </data>
 </root>

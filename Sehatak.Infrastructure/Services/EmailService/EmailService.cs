@@ -48,10 +48,10 @@ namespace Sehatak.Infrastructure.Services
         {
             var subject = purpose switch
             {
-                "register" => "تأكيد حسابك - Sehatak",
-                "change-email" => "تأكيد تغيير الإيميل - Sehatak",
-                "change-password" => "تأكيد تغيير كلمة السر - Sehatak",
-                _ => "رمز التحقق - Sehatak"
+                "register" => "تأكيد حسابك - SIHATUAK",
+                "change-email" => "تأكيد تغيير الإيميل - SIHATUAK",
+                "change-password" => "تأكيد تغيير كلمة السر - SIHATUAK",
+                _ => "رمز التحقق - SIHATUAK"
             };
 
             var body = $@"
@@ -68,13 +68,13 @@ namespace Sehatak.Infrastructure.Services
             var body = $@"
                 <div dir='rtl' style='font-family:Arial;padding:20px'>
                     <h2>مرحباً {name}</h2>
-                    <p>تم إنشاء حسابك بمركز <strong>{centerName}</strong> على منصة Sehatak.</p>
+                    <p>تم إنشاء حسابك بمركز <strong>{centerName}</strong> على منصة SIHATUAK.</p>
                     <p>كلمة السر المؤقتة الخاصة بك:</p>
                     <p style='font-size:24px;font-weight:bold;background:#f0f0f0;padding:10px;border-radius:8px'>{tempPassword}</p>
                     <p style='color:red'>يرجى تغيير كلمة السر فور تسجيل الدخول.</p>
                 </div>";
 
-            await SendAsync(toEmail, "بيانات حسابك - Sehatak", body);
+            await SendAsync(toEmail, "بيانات حسابك - SIHATUAK", body);
         }
 
         public async Task SendSubscriptionRenewalReminderAsync(string toEmail, string centerName, DateOnly endDate)
@@ -109,7 +109,7 @@ namespace Sehatak.Infrastructure.Services
         <div dir='rtl' style='font-family:Arial;padding:20px'>
             <p>{message}</p>
             <hr/>
-            <small>منصة Sehatak</small>
+            <small>منصة SIHATUAK</small>
         </div>";
 
             await SendAsync(toEmail, subject, body);

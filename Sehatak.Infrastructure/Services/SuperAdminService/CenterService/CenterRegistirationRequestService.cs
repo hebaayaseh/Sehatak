@@ -93,6 +93,10 @@ namespace Sehatak.Infrastructure.Services.SuperAdminService.CenterService
             await sharedDbContext.centerRegistrationRequests.AddAsync(creatCenter);
             await sharedDbContext.SaveChangesAsync();
 
+            await emailService.SendCustomMessageAsync(
+                request.AdminEmail , "Success Request / SIHATUAK ", "تم الطلب بنجاح "
+                );
+
             return new CenterRegistrationResponseDto
             {
                 Id = creatCenter.Id,
@@ -114,7 +118,7 @@ namespace Sehatak.Infrastructure.Services.SuperAdminService.CenterService
         public async Task<List<CenterRegistrationResponseDto>> GetCentersRegisterationAsync()
         {
             return await sharedDbContext.centerRegistrationRequests
-                .Where(c => c.ReviewedBySuperAdminId == null && c.Status==CenterRegistrationStatus.Pending)
+                .Where(c => c.Status==CenterRegistrationStatus.Pending)
                 .OrderByDescending(r => r.RequestedAt)
                 .Select(c=> new CenterRegistrationResponseDto
                 {
@@ -142,7 +146,7 @@ namespace Sehatak.Infrastructure.Services.SuperAdminService.CenterService
                 throw new BusinessException("Center.NotFound");
 
             return await sharedDbContext.centerRegistrationRequests
-                .Where(c => c.ReviewedBySuperAdminId == null && c.Id == centerId)
+                .Where(c => c.Id == centerId)
                 .Select(c => new CenterRegistrationResponseDto
                 {
                     AdminEmail = c.AdminEmail,
@@ -173,10 +177,10 @@ namespace Sehatak.Infrastructure.Services.SuperAdminService.CenterService
                 .FirstOrDefaultAsync(r => r.Id == centerId);
 
             if (request == null)
-                throw new BusinessException("CenterRegistration.NotFound");
+                throw new BusinessException("Center.NotFound");
 
             if (request == null)
-                throw new BusinessException("CenterRegistration.NotFound");
+                throw new BusinessException("Center.NotFound");
 
             if (request.Status != CenterRegistrationStatus.Pending)
                 throw new BusinessException("CenterRegistration.AlreadyReviewed");
@@ -188,6 +192,7 @@ namespace Sehatak.Infrastructure.Services.SuperAdminService.CenterService
             {
                 Name = request.CenterName,
                 AdminEmail = request.AdminEmail,
+                Address = request.CenterAddress,
                 Phone = request.CenterPhone,
                 AdminWhatsappNumber = request.AdminPhone,
                 CreatedAt = DateTime.UtcNow,
@@ -202,8 +207,9 @@ namespace Sehatak.Infrastructure.Services.SuperAdminService.CenterService
             var urlExists = await sharedDbContext.MedicalCenters
                 .AnyAsync(c => c.UniqueUrl == centerUrl);
             if (urlExists)
-                throw new BusinessException("Center.UniqueUrlExists");
-            newCenter.LogoUrl = centerUrl;
+                throw new BusinessException("Center.UrlExists");
+
+            newCenter.UniqueUrl = centerUrl;
 
             await sharedDbContext.MedicalCenters.AddAsync(newCenter);
             await sharedDbContext.SaveChangesAsync();
@@ -218,8 +224,11 @@ namespace Sehatak.Infrastructure.Services.SuperAdminService.CenterService
             };
 
             await sharedDbContext.CenterSubscriptions.AddAsync(subscription);
+            await sharedDbContext.SaveChangesAsync();
 
             await contextFactory.CreateTenantDatabaseAsync(centerId);
+            newCenter.CenterStatus = CenterStatus.Active;
+
 
             request.Status = CenterRegistrationStatus.Approved;
             request.ReviewedAt = DateTime.UtcNow;

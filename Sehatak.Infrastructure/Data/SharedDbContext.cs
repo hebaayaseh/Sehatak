@@ -160,7 +160,11 @@ namespace Sehatak.Infrastructure.Data
                 .IsRequired()
                 .HasMaxLength(20);
 
-                entity.Property(x => x.AdminFullName)
+                entity.Property(x => x.AdminFirstName)
+                .IsRequired()
+                .HasMaxLength(150);
+
+                entity.Property(x => x.AdminLastName)
                 .IsRequired()
                 .HasMaxLength(150);
 
