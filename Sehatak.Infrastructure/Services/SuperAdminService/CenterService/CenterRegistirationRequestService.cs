@@ -111,7 +111,7 @@ namespace Sehatak.Infrastructure.Services.SuperAdminService.CenterService
             };
         }
 
-        public async Task<List<CenterRegistrationResponseDto>> GetCentersRegisteration()
+        public async Task<List<CenterRegistrationResponseDto>> GetCentersRegisterationAsync()
         {
             return await sharedDbContext.centerRegistrationRequests
                 .Where(c => c.ReviewedBySuperAdminId == null && c.Status==CenterRegistrationStatus.Pending)
