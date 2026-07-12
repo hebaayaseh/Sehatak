@@ -14,7 +14,8 @@ namespace Sehatak.Domain.Entities.SharedEntities
         public string CenterAddress { get; set; } = string.Empty;
         public string CenterPhone { get; set; } = string.Empty;
 
-        public string AdminFullName { get; set; } = string.Empty;
+        public string AdminFirstName { get; set; } = string.Empty;
+        public string AdminLastName { get; set; } = string.Empty;
         public string AdminEmail { get; set; } = string.Empty;
         public string AdminPhone { get; set; } = string.Empty;
         public string PasswordHash { get; set; } = string.Empty;
@@ -29,6 +30,12 @@ namespace Sehatak.Domain.Entities.SharedEntities
         public SuperAdmin? ReviewedBySuperAdmin { get; set; }
 
         public int? CreatedCenterId { get; set; }
+        public bool RequiresPrepayment { get; set; }
+        public decimal PrepaymentAmount { get; set; }
+        public int RefundPolicyHours { get; set; }
+        public decimal PartialRefundPercent { get; set; }
+        public string? logo { get; set;}
+        public int PlanId { get; set; }
 
         // Navigation Properties : 
         public MedicalCenter? CreatedCenter { get; set; }

@@ -197,7 +197,11 @@ namespace Sehatak.Infrastructure.Data
                .OnDelete(DeleteBehavior.Restrict)
                .IsRequired(false);
 
+                entity.Property(x => x.PrepaymentAmount)
+               .HasColumnType("decimal(10,2)");
 
+                entity.Property(x => x.PartialRefundPercent)
+                    .HasColumnType("decimal(5,2)");
             });
 
             modelBuilder.Entity<SubscriptionPlan>(entity =>
