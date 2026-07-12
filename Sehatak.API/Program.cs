@@ -55,6 +55,7 @@ using System;
 using System.Text;
 using System.Threading.RateLimiting;
 using Sehatak.Infrastructure.Services.PatientService.PatientRegisterAuth;
+using Sehatak.Application.Interfaces.CenterRegistrationRequest;
 
 namespace Sehatak.API
 {
@@ -275,7 +276,7 @@ namespace Sehatak.API
             builder.Services.AddScoped<IStaffLogin, StaffAuthService>();
             builder.Services.AddScoped<IFinancialReport, FinancialReportService>();
             builder.Services.AddScoped<IEditPlan, EditPlanService>();
-            
+            builder.Services.AddScoped<ICenterRegistration, CenterRegistirationRequestService>();
 
             var app = builder.Build();
 
