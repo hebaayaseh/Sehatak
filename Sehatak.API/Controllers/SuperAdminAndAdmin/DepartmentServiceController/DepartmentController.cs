@@ -23,6 +23,14 @@ namespace Sehatak.API.Controllers.SuperAdminAndAdmin.DepartmentServiceController
             return Ok(result);
         }
 
+        [Authorize(Policy = "AdminOrAbove")]
+        [HttpPost("edit-department/{centerId}")]
+        public async Task<IActionResult> EditDepartment(int centerId, [FromBody] DepartmentUpdateRequestDto request)
+        {
+            var result = await departmentService.UpdateDepartmentAsync(centerId, request);
+            return Ok(result);
+        }
+
         
     }
 }
