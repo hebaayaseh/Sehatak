@@ -86,7 +86,7 @@ namespace Sehatak.Infrastructure.Services.SuperAdminService.CenterService
                 AdminFirstName = request.AdminFirstName,
                 AdminLastName = request.AdminLastName,
                 PlanId = request.PlanId,
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.PasswordHash),
+                PasswordHash = request.PasswordHash,
                 RequestedAt = request.RequestedAt,
                
             };
