@@ -31,6 +31,12 @@ namespace Sehatak.API.Controllers.SuperAdminAndAdmin.DepartmentServiceController
             return Ok(result);
         }
 
-        
+        [Authorize(Policy = "AdminOrAbove")]
+        [HttpDelete("delete-department/{centerId}")]
+        public async Task<IActionResult> DeleteDepartment(int centerId, [FromBody] DepartmentRemoveRequestDto request)
+        {
+            var result = await departmentService.RemoveDepartmentAsync(centerId, request);
+            return Ok(result);
+        }
     }
 }
