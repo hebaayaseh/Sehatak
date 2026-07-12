@@ -41,5 +41,6 @@ namespace Sehatak.Domain.Entities.SharedEntities
         public ICollection<CenterSubscription> Subscriptions { get; set; } = new List<CenterSubscription>();
         public SuperAdmin AddedByAdmin { get; set; }
         public ICollection<CenterFeature> Features { get; set; } = new List<CenterFeature>();
+        public CenterRegistrationRequest? RegistrationRequest { get; set; }
     }
 }

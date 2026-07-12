@@ -22,6 +22,7 @@ namespace Sehatak.Infrastructure.Data
         public DbSet<CenterFeature> CenterFeatures => Set<CenterFeature>();
         public DbSet<SubscriptionPayment> subscriptionPayments=> Set<SubscriptionPayment>();
         public DbSet<emailVerificationCode> emailVerificationCodes => Set<emailVerificationCode>();
+        public DbSet<CenterRegistrationRequest> centerRegistrationRequests => Set<CenterRegistrationRequest>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -139,6 +140,63 @@ namespace Sehatak.Infrastructure.Data
 
                 entity.Property(e => e.BookingType)
                       .HasConversion<string>();
+
+            });
+
+            modelBuilder.Entity<CenterRegistrationRequest>(entity=>
+            {
+                entity.ToTable("Center_Registration_Request");
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.CenterName)
+                .IsRequired()
+                .HasMaxLength(200);
+
+                entity.Property(e => e.CenterAddress)
+                .IsRequired()
+                .HasMaxLength(300);
+
+                entity.Property(e => e.CenterPhone)
+                .IsRequired()
+                .HasMaxLength(20);
+
+                entity.Property(x => x.AdminFullName)
+                .IsRequired()
+                .HasMaxLength(150);
+
+                entity.Property(x => x.AdminEmail)
+                    .IsRequired()
+                    .HasMaxLength(150);
+
+                entity.HasIndex(x => x.AdminEmail);
+
+                entity.Property(x => x.AdminPhone)
+                    .IsRequired()
+                    .HasMaxLength(20);
+
+                entity.Property(x => x.PasswordHash)
+                    .IsRequired();
+
+                entity.Property(x => x.Status)
+                    .IsRequired()
+                    .HasConversion<string>()   
+                    .HasMaxLength(20);
+
+                entity.Property(x => x.RejectionReason)
+                    .HasMaxLength(500);
+
+                entity.HasOne(x => x.ReviewedBySuperAdmin)
+                .WithMany()
+                .HasForeignKey(x => x.ReviewedBySuperAdminId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired(false);
+
+                entity.HasOne(x => x.CreatedCenter)
+               .WithOne(c => c.RegistrationRequest)   
+               .HasForeignKey<CenterRegistrationRequest>(x => x.CreatedCenterId)
+               .OnDelete(DeleteBehavior.Restrict)
+               .IsRequired(false);
+
 
             });
 
