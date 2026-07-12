@@ -3,7 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using Sehatak.Application.DTOs.CreateCenterRequestDto;
 using Sehatak.Application.DTOs.Exceptions;
 using Sehatak.Application.Interfaces.CenterRegistrationRequest;
+using Sehatak.Application.Interfaces.IEmail;
 using Sehatak.Domain.Entities.SharedEntities;
+using Sehatak.Domain.Entities.TenantEntities;
 using Sehatak.Domain.Enums;
 using Sehatak.Domain.Enums.SharedEnums;
 using Sehatak.Infrastructure.Data;
@@ -22,10 +24,12 @@ namespace Sehatak.Infrastructure.Services.SuperAdminService.CenterService
     {
         private readonly SharedDbContext sharedDbContext;
         private TenantDbContextFactory contextFactory;
-        public CenterRegistirationRequestService(SharedDbContext sharedDbContext , TenantDbContextFactory contextFactory)
+        private readonly IEmailService emailService;
+        public CenterRegistirationRequestService(SharedDbContext sharedDbContext , TenantDbContextFactory contextFactory , IEmailService emailService)
         {
             this.sharedDbContext = sharedDbContext;
             this.contextFactory=contextFactory;
+            this.emailService = emailService;
         }
 
         public async Task<CenterRegistrationResponseDto> CenterRequestAsync(CenterRegistrationRequestDto request)
@@ -35,6 +39,10 @@ namespace Sehatak.Infrastructure.Services.SuperAdminService.CenterService
 
             if (center != null)
                 throw new BusinessException("Center.UrlExists");
+
+            var plan = await sharedDbContext.SubscriptionPlans.FindAsync(request.PlanId);
+            if (plan == null)
+                throw new BusinessException("Subscription.PlanNotFound");
 
             var pendingRequestExists = await sharedDbContext.centerRegistrationRequests
                 .AnyAsync(r => r.AdminEmail == request.AdminEmail
@@ -100,7 +108,6 @@ namespace Sehatak.Infrastructure.Services.SuperAdminService.CenterService
                 RequestedAt = creatCenter.RequestedAt,
                 ReviewedAt = null,
                 RejectionReason = null,
-                ReviewedBySuperAdminId = null,
             };
         }
 
@@ -112,15 +119,15 @@ namespace Sehatak.Infrastructure.Services.SuperAdminService.CenterService
                 .Select(c=> new CenterRegistrationResponseDto
                 {
                     AdminEmail = c.AdminEmail,
-                    AdminFullName = c.AdminFullName,
+                    AdminFirstName = c.AdminFirstName,
+                    AdminLastName = c.AdminLastName,
+                    PlanId = c.PlanId,
                     AdminPhone = c.AdminPhone,
                     CenterAddress = c.CenterAddress,
                     CenterName= c.CenterName,
                     CenterPhone= c.CenterPhone,
                     CreatedCenterId=c.CreatedCenterId,
                     RequestedAt=c.RequestedAt,
-                    ReviewedBySuperAdmin=c.ReviewedBySuperAdmin,
-                    ReviewedBySuperAdminId=c.ReviewedBySuperAdminId,
                     Status = c.Status,
                     RejectionReason = c.RejectionReason
 
@@ -148,8 +155,6 @@ namespace Sehatak.Infrastructure.Services.SuperAdminService.CenterService
                     CenterPhone = c.CenterPhone,
                     CreatedCenterId = c.CreatedCenterId,
                     RequestedAt = c.RequestedAt,
-                    ReviewedBySuperAdmin = c.ReviewedBySuperAdmin,
-                    ReviewedBySuperAdminId = c.ReviewedBySuperAdminId,
                     Status = c.Status,
                     RejectionReason = c.RejectionReason
 
@@ -175,6 +180,9 @@ namespace Sehatak.Infrastructure.Services.SuperAdminService.CenterService
 
             if (request.Status != CenterRegistrationStatus.Pending)
                 throw new BusinessException("CenterRegistration.AlreadyReviewed");
+            var plan = await sharedDbContext.SubscriptionPlans.FindAsync(request.PlanId);
+            if (plan == null)
+                throw new BusinessException("Subscription.PlanNotFound");
 
             var newCenter = new MedicalCenter
             {
@@ -182,7 +190,7 @@ namespace Sehatak.Infrastructure.Services.SuperAdminService.CenterService
                 AdminEmail = request.AdminEmail,
                 Phone = request.CenterPhone,
                 AdminWhatsappNumber = request.AdminPhone,
-                CreatedAt = request.RequestedAt,
+                CreatedAt = DateTime.UtcNow,
                 CenterStatus = CenterStatus.Active,
                 PartialRefundPercent = request.PartialRefundPercent,
                 RefundPolicyHours = request.RefundPolicyHours,
@@ -190,8 +198,28 @@ namespace Sehatak.Infrastructure.Services.SuperAdminService.CenterService
                 PrepaymentAmount = request.PrepaymentAmount,
                 LogoUrl = request.logo
             };
+            var centerUrl = $"{GenerateSlug(request.CenterName)}.sehatak.com";
+            var urlExists = await sharedDbContext.MedicalCenters
+                .AnyAsync(c => c.UniqueUrl == centerUrl);
+            if (urlExists)
+                throw new BusinessException("Center.UniqueUrlExists");
+            newCenter.LogoUrl = centerUrl;
+
             await sharedDbContext.MedicalCenters.AddAsync(newCenter);
             await sharedDbContext.SaveChangesAsync();
+
+            var subscription = new CenterSubscription { 
+               CenterId = newCenter.Id,
+               PlanId = plan.Id,
+                StartDate = DateOnly.FromDateTime(DateTime.UtcNow),
+                EndDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(plan.DurationDays)),
+                Status = SubscriptionStatus.Pending,
+                AmountPaid = plan.Price
+            };
+
+            await sharedDbContext.CenterSubscriptions.AddAsync(subscription);
+
+            await contextFactory.CreateTenantDatabaseAsync(centerId);
 
             request.Status = CenterRegistrationStatus.Approved;
             request.ReviewedAt = DateTime.UtcNow;
@@ -199,9 +227,58 @@ namespace Sehatak.Infrastructure.Services.SuperAdminService.CenterService
             request.CreatedCenterId = newCenter.Id;
             await sharedDbContext.SaveChangesAsync();
 
+            using var db = contextFactory.CreateForCenter(centerId);
+            var emailExists = await db.Users.AnyAsync(u => u.email == request.AdminEmail);
+            if (emailExists)
+                throw new BusinessException("Auth.EmailExists");
+
+            var admin = new User
+            {
+                firstName = request.AdminFirstName,
+                lastName = request.AdminLastName,
+                address = request.CenterAddress,
+                city = request.CenterAddress,
+                phoneNumber = request.AdminPhone,
+                email = request.AdminEmail,
+                passwordHash = BCrypt.Net.BCrypt.HashPassword(request.PasswordHash),
+                role = userRole.Admin,
+                isActive = true,
+                createdAt = DateTime.UtcNow
+            };
+            await db.Users.AddAsync(admin);
+            await db.SaveChangesAsync();
+
+            await emailService.SendCustomMessageAsync(
+                request.AdminEmail , "Approve Request / SIHATUAK " , "تم تفعيل حسابك بنجاح !"
+            );
+            
             return true;
 
         }
+        public async Task<bool> RejectAsync(int requestId, int superAdminId, string rejectionReason)
+        {
+            var superAdmin = await sharedDbContext.SuperAdmins.FindAsync(superAdminId);
+            if (superAdmin == null)
+                throw new BusinessException("Auth.Unauthorized");
 
+            var request = await sharedDbContext.centerRegistrationRequests.FindAsync(requestId);
+            if (request == null)
+                throw new BusinessException("CenterRegistration.NotFound");
+
+            if (request.Status != CenterRegistrationStatus.Pending)
+                throw new BusinessException("CenterRegistration.AlreadyReviewed");
+
+            request.Status = CenterRegistrationStatus.Rejected;
+            request.ReviewedAt = DateTime.UtcNow;
+            request.ReviewedBySuperAdminId = superAdminId;
+            request.RejectionReason = rejectionReason;
+
+            await sharedDbContext.SaveChangesAsync();
+            return true;
+        }
+        private string GenerateSlug(string name)
+        {
+            return name.Trim().ToLower().Replace(" ", "-");
+        }
     }
 }

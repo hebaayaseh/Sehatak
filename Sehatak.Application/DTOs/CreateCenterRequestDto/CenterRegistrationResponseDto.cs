@@ -24,7 +24,6 @@ namespace Sehatak.Application.DTOs.CreateCenterRequestDto
         public DateTime? ReviewedAt { get; set; }
         public string? RejectionReason { get; set; }
         public int? CreatedCenterId { get; set; }
-        public int? ReviewedBySuperAdminId { get; set; }
 
 
     }

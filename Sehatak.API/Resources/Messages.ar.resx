@@ -349,4 +349,7 @@
   <data name="Validation.InvalidMonth" xml:space="preserve">
     <value>الشهر غير صحيح </value>
   </data>
+  <data name="CenterRegistration.AlreadyPending" xml:space="preserve">
+    <value>الطلب مسجل مسبقا</value>
+  </data>
 </root>

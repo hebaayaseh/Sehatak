@@ -349,4 +349,7 @@
   <data name="Validation.InvalidMonth" xml:space="preserve">
     <value>Moth is not valid</value>
   </data>
+  <data name="CenterRegistration.AlreadyPending" xml:space="preserve">
+    <value>The request already submit  </value>
+  </data>
 </root>
