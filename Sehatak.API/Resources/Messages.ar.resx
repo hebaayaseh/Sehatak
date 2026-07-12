@@ -355,4 +355,7 @@
   <data name="CenterRegistration.AlreadyReviewed" xml:space="preserve">
     <value>تم مراجعة الطلب</value>
   </data>
+  <data name="Department.Exist" xml:space="preserve">
+    <value>القسم موجود بالفعل!</value>
+  </data>
 </root>

@@ -355,4 +355,7 @@
   <data name="CenterRegistration.AlreadyReviewed" xml:space="preserve">
     <value>Request already reviewed </value>
   </data>
+  <data name="Department.Exist" xml:space="preserve">
+    <value>This department already exist </value>
+  </data>
 </root>
