@@ -19,6 +19,21 @@ namespace Sehatak.Infrastructure.Services.SuperAdminService.Plans
             this.sharedDbContext = sharedDbContext;
         }
 
-        
+        public async Task<List<ListOfPlanResponseDto>> ListOfPlanAsync()
+        {
+            return await sharedDbContext.SubscriptionPlans
+                .Where(p => p.IsActive)
+                .Include(p => p.PlanFeatures)
+                    .ThenInclude(pf => pf.Feature)
+                .Select(p => new ListOfPlanResponseDto
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    DurationDays = p.DurationDays,
+                    Price = p.Price,
+                    PlanFeatureId = p.PlanFeatures.Select(pf => pf.Feature.NameOfFeature).ToList()
+                })
+                .ToListAsync();
+        }
     }
 }

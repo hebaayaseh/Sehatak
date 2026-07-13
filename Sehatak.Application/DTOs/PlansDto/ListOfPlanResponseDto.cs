@@ -14,6 +14,6 @@ namespace Sehatak.Application.DTOs.PlansDto
         public decimal Price { get; set; }
 
         public int DurationDays { get; set; }
-        public int PlanFeatureId { get; set; }
+        public List<string> PlanFeatureId { get; set; }
     }
 }

@@ -9,6 +9,6 @@ namespace Sehatak.Application.Interfaces.Plans
 {
     public interface IListOfPlan
     {
-        Task<ListOfPlanResponseDto> ListOfPlanAsync();
+        Task<List<ListOfPlanResponseDto>> ListOfPlanAsync();
     }
 }
