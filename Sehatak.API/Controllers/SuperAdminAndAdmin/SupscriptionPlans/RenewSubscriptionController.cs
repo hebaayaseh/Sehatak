@@ -31,6 +31,12 @@ namespace Sehatak.API.Controllers.SuperAdminAndAdmin.SupscriptionPlans
             return Ok(result);
         }
 
-        
+        [Authorize(Policy = "AdminOrAbove")]
+        [HttpPost("cancle-subscription/{centerId}")]
+        public async Task<IActionResult> CancleSubscription(int centerId, [FromBody] CancleSubcsriptionRequest request)
+        {
+            var result = await renewSubscriptionService.CancleSubscriptionAsync(centerId, request);
+            return Ok(result);
+        }
     }
 }
