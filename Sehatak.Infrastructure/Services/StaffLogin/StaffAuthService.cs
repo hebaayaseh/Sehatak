@@ -3,6 +3,7 @@ using Sehatak.Application.DTOs.StaffLogIn;
 using Sehatak.Application.Interfaces.IEmail;
 using Sehatak.Application.Interfaces.StaffLogin;
 using Sehatak.Domain.Enums;
+using Sehatak.Domain.Enums.SharedEnums;
 using Sehatak.Infrastructure.Data;
 using Sehatak.Infrastructure.Security;
 using System;
@@ -41,7 +42,9 @@ namespace Sehatak.Infrastructure.Services.StaffLogin
             var user =  db.Users.FirstOrDefault(u => u.email == request.Email && u.isActive);
             if (user == null)
                 throw new BusinessException("Auth.Unauthorized");
-            
+
+            if (center.CenterStatus == CenterStatus.Suspended && user.role != userRole.Admin)
+                throw new BusinessException("Center.Suspended");
 
             var valid = BCrypt.Net.BCrypt.Verify(request.Password, user.passwordHash);
 
