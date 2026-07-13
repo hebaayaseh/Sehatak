@@ -1,0 +1,26 @@
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Sehatak.Application.DTOs.StaffSignup;
+using Sehatak.Application.Interfaces.DepartmentInterface;
+
+namespace Sehatak.API.Controllers.SuperAdminAndAdmin.DepartmentServiceController
+{
+    [ApiController]
+    [Route("api-add-doctor-to-department")]
+    public class AddDoctorToDepartmentController : ControllerBase
+    {
+        private readonly IAddDoctorToDepartment addDoctor;
+        public AddDoctorToDepartmentController(IAddDoctorToDepartment addDoctor)
+        {
+            this.addDoctor = addDoctor;
+        }
+
+        [Authorize(Policy = "AdminOrAbove")]
+        [HttpPost("add/doctor-to-department{crnterId}")]
+        public async Task<IActionResult> AddDoctorToDepartment(int centerId,[FromQuery] DoctorRequestDto request)
+        {
+            var result = await addDoctor.RegisterDoctorAsync(centerId, request);
+            return Ok(result);
+        }
+    }
+}

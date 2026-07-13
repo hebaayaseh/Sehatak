@@ -4,7 +4,6 @@ namespace Sehatak.Domain.Entities.TenantEntities
 {
     public class Doctor
     {
-        
         public int Id { get; set; }
         public int userId { get; set; }
         public int? departmentId { get; set; }

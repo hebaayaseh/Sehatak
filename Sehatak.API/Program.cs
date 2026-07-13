@@ -280,6 +280,8 @@ namespace Sehatak.API
             builder.Services.AddScoped<IEditPlan, EditPlanService>();
             builder.Services.AddScoped<ICenterRegistration, CenterRegistirationRequestService>();
             builder.Services.AddScoped<IDepartmentService, DepartmentsService>();
+            builder.Services.AddScoped<IAddDoctorToDepartment, AddDoctorToDepartment>();
+
 
             var app = builder.Build();
 
