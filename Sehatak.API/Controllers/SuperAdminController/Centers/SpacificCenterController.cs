@@ -15,11 +15,11 @@ namespace Sehatak.API.Controllers.SuperAdminController.Centers
             this.centerService = centerService;
         }
 
-        [Authorize(Policy = "SuperAdminOnly")]
-        [HttpGet("GetCenterById/{id}")]
-        public async Task<IActionResult> GetCenterById(int id)
+        [Authorize(Policy = "AdminOrAbove")]
+        [HttpGet("GetCenterById/{centerId}")]
+        public async Task<IActionResult> GetCenterById(int centerId)
         {
-            var result = await centerService.GetSpasificCenterById(id);
+            var result = await centerService.GetSpasificCenterById(centerId);
             return Ok(result);
         }
     }
