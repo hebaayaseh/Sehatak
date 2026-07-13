@@ -282,7 +282,7 @@ namespace Sehatak.API
             builder.Services.AddScoped<IDepartmentService, DepartmentsService>();
             builder.Services.AddScoped<IAddDoctorToDepartment, AddDoctorToDepartment>();
             builder.Services.AddScoped<IRemoveStaff, RemoveStaffFromCenter>();
-
+            builder.Services.AddScoped<IListOfPlan, ListOfPlanService>();
 
             var app = builder.Build();
 
