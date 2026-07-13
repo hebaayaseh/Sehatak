@@ -13,7 +13,7 @@ namespace Sehatak.API.Controllers.SuperAdminController.FeatureOperation
         {
             this.getAllFeatureService = getAllFeatureService;
         }
-        [Authorize(Policy = "SuperAdminOnly")]
+        [Authorize(Policy = "AdminOrAbove")]
         [HttpGet("get-all-feature")]
         public async Task<IActionResult> GetAllFeature()
         {

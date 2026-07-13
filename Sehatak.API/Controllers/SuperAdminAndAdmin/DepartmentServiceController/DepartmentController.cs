@@ -17,7 +17,7 @@ namespace Sehatak.API.Controllers.SuperAdminAndAdmin.DepartmentServiceController
 
         [Authorize(Policy = "AdminOrAbove")]
         [HttpPost("add-department/{centerId}")]
-        public async Task<IActionResult> AddDepartment(int centerId , [FromQuery] DepartmentRequestDto request)
+        public async Task<IActionResult> AddDepartment(int centerId , [FromForm] DepartmentRequestDto request)
         {
             var result = await departmentService.AddDepartmentAsync(centerId,request);
             return Ok(result);
@@ -25,7 +25,7 @@ namespace Sehatak.API.Controllers.SuperAdminAndAdmin.DepartmentServiceController
 
         [Authorize(Policy = "AdminOrAbove")]
         [HttpPost("edit-department/{centerId}")]
-        public async Task<IActionResult> EditDepartment(int centerId, [FromQuery] DepartmentUpdateRequestDto request)
+        public async Task<IActionResult> EditDepartment(int centerId, [FromForm] DepartmentUpdateRequestDto request)
         {
             var result = await departmentService.UpdateDepartmentAsync(centerId, request);
             return Ok(result);

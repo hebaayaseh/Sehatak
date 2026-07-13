@@ -22,7 +22,7 @@ namespace Sehatak.API.Controllers.SuperAdminController.FeatureOperation
             return Ok(result);
         }
 
-        [Authorize(Policy = "SuperAdminOnly")]
+        [Authorize(Policy = "AdminOrAbove")]
         [HttpGet("GetFeatures")]
         public async Task<IActionResult> GetFeatures(int planId)
         {

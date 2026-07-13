@@ -41,6 +41,7 @@ namespace Sehatak.Infrastructure.Services.StaffLogin
             var user =  db.Users.FirstOrDefault(u => u.email == request.Email && u.isActive);
             if (user == null)
                 throw new BusinessException("Auth.Unauthorized");
+            
 
             var valid = BCrypt.Net.BCrypt.Verify(request.Password, user.passwordHash);
 

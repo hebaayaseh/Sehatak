@@ -42,17 +42,22 @@ namespace Sehatak.Infrastructure.Services.DepartmentService
             if (department == null)
                 throw new BusinessException("Department.NotFound");
 
+            var emailExists = await db.Users.AnyAsync(u => u.email == request.email);
+            if (emailExists)
+                throw new BusinessException("Auth.EmailExists");
+
+
             var tempPasswored = GenerateTempPassword();
             var user = new User 
             { 
                 firstName = request.doctorFirstName,
                 lastName = request.doctorLastName,
                 address = request.address,
-                createdAt = DateTime.Now,
+                createdAt = DateTime.UtcNow,
                 email = request.email,
                 city = request.city,
                 role = userRole.Doctor,
-                passwordHash = tempPasswored,
+                passwordHash = BCrypt.Net.BCrypt.HashPassword(tempPasswored),
                 isActive = true
             };
             if (request.phoneNumber != null)
