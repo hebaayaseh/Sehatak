@@ -20,6 +20,7 @@ using Sehatak.Application.Interfaces.Centers;
 using Sehatak.Application.Interfaces.CentersStatusDto;
 using Sehatak.Application.Interfaces.DepartmentInterface;
 using Sehatak.Application.Interfaces.Features;
+using Sehatak.Application.Interfaces.GetSttafInterFace;
 using Sehatak.Application.Interfaces.IEmail;
 using Sehatak.Application.Interfaces.IFinancialReports;
 using Sehatak.Application.Interfaces.IPatientCenter;
@@ -42,6 +43,7 @@ using Sehatak.Infrastructure.Services;
 using Sehatak.Infrastructure.Services;
 using Sehatak.Infrastructure.Services.DepartmentService;
 using Sehatak.Infrastructure.Services.FinancialReportServices;
+using Sehatak.Infrastructure.Services.GetStaff;
 using Sehatak.Infrastructure.Services.PatientService.PatientRegisterAuth;
 using Sehatak.Infrastructure.Services.PtientCenterService;
 using Sehatak.Infrastructure.Services.StaffLogin;
@@ -286,6 +288,8 @@ namespace Sehatak.API
             builder.Services.AddScoped<IRemoveStaff, RemoveStaffFromCenter>();
             builder.Services.AddScoped<IListOfPlan, ListOfPlanService>();
             builder.Services.AddScoped<IGetpatientCenter, GetPatientCenterService>();
+            builder.Services.AddScoped<IGetStaff, GetStaffService>();
+
             var app = builder.Build();
 
             // MIDDLEWARE PIPELINE 

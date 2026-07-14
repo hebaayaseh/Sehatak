@@ -23,7 +23,7 @@ namespace Sehatak.API.Controllers.SuperAdminAndAdmin.PtientCentercontroller
             return Ok(result);
         }
         [Authorize(Policy = "AdminOrAbove")]
-        [HttpGet("get-patient-from-center/{centerId}")]
+        [HttpPost("get-patient-from-center/{centerId}")]
         public async Task<IActionResult> GetPatientAsync(int centerId, [FromBody] GetPatientRequestDto request)
         {
             var result = await getpatient.GetPatientAsync(centerId , request);
