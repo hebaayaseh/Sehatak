@@ -4,7 +4,7 @@ using Sehatak.Application.Interfaces.GetSttafInterFace;
 namespace Sehatak.API.Controllers.ForAllActors
 {
     [ApiController]
-    [Route("get-Receptionist-and-Lap-Technical")]
+    [Route("get-Receptionist-and-LabTechnician")]
     public class GetReceptionistController : ControllerBase
     {
         private readonly IGetStaff getStaff;
@@ -20,7 +20,7 @@ namespace Sehatak.API.Controllers.ForAllActors
             return Ok(result);
         }
 
-        [HttpGet("Get-Lap-Tecnical/{centerId}")]
+        [HttpGet("Get-LabTechnician/{centerId}")]
         public async Task<IActionResult> GetLapTechnicalAsync(int centerId)
         {
             var result = await getStaff.GetLapTechnicalsAsync(centerId);

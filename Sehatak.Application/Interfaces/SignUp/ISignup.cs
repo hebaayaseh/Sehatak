@@ -10,6 +10,6 @@ namespace Sehatak.Application.Interfaces.SignUp
     public interface ISignup
     {
         Task<ReceptionistResponseDto> AddReceptionistAsync(int centerId , ReceptionistRequestDto request);
-        Task<LapTechnicalResponseDto> AddLapTechnicalAsync(int centerId , LapTechnicalRequestDto request);
+        Task<LabTechnicianResponseDto> AddLabTechnicianAsync(int centerId , LabTechnicianRequestDto request);
     }
 }

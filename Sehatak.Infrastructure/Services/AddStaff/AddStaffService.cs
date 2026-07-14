@@ -29,7 +29,7 @@ namespace Sehatak.Infrastructure.Services.AddStaff
             this.emailService = emailService;
         }
 
-        public async Task<LapTechnicalResponseDto> AddLapTechnicalAsync(int centerId, LapTechnicalRequestDto request)
+        public async Task<LabTechnicianResponseDto> AddLabTechnicianAsync(int centerId, LabTechnicianRequestDto request)
         {
             var center = await sharedDbContext.MedicalCenters
                .FirstOrDefaultAsync(c => c.Id == centerId && c.CenterStatus == CenterStatus.Active);
@@ -39,14 +39,14 @@ namespace Sehatak.Infrastructure.Services.AddStaff
 
             using var db = contextFactory.CreateForCenter(centerId);
 
-            var LapTechnical = await db.Users
+            var LabTechnician = await db.Users
                 .FirstOrDefaultAsync(e => e.email == request.email);
 
-            if (LapTechnical != null)
+            if (LabTechnician != null)
                 throw new BusinessException("Auth.EmailExists");
             var tempPaswored = GenerateTempPassword();
 
-            var newLapTechnical = new User
+            var newLabTechnician = new User
             {
                 firstName = request.LapTechnicalFirstName,
                 lastName = request.LapTechnicalLastName,
@@ -60,7 +60,7 @@ namespace Sehatak.Infrastructure.Services.AddStaff
             };
             if (request.phoneNumber != null)
             {
-                newLapTechnical.phoneNumber = request.phoneNumber;
+                newLabTechnician.phoneNumber = request.phoneNumber;
             }
             if (request.ProfileImage != null)
             {
@@ -70,9 +70,9 @@ namespace Sehatak.Infrastructure.Services.AddStaff
                 {
                     await request.ProfileImage.CopyToAsync(stream);
                 }
-                newLapTechnical.ProfileImageUrl = $"/uploads/receipts/{fileName}";
+                newLabTechnician.ProfileImageUrl = $"/uploads/receipts/{fileName}";
             }
-            await db.Users.AddAsync(newLapTechnical);
+            await db.Users.AddAsync(newLabTechnician);
             await db.SaveChangesAsync();
             await emailService.SendTempPasswordAsync(
                 request.email,
@@ -80,10 +80,10 @@ namespace Sehatak.Infrastructure.Services.AddStaff
                  tempPaswored,
                   center.Name);
 
-            return new LapTechnicalResponseDto
+            return new LabTechnicianResponseDto
             {
-                UserId = newLapTechnical.Id,
-                Email = newLapTechnical.email,
+                UserId = newLabTechnician.Id,
+                Email = newLabTechnician.email,
                 Message = "تم التسجيل، يرجى الانتباه لكلمة المرور وتغيريها في أقرب وقت."
             };
         

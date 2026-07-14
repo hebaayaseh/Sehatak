@@ -17,7 +17,7 @@ namespace Sehatak.API.Controllers.SuperAdminAndAdmin.DepartmentServiceController
 
         [Authorize(Policy = "AdminOrAbove")]
         [HttpPost("add-doctor-to-department/{centerId}")]
-        public async Task<IActionResult> AddDoctorToDepartment(int centerId,[FromQuery] DoctorRequestDto request)
+        public async Task<IActionResult> AddDoctorToDepartment(int centerId,[FromForm] DoctorRequestDto request)
         {
             var result = await addDoctor.RegisterDoctorAsync(centerId, request);
             return Ok(result);

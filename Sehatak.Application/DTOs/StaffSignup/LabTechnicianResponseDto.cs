@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Sehatak.Application.DTOs.StaffSignup
 {
-    public class LapTechnicalResponseDto
+    public class LabTechnicianResponseDto
     {
         public int UserId { get; set; }
         public string Email { get; set; } = string.Empty;

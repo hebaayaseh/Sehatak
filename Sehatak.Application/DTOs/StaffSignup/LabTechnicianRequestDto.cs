@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Sehatak.Application.DTOs.StaffSignup
 {
-    public class LapTechnicalRequestDto
+    public class LabTechnicianRequestDto
     {
         public string LapTechnicalFirstName { get; set; }
         public string LapTechnicalLastName { get; set; }

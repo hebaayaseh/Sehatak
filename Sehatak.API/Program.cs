@@ -32,6 +32,7 @@ using Sehatak.Application.Interfaces.MedicalCenter;
 using Sehatak.Application.Interfaces.Plans;
 using Sehatak.Application.Interfaces.RemoveFeatureFromCenter;
 using Sehatak.Application.Interfaces.RenewSubscription;
+using Sehatak.Application.Interfaces.SignUp;
 using Sehatak.Application.Interfaces.StaffLogin;
 using Sehatak.Application.Interfaces.SuperAdminInterface;
 using Sehatak.Domain.Enums.SharedEnums;
@@ -41,6 +42,7 @@ using Sehatak.Infrastructure.Security;
 using Sehatak.Infrastructure.Security;
 using Sehatak.Infrastructure.Services;
 using Sehatak.Infrastructure.Services;
+using Sehatak.Infrastructure.Services.AddStaff;
 using Sehatak.Infrastructure.Services.DepartmentService;
 using Sehatak.Infrastructure.Services.FinancialReportServices;
 using Sehatak.Infrastructure.Services.GetStaff;
@@ -289,7 +291,7 @@ namespace Sehatak.API
             builder.Services.AddScoped<IListOfPlan, ListOfPlanService>();
             builder.Services.AddScoped<IGetpatientCenter, GetPatientCenterService>();
             builder.Services.AddScoped<IGetStaff, GetStaffService>();
-
+            builder.Services.AddScoped<ISignup, AddStaffService>();
             var app = builder.Build();
 
             // MIDDLEWARE PIPELINE 
