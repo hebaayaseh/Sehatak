@@ -29,6 +29,66 @@ namespace Sehatak.Infrastructure.Services.AddStaff
             this.emailService = emailService;
         }
 
+        public async Task<LapTechnicalResponseDto> AddLapTechnicalAsync(int centerId, LapTechnicalRequestDto request)
+        {
+            var center = await sharedDbContext.MedicalCenters
+               .FirstOrDefaultAsync(c => c.Id == centerId && c.CenterStatus == CenterStatus.Active);
+
+            if (center == null)
+                throw new BusinessException("Center.NotFound");
+
+            using var db = contextFactory.CreateForCenter(centerId);
+
+            var LapTechnical = await db.Users
+                .FirstOrDefaultAsync(e => e.email == request.email);
+
+            if (LapTechnical != null)
+                throw new BusinessException("Auth.EmailExists");
+            var tempPaswored = GenerateTempPassword();
+
+            var newLapTechnical = new User
+            {
+                firstName = request.LapTechnicalFirstName,
+                lastName = request.LapTechnicalLastName,
+                email = request.email,
+                passwordHash = BCrypt.Net.BCrypt.HashPassword(tempPaswored),
+                isActive = true,
+                role = userRole.LabTechnician,
+                address = request.address,
+                createdAt = DateTime.UtcNow,
+                city = request.city,
+            };
+            if (request.phoneNumber != null)
+            {
+                newLapTechnical.phoneNumber = request.phoneNumber;
+            }
+            if (request.ProfileImage != null)
+            {
+                var fileName = Guid.NewGuid() + Path.GetExtension(request.ProfileImage.FileName);
+                var path = Path.Combine("wwwroot/uploads/receipts", fileName);
+                using (var stream = new FileStream(path, FileMode.Create))
+                {
+                    await request.ProfileImage.CopyToAsync(stream);
+                }
+                newLapTechnical.ProfileImageUrl = $"/uploads/receipts/{fileName}";
+            }
+            await db.Users.AddAsync(newLapTechnical);
+            await db.SaveChangesAsync();
+            await emailService.SendTempPasswordAsync(
+                request.email,
+                 name: $"{request.LapTechnicalFirstName} {request.LapTechnicalLastName}",
+                 tempPaswored,
+                  center.Name);
+
+            return new LapTechnicalResponseDto
+            {
+                UserId = newLapTechnical.Id,
+                Email = newLapTechnical.email,
+                Message = "تم التسجيل، يرجى الانتباه لكلمة المرور وتغيريها في أقرب وقت."
+            };
+        
+        }
+
         public async Task<ReceptionistResponseDto> AddReceptionistAsync(int centerId, ReceptionistRequestDto request)
         {
             var center = await sharedDbContext.MedicalCenters
@@ -74,6 +134,12 @@ namespace Sehatak.Infrastructure.Services.AddStaff
             }
             await db.Users.AddAsync(newReceptionist);
             await db.SaveChangesAsync();
+
+            await emailService.SendTempPasswordAsync(
+                 request.email,
+                 name: $"{request.ReceptionistFirstName} {request.ReceptionistLastName}",
+                 tempPaswored,
+                 center.Name);
 
             return new ReceptionistResponseDto { 
               UserId = newReceptionist.Id,
