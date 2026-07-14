@@ -8,7 +8,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.IdentityModel.Tokens;
 using Sehatak.API.Hubs;
-using System.Threading.RateLimiting;
 using Sehatak.API.Hubs;
 using Sehatak.API.Middleware;
 using Sehatak.API.Middleware;
@@ -16,11 +15,14 @@ using Sehatak.Application.Interfaces.AddFeatureToCenter;
 using Sehatak.Application.Interfaces.AssignFeatursToPlan;
 using Sehatak.Application.Interfaces.AuditLog;
 using Sehatak.Application.Interfaces.AuthPatient;
+using Sehatak.Application.Interfaces.CenterRegistrationRequest;
 using Sehatak.Application.Interfaces.Centers;
 using Sehatak.Application.Interfaces.CentersStatusDto;
+using Sehatak.Application.Interfaces.DepartmentInterface;
 using Sehatak.Application.Interfaces.Features;
 using Sehatak.Application.Interfaces.IEmail;
 using Sehatak.Application.Interfaces.IFinancialReports;
+using Sehatak.Application.Interfaces.IPatientCenter;
 using Sehatak.Application.Interfaces.IProfileInterface;
 using Sehatak.Application.Interfaces.ISubscriptionPaymentService;
 using Sehatak.Application.Interfaces.MedicalCenter;
@@ -38,7 +40,10 @@ using Sehatak.Infrastructure.Security;
 using Sehatak.Infrastructure.Security;
 using Sehatak.Infrastructure.Services;
 using Sehatak.Infrastructure.Services;
+using Sehatak.Infrastructure.Services.DepartmentService;
 using Sehatak.Infrastructure.Services.FinancialReportServices;
+using Sehatak.Infrastructure.Services.PatientService.PatientRegisterAuth;
+using Sehatak.Infrastructure.Services.PtientCenterService;
 using Sehatak.Infrastructure.Services.StaffLogin;
 using Sehatak.Infrastructure.Services.SuperAdminService.Background;
 using Sehatak.Infrastructure.Services.SuperAdminService.CenterService;
@@ -54,10 +59,7 @@ using Serilog;
 using System;
 using System.Text;
 using System.Threading.RateLimiting;
-using Sehatak.Infrastructure.Services.PatientService.PatientRegisterAuth;
-using Sehatak.Application.Interfaces.CenterRegistrationRequest;
-using Sehatak.Application.Interfaces.DepartmentInterface;
-using Sehatak.Infrastructure.Services.DepartmentService;
+using System.Threading.RateLimiting;
 
 namespace Sehatak.API
 {
@@ -283,7 +285,7 @@ namespace Sehatak.API
             builder.Services.AddScoped<IAddDoctorToDepartment, AddDoctorToDepartment>();
             builder.Services.AddScoped<IRemoveStaff, RemoveStaffFromCenter>();
             builder.Services.AddScoped<IListOfPlan, ListOfPlanService>();
-
+            builder.Services.AddScoped<IGetpatientCenter, GetPatientCenterService>();
             var app = builder.Build();
 
             // MIDDLEWARE PIPELINE 
