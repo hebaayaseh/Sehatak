@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Sehatak.Application.DTOs.PatientCenter;
 using Sehatak.Application.Interfaces.IPatientCenter;
 
 namespace Sehatak.API.Controllers.SuperAdminAndAdmin.PtientCentercontroller
@@ -21,5 +22,13 @@ namespace Sehatak.API.Controllers.SuperAdminAndAdmin.PtientCentercontroller
             var result = await getpatient.GetPatientesAsync(centerId);
             return Ok(result);
         }
+        [Authorize(Policy = "AdminOrAbove")]
+        [HttpGet("get-patient-from-center/{centerId}")]
+        public async Task<IActionResult> GetPatientAsync(int centerId, [FromBody] GetPatientRequestDto request)
+        {
+            var result = await getpatient.GetPatientAsync(centerId , request);
+            return Ok(result);
+        }
+
     }
 }

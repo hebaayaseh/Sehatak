@@ -10,5 +10,6 @@ namespace Sehatak.Application.Interfaces.IPatientCenter
     public interface IGetpatientCenter
     {
         Task<List<GetPatientResponseDto>> GetPatientesAsync(int centerId);
+        Task<GetPatientResponseDto> GetPatientAsync(int centerId , GetPatientRequestDto request);
     }
 }
