@@ -17,9 +17,18 @@ namespace Sehatak.API.Controllers.SuperAdminAndAdmin.EditProfilecontroller
 
         [Authorize(Policy = "AdminOnly")]
         [HttpPost("edit-center-information/{centerId}")]
-        public async Task<IActionResult> EditCenterIngoration(int centerId , [FromForm] EditCenterInformationRequest request)
+        public async Task<IActionResult> EditCenterInformation(int centerId , [FromForm] EditCenterInformationRequest request)
         {
             var result = await iprofile.EditCenterInformation(centerId, request);
+            return Ok(result);
+        }
+
+        [Authorize(Policy = "AdminOnly")]
+        [HttpPost("edit-admin-information/{centerId}")]
+        public async Task<IActionResult> EditAdminiInformation(int centerId, [FromForm] EditSttafInformationRequest request)
+        {
+            var adminId = int.Parse(User.FindFirst("UserId")!.Value);
+            var result = await iprofile.EditSttafInformation(centerId,adminId, request);
             return Ok(result);
         }
     }

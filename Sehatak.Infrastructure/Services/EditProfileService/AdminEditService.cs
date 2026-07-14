@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using Microsoft.EntityFrameworkCore;
 using Sehatak.Application.DTOs.EditProfile.EditProfileActors;
 using Sehatak.Application.DTOs.Exceptions;
 using Sehatak.Application.Interfaces.IProfileInterface.ProfileAdmin;
@@ -53,11 +54,12 @@ namespace Sehatak.Infrastructure.Services.EditProfileService
             if (request.Address != null)
                 center.Address = request.Address;
 
-            if(request.LogoUrl!=null)
+            if (request.LogoUrl != null)
             {
-                
-                var fileName = Guid.NewGuid() + Path.GetExtension(request.LogoUrl.FileName);
+                if (!string.IsNullOrEmpty(center.LogoUrl))
+                    DeleteImageFile(center.LogoUrl);
 
+                var fileName = Guid.NewGuid() + Path.GetExtension(request.LogoUrl.FileName);
                 var path = Path.Combine("wwwroot/uploads/receipts", fileName);
 
                 using (var stream = new FileStream(path, FileMode.Create))
@@ -66,8 +68,15 @@ namespace Sehatak.Infrastructure.Services.EditProfileService
                 }
 
                 center.LogoUrl = $"/uploads/receipts/{fileName}";
-
             }
+            else if (request.LogoUrl==null)
+            {
+                if (!string.IsNullOrEmpty(center.LogoUrl))
+                    DeleteImageFile(center.LogoUrl);
+
+                center.LogoUrl = null;
+            }
+
             await sharedDbContext.SaveChangesAsync();
 
             return new EditCenterInformationResponse { 
@@ -84,6 +93,21 @@ namespace Sehatak.Infrastructure.Services.EditProfileService
 
             };
 
+        }
+        private void DeleteImageFile(string relativeUrl)
+        {
+            try
+            {
+                var webRoot = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+                var fullPath = Path.Combine(webRoot, relativeUrl.TrimStart('/').Replace("/", Path.DirectorySeparatorChar.ToString()));
+
+                if (File.Exists(fullPath))
+                    File.Delete(fullPath);
+            }
+            catch (Exception)
+            {
+                
+            }
         }
 
         public async Task<EditSttafInformationResponse> EditSttafInformation(int centerId , int adminId, EditSttafInformationRequest request)
@@ -117,8 +141,11 @@ namespace Sehatak.Infrastructure.Services.EditProfileService
             if(request.phoneNumber!=null)
                 admin.phoneNumber=request.phoneNumber;
 
-            if (request.profileImage != null)  
+            if (request.profileImage != null)
             {
+                if (!string.IsNullOrEmpty(admin.ProfileImageUrl))
+                    DeleteImageFile(admin.ProfileImageUrl);
+
                 var fileName = Guid.NewGuid() + Path.GetExtension(request.profileImage.FileName);
                 var path = Path.Combine("wwwroot/uploads/receipts", fileName);
 
@@ -129,6 +156,14 @@ namespace Sehatak.Infrastructure.Services.EditProfileService
 
                 admin.ProfileImageUrl = $"/uploads/receipts/{fileName}";
             }
+            else if (request.RemoveProfileImage)
+            {
+                if (!string.IsNullOrEmpty(admin.ProfileImageUrl))
+                    DeleteImageFile(admin.ProfileImageUrl);
+
+                admin.ProfileImageUrl = null;
+            }
+
 
             await db.SaveChangesAsync();
 

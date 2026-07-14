@@ -25,6 +25,7 @@ using Sehatak.Application.Interfaces.IEmail;
 using Sehatak.Application.Interfaces.IFinancialReports;
 using Sehatak.Application.Interfaces.IPatientCenter;
 using Sehatak.Application.Interfaces.IProfileInterface;
+using Sehatak.Application.Interfaces.IProfileInterface.ProfileAdmin;
 using Sehatak.Application.Interfaces.ISubscriptionPaymentService;
 using Sehatak.Application.Interfaces.MedicalCenter;
 using Sehatak.Application.Interfaces.MedicalCenter;
@@ -44,6 +45,7 @@ using Sehatak.Infrastructure.Services;
 using Sehatak.Infrastructure.Services;
 using Sehatak.Infrastructure.Services.AddStaff;
 using Sehatak.Infrastructure.Services.DepartmentService;
+using Sehatak.Infrastructure.Services.EditProfileService;
 using Sehatak.Infrastructure.Services.FinancialReportServices;
 using Sehatak.Infrastructure.Services.GetStaff;
 using Sehatak.Infrastructure.Services.PatientService.PatientRegisterAuth;
@@ -292,6 +294,8 @@ namespace Sehatak.API
             builder.Services.AddScoped<IGetpatientCenter, GetPatientCenterService>();
             builder.Services.AddScoped<IGetStaff, GetStaffService>();
             builder.Services.AddScoped<ISignup, AddStaffService>();
+            builder.Services.AddScoped<IprofileAdmin, AdminEditService>();
+
             var app = builder.Build();
 
             // MIDDLEWARE PIPELINE 
