@@ -10,5 +10,6 @@ namespace Sehatak.Application.Interfaces.GetSttafInterFace
     public interface IGetStaff
     {
         Task<List<GetDoctorsResponseDto>> GetDoctorsAsync(int centerId);
+        Task<List<GetReceptionistResponseDto>> GetReceptionistsAsync(int centerId);
     }
 }
