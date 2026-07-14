@@ -1,5 +1,5 @@
-﻿using Sehatak.Application.DTOs.EditProfile;
-using Sehatak.Application.DTOs.SuperAdminProfile;
+﻿using Sehatak.Application.DTOs.EditProfile.EditEmailOrPasswored;
+using Sehatak.Application.DTOs.EditProfile.EditSuperAdmin;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sehatak.Application.DTOs.SuperAdminProfile
+namespace Sehatak.Application.DTOs.EditProfile.EditSuperAdmin
 {
     public class ProfileResponse
     {

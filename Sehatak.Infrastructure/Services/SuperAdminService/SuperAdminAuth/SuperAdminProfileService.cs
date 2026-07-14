@@ -1,9 +1,9 @@
 ﻿using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.EntityFrameworkCore;
-using Sehatak.Application.DTOs.EditProfile;
+using Sehatak.Application.DTOs.EditProfile.EditEmailOrPasswored;
+using Sehatak.Application.DTOs.EditProfile.EditSuperAdmin;
 using Sehatak.Application.DTOs.Exceptions;
 using Sehatak.Application.DTOs.PatienRegisterDto;
-using Sehatak.Application.DTOs.SuperAdminProfile;
 using Sehatak.Application.Interfaces.AuthPatient;
 using Sehatak.Application.Interfaces.IEmail;
 using Sehatak.Application.Interfaces.IProfileInterface;

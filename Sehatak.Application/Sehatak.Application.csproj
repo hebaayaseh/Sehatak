@@ -16,4 +16,9 @@
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.9" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Interfaces\IProfileInterface\ProfileStaff\" />
+    <Folder Include="Interfaces\IProfileInterface\ProfileDoctor\" />
+  </ItemGroup>
+
 </Project>

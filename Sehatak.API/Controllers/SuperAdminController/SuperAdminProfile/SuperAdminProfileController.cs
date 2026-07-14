@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Sehatak.Application.DTOs.EditProfile;
-using Sehatak.Application.DTOs.SuperAdminProfile;
+using Sehatak.Application.DTOs.EditProfile.EditEmailOrPasswored;
+using Sehatak.Application.DTOs.EditProfile.EditSuperAdmin;
 using Sehatak.Application.Interfaces.IProfileInterface;
 
 namespace Sehatak.API.Controllers.SuperAdminController.SuperAdminProfile
