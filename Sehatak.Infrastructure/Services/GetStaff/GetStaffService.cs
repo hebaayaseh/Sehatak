@@ -3,6 +3,7 @@ using Sehatak.Application.DTOs.Exceptions;
 using Sehatak.Application.DTOs.GetStaffDto;
 using Sehatak.Application.Interfaces.GetSttafInterFace;
 using Sehatak.Domain.Enums;
+using Sehatak.Domain.Enums.SharedEnums;
 using Sehatak.Infrastructure.Data;
 using System;
 using System.Collections.Generic;
@@ -25,7 +26,7 @@ namespace Sehatak.Infrastructure.Services.GetStaff
         public async Task<List<GetDoctorsResponseDto>> GetDoctorsAsync(int centerId)
         {
             var center = await SharedDbContext.MedicalCenters
-                .FindAsync(centerId);
+                 .FirstOrDefaultAsync(c => c.Id == centerId && c.CenterStatus == CenterStatus.Active);
 
             if (center == null)
                 throw new BusinessException("Center.NotFound");
@@ -51,15 +52,12 @@ namespace Sehatak.Infrastructure.Services.GetStaff
                     } ).ToList()
                 }).ToListAsync();
 
-            
-
-            
         }
 
         public async Task<List<GetLapTechnicalDto>> GetLapTechnicalsAsync(int centerId)
         {
             var center = await SharedDbContext.MedicalCenters
-               .FindAsync(centerId);
+                .FirstOrDefaultAsync(c => c.Id == centerId && c.CenterStatus == CenterStatus.Active);
 
             if (center == null)
                 throw new BusinessException("Center.NotFound");
@@ -67,7 +65,7 @@ namespace Sehatak.Infrastructure.Services.GetStaff
             using var db = contextFactory.CreateForCenter(centerId);
 
             return await db.Users
-                .Where(u => u.role == userRole.LabTechnician)
+                .Where(u => u.role == userRole.LabTechnician && u.isActive)
                 .Select(r => new GetLapTechnicalDto
                 {
 
@@ -87,7 +85,7 @@ namespace Sehatak.Infrastructure.Services.GetStaff
             using var db = contextFactory.CreateForCenter(centerId);
 
             return await db.Users
-                .Where(u => u.role == userRole.Receptionist)
+                .Where(u => u.role == userRole.Receptionist && u.isActive)
                 .Select(r=>new GetReceptionistResponseDto { 
                 
                     ReceptionistId = r.Id,
