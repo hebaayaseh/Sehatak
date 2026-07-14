@@ -68,7 +68,7 @@ namespace Sehatak.API.Controllers.SuperAdminController.SuperAdminProfile
 
         [Authorize(Policy = "SuperAdminOnly")]
         [HttpPost("super-admin-edit-profile-image/{superAdminId}")]
-        public async Task<IActionResult> EditProfileImage(int superAdminId, [FromBody] EditProfileImageRequest request)
+        public async Task<IActionResult> EditProfileImage(int superAdminId, [FromForm] EditProfileImageRequest request)
         {
             var result = await profile.EditProfileImage(superAdminId, request);
             return Ok(result);

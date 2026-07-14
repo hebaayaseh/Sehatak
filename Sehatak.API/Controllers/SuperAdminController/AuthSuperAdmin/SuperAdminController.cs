@@ -16,7 +16,7 @@ namespace Sehatak.API.Controllers.SuperAdminController.AuthSuperAdmin
         }
 
         [HttpPost("Register_SuperAdmin")]
-        public async Task<IActionResult> RegisterSuperAdmin(RegisterSuperAdminRequestDto superAdminDto)
+        public async Task<IActionResult> RegisterSuperAdmin([FromForm]RegisterSuperAdminRequestDto superAdminDto)
         {
             var result = await superAdminAuthService.RegisterAsync(superAdminDto);
             return Ok(result);
