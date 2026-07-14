@@ -56,6 +56,26 @@ namespace Sehatak.Infrastructure.Services.GetStaff
             
         }
 
+        public async Task<List<GetLapTechnicalDto>> GetLapTechnicalsAsync(int centerId)
+        {
+            var center = await SharedDbContext.MedicalCenters
+               .FindAsync(centerId);
+
+            if (center == null)
+                throw new BusinessException("Center.NotFound");
+
+            using var db = contextFactory.CreateForCenter(centerId);
+
+            return await db.Users
+                .Where(u => u.role == userRole.LabTechnician)
+                .Select(r => new GetLapTechnicalDto
+                {
+
+                    LapTechnicalId = r.Id,
+                    LapTechnicalName = r.firstName + " " + r.lastName
+                }).ToListAsync();
+        }
+
         public async Task<List<GetReceptionistResponseDto>> GetReceptionistsAsync(int centerId)
         {
             var center = await SharedDbContext.MedicalCenters
