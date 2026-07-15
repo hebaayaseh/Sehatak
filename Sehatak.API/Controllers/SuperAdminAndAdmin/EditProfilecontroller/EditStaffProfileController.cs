@@ -37,7 +37,7 @@ namespace Sehatak.API.Controllers.SuperAdminAndAdmin.EditProfilecontroller
 
         [Authorize(Policy = "MedicalStaff")]
         [HttpPost("edit-staff-email/{centerId}")]
-        public async Task<IActionResult> EditStaffEmail(int centerId, [FromForm] EditEmailRequest request)
+        public async Task<IActionResult> EditStaffEmail(int centerId, [FromBody] EditEmailRequest request)
         {
             var adminId = int.Parse(
                 User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
@@ -47,7 +47,7 @@ namespace Sehatak.API.Controllers.SuperAdminAndAdmin.EditProfilecontroller
 
         [Authorize(Policy = "MedicalStaff")]
         [HttpPost("edit-staff-confirm-email-code/{centerId}")]
-        public async Task<IActionResult> ConfirmEmail(int centerId, [FromForm] ConfirmEditEmailRequest request)
+        public async Task<IActionResult> ConfirmEmail(int centerId, [FromBody] ConfirmEditEmailRequest request)
         {
             var adminId = int.Parse(
                 User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
@@ -55,5 +55,14 @@ namespace Sehatak.API.Controllers.SuperAdminAndAdmin.EditProfilecontroller
             return Ok(result);
         }
 
+        [Authorize(Policy = "MedicalStaff")]
+        [HttpPost("edit-staff-passwored/{centerId}")]
+        public async Task<IActionResult> EditStaffPasswored(int centerId, [FromBody] EditPasswordRequest request)
+        {
+            var adminId = int.Parse(
+                User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            var result = await iprofile.RequestEditPassword(centerId, adminId, request);
+            return Ok(result);
+        }
     }
 }
