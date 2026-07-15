@@ -8,10 +8,10 @@ namespace Sehatak.API.Controllers.SuperAdminAndAdmin.EditProfilecontroller
 {
     [ApiController]
     [Route("api-edit-center-admin-informations")]
-    public class EditAdminProfileController : ControllerBase
+    public class EditStaffProfileController : ControllerBase
     {
         private readonly IprofileAdmin iprofile;
-        public EditAdminProfileController(IprofileAdmin iprofile)
+        public EditStaffProfileController(IprofileAdmin iprofile)
         {
             this.iprofile = iprofile;
         }
@@ -24,7 +24,7 @@ namespace Sehatak.API.Controllers.SuperAdminAndAdmin.EditProfilecontroller
             return Ok(result);
         }
 
-        [Authorize(Policy = "AdminOnly")]
+        [Authorize(Policy = "MedicalStaff")]
         [HttpPost("edit-admin-information/{centerId}")]
         public async Task<IActionResult> EditAdminiInformation(int centerId, [FromForm] EditSttafInformationRequest request)
         {

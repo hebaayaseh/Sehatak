@@ -16,5 +16,7 @@ namespace Sehatak.Application.DTOs.EditProfile.EditProfileActors
         public string? address { get; set; }
         public string? city {  get; set; }
         public string? phoneNumber { get; set; }
+        public string? Specialization { get; set; }
+        public string? Bio { get; set; }
     }
 }

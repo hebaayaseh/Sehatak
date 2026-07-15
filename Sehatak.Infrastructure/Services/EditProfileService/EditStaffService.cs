@@ -126,7 +126,8 @@ namespace Sehatak.Infrastructure.Services.EditProfileService
                              && u.isActive
                              && (u.role == userRole.Admin
                               || u.role == userRole.Receptionist
-                              || u.role == userRole.LabTechnician)); 
+                              || u.role == userRole.LabTechnician 
+                              || u.role == userRole.Doctor));
             if (user == null)
                 throw new BusinessException("Auth.Forbidden");
 
@@ -168,17 +169,33 @@ namespace Sehatak.Infrastructure.Services.EditProfileService
                 user.ProfileImageUrl = null;
             }
 
+            Doctor? doctor = null;
+            if (user.role == userRole.Doctor)
+            {
+                doctor = await db.Doctors.FirstOrDefaultAsync(d => d.userId == userId);
+
+                if (doctor == null)
+                    throw new BusinessException("Doctor.NotFound");   // حالة غير متوقعة: User دورو Doctor بس ما إلو صف بجدول Doctors
+
+                if (request.Specialization != null)
+                    doctor.Specialization = request.Specialization;
+
+                if (request.Bio != null)
+                    doctor.Bio = request.Bio;
+            }
 
             await db.SaveChangesAsync();
 
-            return new EditSttafInformationResponse
+            return new EditStaffProfileResponse
             {
-                StaffId = userId,
+                UserId = userId,
                 FullName = user.firstName + " " + user.lastName,
                 PhoneNumber = user.phoneNumber,
                 ProfileImageUrl = user.ProfileImageUrl,
                 Address = user.address,
                 City = user.city,
+                Specialization = doctor?.Specialization,   // null تلقائياً لو مش دكتور
+                Bio = doctor?.Bio,
                 Message = "تم تحديث البيانات بنجاح"
             };
 

@@ -14,6 +14,8 @@ namespace Sehatak.Application.DTOs.EditProfile.EditProfileActors
         public string Address { get; set; } = string.Empty;
         public string City { get; set; } = string.Empty;
         public string? PhoneNumber { get; set; }
+        public string? Specialization { get; set; }   
+        public string? Bio { get; set; }
         public string Message { get; set; } = "تم تحديث البيانات بنجاح";
     }
 }

@@ -26,7 +26,6 @@ using Sehatak.Application.Interfaces.IFinancialReports;
 using Sehatak.Application.Interfaces.IPatientCenter;
 using Sehatak.Application.Interfaces.IProfileInterface;
 using Sehatak.Application.Interfaces.IProfileInterface.ProfileAdmin;
-using Sehatak.Application.Interfaces.IProfileInterface.ProfileDoctor;
 using Sehatak.Application.Interfaces.ISubscriptionPaymentService;
 using Sehatak.Application.Interfaces.MedicalCenter;
 using Sehatak.Application.Interfaces.MedicalCenter;
@@ -296,7 +295,6 @@ namespace Sehatak.API
             builder.Services.AddScoped<IGetStaff, GetStaffService>();
             builder.Services.AddScoped<ISignup, AddStaffService>();
             builder.Services.AddScoped<IprofileAdmin, EditStaffService>();
-            builder.Services.AddScoped<IProfileDoctor, EditDoctorService>();
 
             var app = builder.Build();
 
