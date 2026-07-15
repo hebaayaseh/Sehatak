@@ -11,6 +11,7 @@ using Sehatak.API.Hubs;
 using Sehatak.API.Hubs;
 using Sehatak.API.Middleware;
 using Sehatak.API.Middleware;
+using Sehatak.Application.Interfaces.AddDoctorDailyHours;
 using Sehatak.Application.Interfaces.AddFeatureToCenter;
 using Sehatak.Application.Interfaces.AssignFeatursToPlan;
 using Sehatak.Application.Interfaces.AuditLog;
@@ -295,6 +296,7 @@ namespace Sehatak.API
             builder.Services.AddScoped<IGetStaff, GetStaffService>();
             builder.Services.AddScoped<ISignup, AddStaffService>();
             builder.Services.AddScoped<IprofileStaff, EditStaffService>();
+            builder.Services.AddScoped<IAddDoctorDailyHours, AddDoctorDailyHoursService>();
 
             var app = builder.Build();
 

@@ -36,10 +36,6 @@ namespace Sehatak.Infrastructure.Services.PtientCenterService
             using var db = contextFactory.CreateForCenter(centerId);
 
                 var patient= await db.Users
-                .Include(u => u.patient)
-                .ThenInclude(p => p.appointments)
-                .ThenInclude(a => a.Doctor)
-                .ThenInclude(d => d.user)
                 .Where(u => u.role == userRole.Patient && u.patient != null && u.Id==request.userId)
                 .Select(u => new GetPatientResponseDto
                 {
@@ -71,10 +67,6 @@ namespace Sehatak.Infrastructure.Services.PtientCenterService
             using var db = contextFactory.CreateForCenter(centerId);
 
             return await db.Users
-                .Include(u => u.patient)
-                .ThenInclude(p => p.appointments)
-                .ThenInclude(a => a.Doctor)
-                .ThenInclude(d => d.user)
                 .Where(u => u.role == userRole.Patient && u.patient != null)
                 .Select(u => new GetPatientResponseDto
                 {
@@ -83,7 +75,7 @@ namespace Sehatak.Infrastructure.Services.PtientCenterService
                     BloodType = u.patient.BloodType,
                     Gender = u.patient.Gender,
                     appointments = u.patient.appointments
-                    .Select(a=>a.Doctor.user.firstName+""+ a.Doctor.user.lastName)
+                    .Select(a=>a.Doctor.user.firstName+" "+ a.Doctor.user.lastName)
                     .ToList(),
 
                 }).ToListAsync();

@@ -358,4 +358,7 @@
   <data name="Department.Exist" xml:space="preserve">
     <value>This department already exist </value>
   </data>
+  <data name="Schedule.Conflict" xml:space="preserve">
+    <value>There is a scheduling conflict</value>
+  </data>
 </root>

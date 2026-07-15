@@ -34,21 +34,22 @@ namespace Sehatak.Infrastructure.Services.GetStaff
             using var db = contextFactory.CreateForCenter(centerId);
 
             return await db.Departments
-                .Include(d => d.Doctors)
-                  .ThenInclude(u => u.user)
                 .Select(p => new GetDoctorsResponseDto
                 {
                     DepartmentId = p.Id,
                     DepartmentName = p.Name,
                     DepartmentDescription = p.Description,
                     DepartmentImageUrl = p.ImageUrl,
-                    Doctors = p.Doctors.Select(a=>new DoctorSummaryDto
+                    Doctors = p.Doctors
+                    .Where(a=>a.user.isActive)
+                    .Select(a=>new DoctorSummaryDto
                     {
                         DoctorId = a.Id,
                         DoctorName = a.user.firstName+" "+a.user.lastName,
                         Specialization = a.Specialization,
                         ProfileImageUrl = a.user.ProfileImageUrl,
                         OnlineEnabled = a.OnlineEnabled
+                        
                     } ).ToList()
                 }).ToListAsync();
 

@@ -358,4 +358,7 @@
   <data name="Department.Exist" xml:space="preserve">
     <value>القسم موجود بالفعل!</value>
   </data>
+  <data name="Schedule.Conflict" xml:space="preserve">
+    <value>يوجد تضارب في المواعيد!</value>
+  </data>
 </root>
