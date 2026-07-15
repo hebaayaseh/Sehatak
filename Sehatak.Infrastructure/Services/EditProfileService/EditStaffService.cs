@@ -301,6 +301,7 @@ namespace Sehatak.Infrastructure.Services.EditProfileService
             if (center == null)
                 throw new BusinessException("Center.NotFound");
 
+
             using var db = contextFactory.CreateForCenter(centerId);
 
             var user = await db.Users
@@ -314,11 +315,13 @@ namespace Sehatak.Infrastructure.Services.EditProfileService
                 throw new BusinessException("Auth.Forbidden");
 
 
-            var exists = await db.Users
-                .AnyAsync(x => x.email == request.PasswordHash);
+            if (request.PasswordHash != request.ConfirmPassword)
+                throw new BusinessException("Validation.PasswordMismatch");
 
-            if (exists)
-                throw new BusinessException("Auth.EmailExists");
+            var isSamePassword = BCrypt.Net.BCrypt.Verify(request.PasswordHash, user.passwordHash);
+            if (isSamePassword)
+                throw new BusinessException("Validation.SamePassword");
+
 
             var code = new Random().Next(100000, 999999).ToString();
 
