@@ -45,7 +45,15 @@ namespace Sehatak.API.Controllers.SuperAdminAndAdmin.EditProfilecontroller
             return Ok(result);
         }
 
-
+        [Authorize(Policy = "MedicalStaff")]
+        [HttpPost("edit-staff-confirm-email-code/{centerId}")]
+        public async Task<IActionResult> ConfirmEmail(int centerId, [FromForm] ConfirmEditEmailRequest request)
+        {
+            var adminId = int.Parse(
+                User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            var result = await iprofile.ConfirmEditEmail(centerId, adminId, request);
+            return Ok(result);
+        }
 
     }
 }
