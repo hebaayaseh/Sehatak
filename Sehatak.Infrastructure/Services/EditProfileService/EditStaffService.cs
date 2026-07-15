@@ -186,9 +186,9 @@ namespace Sehatak.Infrastructure.Services.EditProfileService
 
             await db.SaveChangesAsync();
 
-            return new EditStaffProfileResponse
+            return new EditSttafInformationResponse
             {
-                UserId = userId,
+                StaffId = userId,
                 FullName = user.firstName + " " + user.lastName,
                 PhoneNumber = user.phoneNumber,
                 ProfileImageUrl = user.ProfileImageUrl,
