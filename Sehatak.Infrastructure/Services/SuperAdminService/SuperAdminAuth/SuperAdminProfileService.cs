@@ -47,9 +47,9 @@ namespace Sehatak.Infrastructure.Services.SuperAdminService.SuperAdminAuth
 
         }
         
-        public async Task<ProfileImageResponse> EditProfileImage(int superAdminId, EditProfileImageRequest request)
+        public async Task<ProfileImageResponse> EditProfileImage(int userId, EditProfileImageRequest request)
         {
-            var superAdmin = await sharedDbContext.SuperAdmins.FindAsync(superAdminId);
+            var superAdmin = await sharedDbContext.SuperAdmins.FindAsync(userId);
             if (superAdmin == null)
                 throw new BusinessException("Auth.Unauthorized");
 

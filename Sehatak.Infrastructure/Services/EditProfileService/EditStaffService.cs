@@ -1,8 +1,11 @@
 ﻿using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.EntityFrameworkCore;
+using Sehatak.Application.DTOs.EditProfile.EditEmailOrPasswored;
 using Sehatak.Application.DTOs.EditProfile.EditProfileActors;
 using Sehatak.Application.DTOs.Exceptions;
+using Sehatak.Application.Interfaces.IEmail;
 using Sehatak.Application.Interfaces.IProfileInterface.ProfileAdmin;
+using Sehatak.Domain.Entities.General;
 using Sehatak.Domain.Entities.SharedEntities;
 using Sehatak.Domain.Entities.TenantEntities;
 using Sehatak.Domain.Enums;
@@ -16,14 +19,17 @@ using System.Threading.Tasks;
 
 namespace Sehatak.Infrastructure.Services.EditProfileService
 {
-    public class EditStaffService : IprofileAdmin
+    public class EditStaffService : IprofileStaff
     {
         private readonly SharedDbContext sharedDbContext;
-        private TenantDbContextFactory contextFactory; 
-        public EditStaffService(SharedDbContext sharedDbContext ,  TenantDbContextFactory contextFactory)
+        private readonly TenantDbContextFactory contextFactory;
+        private readonly IEmailService emailService;
+
+        public EditStaffService(SharedDbContext sharedDbContext ,  TenantDbContextFactory contextFactory , IEmailService emailService)
         {
             this.sharedDbContext = sharedDbContext;
             this.contextFactory = contextFactory;
+            this.emailService = emailService;
         }
 
         public async Task<EditCenterInformationResponse> EditCenterInformation(int centerId, EditCenterInformationRequest request)
@@ -175,7 +181,7 @@ namespace Sehatak.Infrastructure.Services.EditProfileService
                 doctor = await db.Doctors.FirstOrDefaultAsync(d => d.userId == userId);
 
                 if (doctor == null)
-                    throw new BusinessException("Doctor.NotFound");   // حالة غير متوقعة: User دورو Doctor بس ما إلو صف بجدول Doctors
+                    throw new BusinessException("Doctor.NotFound");   
 
                 if (request.Specialization != null)
                     doctor.Specialization = request.Specialization;
@@ -194,11 +200,107 @@ namespace Sehatak.Infrastructure.Services.EditProfileService
                 ProfileImageUrl = user.ProfileImageUrl,
                 Address = user.address,
                 City = user.city,
-                Specialization = doctor?.Specialization,   // null تلقائياً لو مش دكتور
+                Specialization = doctor?.Specialization,   
                 Bio = doctor?.Bio,
                 Message = "تم تحديث البيانات بنجاح"
             };
 
+        }
+
+        public async Task<bool> RequestEditEmail(int centerId, int userId, EditEmailRequest request)
+        {
+            var center = await sharedDbContext.MedicalCenters
+                .FirstOrDefaultAsync(c => c.Id == centerId && c.CenterStatus == CenterStatus.Active);
+
+            if (center == null)
+                throw new BusinessException("Center.NotFound");
+
+            using var db = contextFactory.CreateForCenter(centerId);
+
+            var user = await db.Users
+            .FirstOrDefaultAsync(u => u.Id == userId
+                             && u.isActive
+                             && (u.role == userRole.Admin
+                              || u.role == userRole.Receptionist
+                              || u.role == userRole.LabTechnician
+                              || u.role == userRole.Doctor));
+            if (user == null)
+                throw new BusinessException("Auth.Forbidden");
+
+
+            var exists = await db.Users
+                .AnyAsync(x => x.email == request.Email);
+
+            if (exists)
+                throw new BusinessException("Auth.EmailExists");
+
+            var code = new Random().Next(100000, 999999).ToString();
+
+            db.EmailVerificationCodes.Add(new EmailVerificationCode
+            {
+                UserId = user.Id,
+                Code = code,
+                Purpose = "change-email",
+                PendingValue = request.Email,
+                ExpiresAt = DateTime.UtcNow.AddMinutes(10)
+            });
+
+            await sharedDbContext.SaveChangesAsync();
+
+
+            await emailService.SendOtpAsync(user.email, code, "change-email");
+
+            return true;
+        }
+
+        public async Task<EmailResponse> ConfirmEditEmail(int centerId, int userId, ConfirmEditEmailRequest request)
+        {
+            var center = await sharedDbContext.MedicalCenters
+            .FirstOrDefaultAsync(c => c.Id == centerId && c.CenterStatus == CenterStatus.Active);
+
+            if (center == null)
+                throw new BusinessException("Center.NotFound");
+
+            using var db = contextFactory.CreateForCenter(centerId);
+
+            var user = await db.Users
+            .FirstOrDefaultAsync(u => u.Id == userId
+                             && u.isActive
+                             && (u.role == userRole.Admin
+                              || u.role == userRole.Receptionist
+                              || u.role == userRole.LabTechnician
+                              || u.role == userRole.Doctor));
+            if (user == null)
+                throw new BusinessException("Auth.Forbidden");
+
+            var validCode = await db.EmailVerificationCodes
+                .Where(c => c.UserId == userId
+                         && c.Purpose == "change-email"
+                         && c.Code == request.Code
+                         && !c.IsUsed
+                         && c.ExpiresAt > DateTime.UtcNow)
+                .OrderByDescending(c => c.CreatedAt)
+                .FirstOrDefaultAsync();
+
+            if (validCode == null || string.IsNullOrEmpty(validCode.PendingValue))
+                throw new BusinessException("Verfiy.Code");
+
+            user.email = validCode.PendingValue;
+            validCode.IsUsed = true;
+
+            await db.SaveChangesAsync();
+
+            return new EmailResponse { Email = user.email };
+        }
+
+        public Task<bool> RequestEditPassword(int centerId, int userId, EditPasswordRequest request)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<PasswordResponse> ConfirmEditPassword(int centerId, int userId, ConfirmEditPasswordRequest request)
+        {
+            throw new NotImplementedException();
         }
     }
 }

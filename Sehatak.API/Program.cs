@@ -294,7 +294,7 @@ namespace Sehatak.API
             builder.Services.AddScoped<IGetpatientCenter, GetPatientCenterService>();
             builder.Services.AddScoped<IGetStaff, GetStaffService>();
             builder.Services.AddScoped<ISignup, AddStaffService>();
-            builder.Services.AddScoped<IprofileAdmin, EditStaffService>();
+            builder.Services.AddScoped<IprofileStaff, EditStaffService>();
 
             var app = builder.Build();
 

@@ -10,8 +10,8 @@ namespace Sehatak.API.Controllers.SuperAdminAndAdmin.EditProfilecontroller
     [Route("api-edit-center-admin-informations")]
     public class EditStaffProfileController : ControllerBase
     {
-        private readonly IprofileAdmin iprofile;
-        public EditStaffProfileController(IprofileAdmin iprofile)
+        private readonly IprofileStaff iprofile;
+        public EditStaffProfileController(IprofileStaff iprofile)
         {
             this.iprofile = iprofile;
         }
