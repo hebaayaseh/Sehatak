@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Sehatak.Application.DTOs.EditProfile.EditProfileActors;
 using Sehatak.Application.Interfaces.IProfileInterface.ProfileAdmin;
+using System.Security.Claims;
 
 namespace Sehatak.API.Controllers.SuperAdminAndAdmin.EditProfilecontroller
 {
@@ -27,7 +28,8 @@ namespace Sehatak.API.Controllers.SuperAdminAndAdmin.EditProfilecontroller
         [HttpPost("edit-admin-information/{centerId}")]
         public async Task<IActionResult> EditAdminiInformation(int centerId, [FromForm] EditSttafInformationRequest request)
         {
-            var adminId = int.Parse(User.FindFirst("UserId")!.Value);
+            var adminId = int.Parse(
+                User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
             var result = await iprofile.EditSttafInformation(centerId,adminId, request);
             return Ok(result);
         }

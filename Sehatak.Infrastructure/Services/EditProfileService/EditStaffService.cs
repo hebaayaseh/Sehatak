@@ -4,6 +4,7 @@ using Sehatak.Application.DTOs.EditProfile.EditProfileActors;
 using Sehatak.Application.DTOs.Exceptions;
 using Sehatak.Application.Interfaces.IProfileInterface.ProfileAdmin;
 using Sehatak.Domain.Entities.SharedEntities;
+using Sehatak.Domain.Entities.TenantEntities;
 using Sehatak.Domain.Enums;
 using Sehatak.Domain.Enums.SharedEnums;
 using Sehatak.Infrastructure.Data;
@@ -15,11 +16,11 @@ using System.Threading.Tasks;
 
 namespace Sehatak.Infrastructure.Services.EditProfileService
 {
-    public class AdminEditService : IprofileAdmin
+    public class EditStaffService : IprofileAdmin
     {
         private readonly SharedDbContext sharedDbContext;
         private TenantDbContextFactory contextFactory; 
-        public AdminEditService(SharedDbContext sharedDbContext ,  TenantDbContextFactory contextFactory)
+        public EditStaffService(SharedDbContext sharedDbContext ,  TenantDbContextFactory contextFactory)
         {
             this.sharedDbContext = sharedDbContext;
             this.contextFactory = contextFactory;
@@ -110,7 +111,7 @@ namespace Sehatak.Infrastructure.Services.EditProfileService
             }
         }
 
-        public async Task<EditSttafInformationResponse> EditSttafInformation(int centerId , int adminId, EditSttafInformationRequest request)
+        public async Task<EditSttafInformationResponse> EditSttafInformation(int centerId , int userId, EditSttafInformationRequest request)
         {
             var center = await sharedDbContext.MedicalCenters
                 .FirstOrDefaultAsync(c => c.Id == centerId && c.CenterStatus == CenterStatus.Active);
@@ -120,31 +121,34 @@ namespace Sehatak.Infrastructure.Services.EditProfileService
 
             using var db = contextFactory.CreateForCenter(centerId);
 
-            var admin = await db.Users
-                .FirstOrDefaultAsync(a => a.Id == adminId && a.role == userRole.Admin && a.isActive);
-
-            if (admin == null)
+            var user = await db.Users
+            .FirstOrDefaultAsync(u => u.Id == userId
+                             && u.isActive
+                             && (u.role == userRole.Admin
+                              || u.role == userRole.Receptionist
+                              || u.role == userRole.LabTechnician)); 
+            if (user == null)
                 throw new BusinessException("Auth.Forbidden");
 
             if (request.firstNmae != null)
-                admin.firstName = request.firstNmae;
+                user.firstName = request.firstNmae;
 
             if (request.lastNmae != null)
-                admin.lastName = request.lastNmae;
+                user.lastName = request.lastNmae;
 
             if (request.address != null)
-                admin.address = request.address;
+                user.address = request.address;
 
             if (request.city != null)
-                admin.city = request.city;
+                user.city = request.city;
 
             if(request.phoneNumber!=null)
-                admin.phoneNumber=request.phoneNumber;
+                user.phoneNumber=request.phoneNumber;
 
             if (request.profileImage != null)
             {
-                if (!string.IsNullOrEmpty(admin.ProfileImageUrl))
-                    DeleteImageFile(admin.ProfileImageUrl);
+                if (!string.IsNullOrEmpty(user.ProfileImageUrl))
+                    DeleteImageFile(user.ProfileImageUrl);
 
                 var fileName = Guid.NewGuid() + Path.GetExtension(request.profileImage.FileName);
                 var path = Path.Combine("wwwroot/uploads/receipts", fileName);
@@ -154,14 +158,14 @@ namespace Sehatak.Infrastructure.Services.EditProfileService
                     await request.profileImage.CopyToAsync(stream);
                 }
 
-                admin.ProfileImageUrl = $"/uploads/receipts/{fileName}";
+                user.ProfileImageUrl = $"/uploads/receipts/{fileName}";
             }
             else if (request.RemoveProfileImage)
             {
-                if (!string.IsNullOrEmpty(admin.ProfileImageUrl))
-                    DeleteImageFile(admin.ProfileImageUrl);
+                if (!string.IsNullOrEmpty(user.ProfileImageUrl))
+                    DeleteImageFile(user.ProfileImageUrl);
 
-                admin.ProfileImageUrl = null;
+                user.ProfileImageUrl = null;
             }
 
 
@@ -169,12 +173,12 @@ namespace Sehatak.Infrastructure.Services.EditProfileService
 
             return new EditSttafInformationResponse
             {
-                StaffId = adminId,
-                FullName = admin.firstName + " " + admin.lastName,
-                PhoneNumber = admin.phoneNumber,
-                ProfileImageUrl = admin.ProfileImageUrl,
-                Address = admin.address,
-                City = admin.city,
+                StaffId = userId,
+                FullName = user.firstName + " " + user.lastName,
+                PhoneNumber = user.phoneNumber,
+                ProfileImageUrl = user.ProfileImageUrl,
+                Address = user.address,
+                City = user.city,
                 Message = "تم تحديث البيانات بنجاح"
             };
 

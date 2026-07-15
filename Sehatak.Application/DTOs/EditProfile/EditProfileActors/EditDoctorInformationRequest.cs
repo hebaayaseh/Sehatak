@@ -17,5 +17,6 @@ namespace Sehatak.Application.DTOs.EditProfile.EditProfileActors
         public string? phoneNumber { get; set; }
         public string? Bio {  get; set; }
         public string? Specialization { get; set; }
+        public bool RemoveProfileImage { get; set; } = false;
     }
 }
