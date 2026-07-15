@@ -245,7 +245,7 @@ namespace Sehatak.Infrastructure.Services.EditProfileService
                 ExpiresAt = DateTime.UtcNow.AddMinutes(10)
             });
 
-            await sharedDbContext.SaveChangesAsync();
+            await db.SaveChangesAsync();
 
 
             await emailService.SendOtpAsync(user.email, code, "change-email");
@@ -331,7 +331,7 @@ namespace Sehatak.Infrastructure.Services.EditProfileService
                 ExpiresAt = DateTime.UtcNow.AddMinutes(10)
             });
 
-            await sharedDbContext.SaveChangesAsync();
+            await db.SaveChangesAsync();
 
 
             await emailService.SendOtpAsync(user.email, code, "change-email");
