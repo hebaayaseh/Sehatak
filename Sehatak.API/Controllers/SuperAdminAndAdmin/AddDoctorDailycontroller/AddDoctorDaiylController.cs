@@ -1,0 +1,31 @@
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Sehatak.Application.DTOs.AddDoctorDailyHour;
+using Sehatak.Application.Interfaces.AddDoctorDailyHours;
+using System.Security.Claims;
+
+namespace Sehatak.API.Controllers.SuperAdminAndAdmin.AddDoctorDaiktcontroller
+{
+    [ApiController]
+    [Route("api-add-doctor-daily-hours")]
+    public class AddDoctorDaiylController : ControllerBase
+    {
+        private readonly IAddDoctorDailyHours addHours;
+        public AddDoctorDaiylController(IAddDoctorDailyHours addHours)
+        {
+            this.addHours = addHours;
+        }
+        [Authorize(Policy = "AdminOnly")]
+        [HttpPost("add-doctor-hours/{centerId}/{doctorId}")]
+        public async Task<IActionResult> AddDoctorDailyHours(int centerId , int doctorId,
+            [FromBody] AddDoctorDailyHoursRequest request)
+        {
+            var userId = int.Parse(
+                User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+
+            var result = await addHours.AddDoctorDailyHoursAsync(centerId,doctorId,userId,request);
+            return Ok(result);
+        }
+
+    }
+}
