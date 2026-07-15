@@ -23,7 +23,7 @@ namespace Sehatak.API.Controllers.SuperAdminAndAdmin.AddDoctorDaiktcontroller
             var userId = int.Parse(
                 User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
 
-            var result = await addHours.AddDoctorDailyHoursAsync(centerId,doctorId,userId,request);
+            var result = await addHours.AddDoctorDailyHoursAsync(centerId,userId, doctorId,request);
             return Ok(result);
         }
 
