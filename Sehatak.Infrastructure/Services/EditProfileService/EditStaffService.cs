@@ -301,19 +301,17 @@ namespace Sehatak.Infrastructure.Services.EditProfileService
             if (center == null)
                 throw new BusinessException("Center.NotFound");
 
-
             using var db = contextFactory.CreateForCenter(centerId);
 
             var user = await db.Users
-            .FirstOrDefaultAsync(u => u.Id == userId
-                             && u.isActive
-                             && (u.role == userRole.Admin
-                              || u.role == userRole.Receptionist
-                              || u.role == userRole.LabTechnician
-                              || u.role == userRole.Doctor));
+                .FirstOrDefaultAsync(u => u.Id == userId
+                                 && u.isActive
+                                 && (u.role == userRole.Admin
+                                  || u.role == userRole.Receptionist
+                                  || u.role == userRole.LabTechnician
+                                  || u.role == userRole.Doctor));
             if (user == null)
                 throw new BusinessException("Auth.Forbidden");
-
 
             if (request.PasswordHash != request.ConfirmPassword)
                 throw new BusinessException("Validation.PasswordMismatch");
@@ -322,22 +320,20 @@ namespace Sehatak.Infrastructure.Services.EditProfileService
             if (isSamePassword)
                 throw new BusinessException("Validation.SamePassword");
 
-
             var code = new Random().Next(100000, 999999).ToString();
 
             db.EmailVerificationCodes.Add(new EmailVerificationCode
             {
                 UserId = user.Id,
                 Code = code,
-                Purpose = "change-email",
+                Purpose = "change-password",  
                 PendingValue = request.PasswordHash,
                 ExpiresAt = DateTime.UtcNow.AddMinutes(10)
             });
 
             await db.SaveChangesAsync();
 
-
-            await emailService.SendOtpAsync(user.email, code, "change-email");
+            await emailService.SendOtpAsync(user.email, code, "change-password");   
 
             return true;
         }
@@ -345,7 +341,7 @@ namespace Sehatak.Infrastructure.Services.EditProfileService
         public async Task<PasswordResponse> ConfirmEditPassword(int centerId, int userId, ConfirmEditPasswordRequest request)
         {
             var center = await sharedDbContext.MedicalCenters
-            .FirstOrDefaultAsync(c => c.Id == centerId && c.CenterStatus == CenterStatus.Active);
+                .FirstOrDefaultAsync(c => c.Id == centerId && c.CenterStatus == CenterStatus.Active);
 
             if (center == null)
                 throw new BusinessException("Center.NotFound");
@@ -353,18 +349,18 @@ namespace Sehatak.Infrastructure.Services.EditProfileService
             using var db = contextFactory.CreateForCenter(centerId);
 
             var user = await db.Users
-            .FirstOrDefaultAsync(u => u.Id == userId
-                             && u.isActive
-                             && (u.role == userRole.Admin
-                              || u.role == userRole.Receptionist
-                              || u.role == userRole.LabTechnician
-                              || u.role == userRole.Doctor));
+                .FirstOrDefaultAsync(u => u.Id == userId
+                                 && u.isActive
+                                 && (u.role == userRole.Admin
+                                  || u.role == userRole.Receptionist
+                                  || u.role == userRole.LabTechnician
+                                  || u.role == userRole.Doctor));
             if (user == null)
                 throw new BusinessException("Auth.Forbidden");
 
             var validCode = await db.EmailVerificationCodes
                 .Where(c => c.UserId == userId
-                         && c.Purpose == "change-email"
+                         && c.Purpose == "change-password"   
                          && c.Code == request.Code
                          && !c.IsUsed
                          && c.ExpiresAt > DateTime.UtcNow)
@@ -374,7 +370,7 @@ namespace Sehatak.Infrastructure.Services.EditProfileService
             if (validCode == null || string.IsNullOrEmpty(validCode.PendingValue))
                 throw new BusinessException("Verfiy.Code");
 
-            user.email = validCode.PendingValue;
+            user.passwordHash = BCrypt.Net.BCrypt.HashPassword(validCode.PendingValue);   
             validCode.IsUsed = true;
 
             await db.SaveChangesAsync();
