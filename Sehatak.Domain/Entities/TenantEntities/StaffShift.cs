@@ -12,7 +12,7 @@
         public TimeOnly StartTime { get; set; }
 
         public TimeOnly EndTime { get; set; }
-
+            
         public bool IsActive { get; set; } = true;
 
         //  Navigation Properties :

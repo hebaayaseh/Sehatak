@@ -23,8 +23,6 @@ namespace Sehatak.Infrastructure.Services.SuperAdminService.Plans
         {
             return await sharedDbContext.SubscriptionPlans
                 .Where(p => p.IsActive)
-                .Include(p => p.PlanFeatures)
-                    .ThenInclude(pf => pf.Feature)
                 .Select(p => new ListOfPlanResponseDto
                 {
                     Id = p.Id,

@@ -361,4 +361,7 @@
   <data name="Schedule.Conflict" xml:space="preserve">
     <value>There is a scheduling conflict</value>
   </data>
+  <data name="Validation.DuplicateServiceNames" xml:space="preserve">
+    <value>The name is duplicate!</value>
+  </data>
 </root>

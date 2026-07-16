@@ -15,6 +15,7 @@ namespace Sehatak.API.Controllers.SuperAdminAndAdmin.AddDoctorDaiktcontroller
         {
             this.addHours = addHours;
         }
+
         [Authorize(Policy = "AdminOnly")]
         [HttpPost("add-doctor-hours/{centerId}/{doctorId}")]
         public async Task<IActionResult> AddDoctorDailyHours(int centerId , int doctorId,
