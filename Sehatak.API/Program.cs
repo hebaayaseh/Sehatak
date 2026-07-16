@@ -34,6 +34,7 @@ using Sehatak.Application.Interfaces.MedicalCenter;
 using Sehatak.Application.Interfaces.Plans;
 using Sehatak.Application.Interfaces.RemoveFeatureFromCenter;
 using Sehatak.Application.Interfaces.RenewSubscription;
+using Sehatak.Application.Interfaces.ServicePriceInterface;
 using Sehatak.Application.Interfaces.SignUp;
 using Sehatak.Application.Interfaces.StaffLogin;
 using Sehatak.Application.Interfaces.SuperAdminInterface;
@@ -51,6 +52,7 @@ using Sehatak.Infrastructure.Services.FinancialReportServices;
 using Sehatak.Infrastructure.Services.GetStaff;
 using Sehatak.Infrastructure.Services.PatientService.PatientRegisterAuth;
 using Sehatak.Infrastructure.Services.PtientCenterService;
+using Sehatak.Infrastructure.Services.ServicePriceService;
 using Sehatak.Infrastructure.Services.StaffLogin;
 using Sehatak.Infrastructure.Services.SuperAdminService.Background;
 using Sehatak.Infrastructure.Services.SuperAdminService.CenterService;
@@ -297,6 +299,7 @@ namespace Sehatak.API
             builder.Services.AddScoped<ISignup, AddStaffService>();
             builder.Services.AddScoped<IprofileStaff, EditStaffService>();
             builder.Services.AddScoped<IAddDoctorDailyHours, AddDoctorDailyHoursService>();
+            builder.Services.AddScoped<IServicePrice, servicePrice>();
 
             var app = builder.Build();
 
