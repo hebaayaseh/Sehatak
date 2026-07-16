@@ -23,8 +23,8 @@ namespace Sehatak.API.Controllers.SuperAdminAndAdmin.ServicePricecontroller
         {
             var userId = int.Parse(
                 User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
-            var result = await servicePrice.AddServicePriceAsync(userId, centerId, requesr);
-            return Ok(request);
+            var result = await servicePrice.AddServicePriceAsync(userId, centerId, request);
+            return Ok(result);
         }
     }
 }
