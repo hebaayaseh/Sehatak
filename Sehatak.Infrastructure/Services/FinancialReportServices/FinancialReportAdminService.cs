@@ -82,10 +82,10 @@ namespace Sehatak.Infrastructure.Services.FinancialReportServices
 
             using var workbook = new XLWorkbook();
             var paymentSheet = workbook.Worksheets.Add("Payment");
-            paymentSheet.RightToLeft = true;
             paymentSheet.Cell(1, 1).Value = "Payment Type";
             paymentSheet.Cell(1, 2).Value = "Amount";
             paymentSheet.Range(1, 1, 1, 2).Style.Font.Bold = true;
+            paymentSheet.Range(1, 1, 1, 2).SortLeftToRight();
 
             var paymentByType = confirmedPayments
                 .GroupBy(t => t.PaymentType)

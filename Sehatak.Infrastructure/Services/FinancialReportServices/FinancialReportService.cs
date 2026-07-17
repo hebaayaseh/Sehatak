@@ -73,10 +73,10 @@ namespace Sehatak.Infrastructure.Services.FinancialReportServices
 
             using var workbook = new XLWorkbook();
             var paymentSheet = workbook.Worksheets.Add("Payment confirmed");
-            paymentSheet.RightToLeft = true;
             paymentSheet.Cell(1,1).Value= "Center";
             paymentSheet.Cell(1,2).Value= "Amount";
             paymentSheet.Range(1, 1, 1, 2).Style.Font.Bold = true;
+            paymentSheet.Range(1, 1, 1, 2).SortLeftToRight();
 
             var paymentByCenter = confirmedPayments
                 .GroupBy(c=>c.CenterName)
@@ -99,10 +99,10 @@ namespace Sehatak.Infrastructure.Services.FinancialReportServices
             paymentSheet.Columns().AdjustToContents();
 
             var subSheet = workbook.Worksheets.Add("Active Supscription");
-            subSheet.RightToLeft = true;
             subSheet.Cell(row, 1).Value = "Center";
             subSheet.Cell(row, 2).Value = "Amount";
             subSheet.Range(1, 1, 1, 2).Style.Font.Bold = true;
+            paymentSheet.Range(1, 1, 1, 2).SortLeftToRight();
 
             var subByCenter = activeSubscriptionsAmounts
                 .GroupBy(c => c.CenterName)
