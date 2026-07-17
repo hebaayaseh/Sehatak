@@ -42,7 +42,7 @@ namespace Sehatak.Infrastructure.Services.FinancialReportServices
             else
             {
                 periodStart = new DateTime(request.Year, 1, 1);
-                periodEnd = periodEnd = new DateTime(request.Year, 12, 31);
+                periodEnd = new DateTime(request.Year, 12, 31);
 
             }
 

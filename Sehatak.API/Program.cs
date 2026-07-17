@@ -91,7 +91,11 @@ namespace Sehatak.API
                 ));
 
             // 1. CONTROLLERS
-            builder.Services.AddControllers();
+            builder.Services.AddControllers()
+            .AddJsonOptions(options =>
+            {
+              options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+            });
 
             // 2. SWAGGER
             builder.Services.AddEndpointsApiExplorer();
@@ -300,7 +304,7 @@ namespace Sehatak.API
             builder.Services.AddScoped<IprofileStaff, EditStaffService>();
             builder.Services.AddScoped<IAddDoctorDailyHours, AddDoctorDailyHoursService>();
             builder.Services.AddScoped<IServicePrice, servicePrice>();
-
+            builder.Services.AddScoped<IFinancialReportAdmin, FinancialReportAdminService>();
             var app = builder.Build();
 
             // MIDDLEWARE PIPELINE 
