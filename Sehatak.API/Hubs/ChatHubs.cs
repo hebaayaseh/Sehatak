@@ -21,7 +21,6 @@ public class ChatHubs : Hub
             });
     }
 
-
     public override async Task OnConnectedAsync()
     {
         var userId = Context.UserIdentifier;

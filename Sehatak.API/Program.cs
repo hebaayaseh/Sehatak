@@ -147,8 +147,7 @@ namespace Sehatak.API
             );
 
             // 5. TENANT DATABASE
-            builder.Services.AddHttpContextAccessor();
-            builder.Services.AddSingleton<TenantDbContextFactory>();   // بيبني TenantDbContext لمركز معين، يدوياً
+            builder.Services.AddHttpContextAccessor(); // بيبني TenantDbContext لمركز معين، يدوياً
             builder.Services.AddScoped<TenantDbContextAccessor>();     // بيجيب TenantDbContext للمركز الحالي من JWT
             
 
@@ -172,23 +171,34 @@ namespace Sehatak.API
             });
 
             // 8. RATE LIMITING
+            var loginPermitLimit = builder.Configuration.GetValue<int>("RateLimiting:LoginPermitLimit");
+            var loginWindowSeconds = builder.Configuration.GetValue<int>("RateLimiting:LoginWindowSeconds");
+            var generalPermitLimit = builder.Configuration.GetValue<int>("RateLimiting:GeneralPermitLimit");
+            var generalWindowSeconds = builder.Configuration.GetValue<int>("RateLimiting:GeneralWindowSeconds");
+
             builder.Services.AddRateLimiter(options =>
             {
-                options.AddFixedWindowLimiter("LoginPolicy", limiterOptions =>
-                {
-                    limiterOptions.PermitLimit = builder.Configuration.GetValue<int>("RateLimiting:LoginPermitLimit");
-                    limiterOptions.Window = TimeSpan.FromSeconds(builder.Configuration.GetValue<int>("RateLimiting:LoginWindowSeconds"));
-                    limiterOptions.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
-                    limiterOptions.QueueLimit = 0;
-                });
+                options.AddPolicy("LoginPolicy", httpContext =>
+                    RateLimitPartition.GetFixedWindowLimiter(
+                        partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                        factory: _ => new FixedWindowRateLimiterOptions
+                        {
+                            PermitLimit = loginPermitLimit,
+                            Window = TimeSpan.FromSeconds(loginWindowSeconds),
+                            QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                            QueueLimit = 0
+                        }));
 
-                options.AddFixedWindowLimiter("GeneralPolicy", limiterOptions =>
-                {
-                    limiterOptions.PermitLimit = builder.Configuration.GetValue<int>("RateLimiting:GeneralPermitLimit");
-                    limiterOptions.Window = TimeSpan.FromSeconds(builder.Configuration.GetValue<int>("RateLimiting:GeneralWindowSeconds"));
-                    limiterOptions.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
-                    limiterOptions.QueueLimit = 0;
-                });
+                options.AddPolicy("GeneralPolicy", httpContext =>
+                    RateLimitPartition.GetFixedWindowLimiter(
+                        partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                        factory: _ => new FixedWindowRateLimiterOptions
+                        {
+                            PermitLimit = generalPermitLimit,
+                            Window = TimeSpan.FromSeconds(generalWindowSeconds),
+                            QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                            QueueLimit = 0
+                        }));
 
                 options.OnRejected = async (context, cancellationToken) =>
                 {
@@ -200,6 +210,7 @@ namespace Sehatak.API
                     }, cancellationToken);
                 };
             });
+
 
             // 9. JWT AUTHENTICATION
             var jwtKey = builder.Configuration["Jwt:SecretKey"]!;

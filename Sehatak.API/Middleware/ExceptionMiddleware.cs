@@ -9,10 +9,7 @@ public class ExceptionMiddleware
     private readonly ILogger<ExceptionMiddleware> _logger;
     private readonly IStringLocalizerFactory _localizerFactory;
 
-    public ExceptionMiddleware(
-        RequestDelegate next,
-        ILogger<ExceptionMiddleware> logger,
-        IStringLocalizerFactory localizerFactory)
+    public ExceptionMiddleware(RequestDelegate next,ILogger<ExceptionMiddleware> logger,IStringLocalizerFactory localizerFactory)
     {
         _next = next;
         _logger = logger;
@@ -37,13 +34,9 @@ public class ExceptionMiddleware
         }
     }
 
-    private static async Task HandleExceptionAsync(
-        HttpContext context,
-        Exception ex,
-        IStringLocalizerFactory localizerFactory)
+    private static async Task HandleExceptionAsync(HttpContext context,Exception ex,IStringLocalizerFactory localizerFactory)
     {
-        var localizer = localizerFactory.Create(
-            "Messages",
+        var localizer = localizerFactory.Create("Messages",
             System.Reflection.Assembly.GetExecutingAssembly().GetName().Name!
         );
         
