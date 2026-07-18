@@ -52,7 +52,7 @@ namespace Sehatak.Infrastructure.Services.SuperAdminService.SuperAdminAuth
             );
             return new SuperAdminLoginResponseDto 
             {
-                Token = tokens.AccessToken,
+                AccessToken = tokens.AccessToken,
                 RefreshToken = tokens.RefreshToken 
             };
         }

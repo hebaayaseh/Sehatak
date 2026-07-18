@@ -64,7 +64,7 @@ namespace Sehatak.Infrastructure.Services.StaffLogin
             );
             return new StaffLoginResponseDto
             {
-                Token = tokens.AccessToken,
+                AccessToken = tokens.AccessToken,
                 RefreshToken = tokens.RefreshToken,
                 role = user.role.ToString()
             };

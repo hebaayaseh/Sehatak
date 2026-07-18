@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Localization;
 using Sehatak.Application.DTOs.PatienRegisterDto;
+using Sehatak.Application.DTOs.PatientLoginDto;
 using Sehatak.Application.Interfaces.AuthPatient;
 
 namespace Sehatak.API.Controllers.Patient
@@ -18,7 +19,7 @@ namespace Sehatak.API.Controllers.Patient
             
         }
         [EnableRateLimiting("LoginPolicy")]
-        [HttpPost("RegisterPatient{centerId}")]
+        [HttpPost("register-patient{centerId}")]
         public async Task<IActionResult> RegisterPatient (int centerId,[FromForm] RegisterRequestDto registerRequestDto)
         {
             var result = await authService.RegisterAsync(centerId,registerRequestDto);
@@ -33,6 +34,14 @@ namespace Sehatak.API.Controllers.Patient
             if (result == null)
                 throw new ArgumentException("الكود غير صحيح أو منتهي الصلاحية.");
 
+            return Ok(result);
+        }
+
+        [EnableRateLimiting("LoginPolicy")]
+        [HttpPost("login-patient{centerId}")]
+        public async Task<IActionResult> LoginPatient(int centerId, [FromBody] PatientRequestDto registerRequestDto)
+        {
+            var result = await authService.LoginPatientAsync(centerId, registerRequestDto);
             return Ok(result);
         }
     }

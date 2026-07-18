@@ -1,8 +1,10 @@
 ﻿using BCrypt.Net;
 using Castle.Core.Smtp;
+using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Win32;
 using Sehatak.Application.DTOs.PatienRegisterDto;
+using Sehatak.Application.DTOs.PatientLoginDto;
 using Sehatak.Application.Interfaces.AuthPatient;
 using Sehatak.Application.Interfaces.IAuth;
 using Sehatak.Application.Interfaces.IEmail;
@@ -25,19 +27,65 @@ using Volo.Abp;
 namespace Sehatak.Infrastructure.Services.PatientService.PatientRegisterAuth;
     public class AuthService : IAuthService
     {
+    private readonly SharedDbContext sharedDbContext;
     private readonly TenantDbContextFactory tenantFactory;
     private readonly IEmailService emailSender;
     private readonly ITokenService tokenService;
-    public AuthService(TenantDbContextFactory tenantDbContextFactory, IEmailService emailSenderService,ITokenService tokenService)
+    public AuthService(SharedDbContext sharedDbContext , TenantDbContextFactory tenantDbContextFactory, IEmailService emailSenderService,ITokenService tokenService)
     {
+        this.sharedDbContext = sharedDbContext;
         tenantFactory = tenantDbContextFactory;
         emailSender = emailSenderService;
         this.tokenService = tokenService;
     }
 
-    public async Task<RegisterResponseDto> RegisterAsync(int CenterId, RegisterRequestDto request)
+    public async Task<PatientResponseDto> LoginPatientAsync(int centerId, PatientRequestDto request)
     {
-        var db = tenantFactory.CreateForCenter(CenterId);
+        var center = await sharedDbContext.MedicalCenters
+            .FirstOrDefaultAsync(c => c.Id == centerId && c.CenterStatus == CenterStatus.Active);
+        if (center == null)
+            throw new BusinessException("Center.NotFound");
+
+        using var db = tenantFactory.CreateForCenter(centerId);
+
+        var patient = await db.Users
+            .FirstOrDefaultAsync(p => p.isActive && p.email == request.email);
+
+        if(patient == null )
+            throw new BusinessException("Auth.Unauthorized");
+
+        if(patient.role != userRole.Patient)
+            throw new BusinessException("Auth.Forbidden");
+
+        var passwordValid = BCrypt.Net.BCrypt.Verify(request.password, patient.passwordHash);
+
+        if (!passwordValid)
+            throw new BusinessException("Validation.PasswordMismatch");
+
+        var tokens = await tokenService.IssueTokensAsync(
+            userId: patient.Id,
+            name:$"{patient.firstName} {patient.lastName}",
+            email: patient.email,
+            role: patient.role.ToString(),
+            centerId:centerId,
+            ownerType:TokenOwnerType.TenantUser
+        );
+        return new PatientResponseDto
+        {
+            AccessToken = tokens.AccessToken,
+            RefreshToken = tokens.RefreshToken
+        };
+
+    }
+
+    public async Task<RegisterResponseDto> RegisterAsync(int centerId, RegisterRequestDto request)
+    {
+        var center = await sharedDbContext.MedicalCenters
+            .FirstOrDefaultAsync(c => c.Id == centerId && c.CenterStatus == CenterStatus.Active);
+        if (center == null)
+            throw new BusinessException("Center.NotFound");
+
+        var db = tenantFactory.CreateForCenter(centerId);
         var existing = await db.Users.FirstOrDefaultAsync(u => u.email == request.email);
 
         if (existing != null && existing.isActive)
@@ -176,7 +224,7 @@ namespace Sehatak.Infrastructure.Services.PatientService.PatientRegisterAuth;
 
         return new VerifyOtpResponseDto 
         { 
-            Token = tokens.AccessToken, 
+            AccessToken = tokens.AccessToken, 
             RefreshToken = tokens.RefreshToken 
         };
     }

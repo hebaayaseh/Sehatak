@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sehatak.Application.DTOs.PatienRegisterDto
+namespace Sehatak.Application.DTOs.Auth
 {
-    public class VerifyOtpResponseDto
+    public class LogoutRequestDto
     {
-        public string AccessToken { get; set; } = string.Empty;
         public string RefreshToken { get; set; } = string.Empty;
     }
 }
