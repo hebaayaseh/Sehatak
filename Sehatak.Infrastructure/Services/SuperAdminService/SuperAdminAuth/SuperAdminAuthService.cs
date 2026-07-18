@@ -3,9 +3,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Sehatak.Application.DTOs.Exceptions;
 using Sehatak.Application.DTOs.SuperAdminDto;
+using Sehatak.Application.Interfaces.IAuth;
 using Sehatak.Application.Interfaces.SuperAdminInterface;
 using Sehatak.Domain.Entities.SharedEntities;
 using Sehatak.Domain.Enums;
+using Sehatak.Domain.Enums.SharedEnums;
 using Sehatak.Infrastructure.Data;
 using Sehatak.Infrastructure.Security;
 using System;
@@ -20,13 +22,12 @@ namespace Sehatak.Infrastructure.Services.SuperAdminService.SuperAdminAuth
     public class SuperAdminAuthService : ISuperAdminAuthService
     {
         private readonly SharedDbContext sharedDbContext;
-        private readonly JwtTokenGenerator jwtTokenGenerator;
+        private readonly ITokenService tokenService;
         private readonly IConfiguration configuration;
-
-        public SuperAdminAuthService (SharedDbContext sharedDbContext, JwtTokenGenerator jwtTokenGenerator, IConfiguration configuration)
+        public SuperAdminAuthService(SharedDbContext sharedDbContext, ITokenService tokenService, IConfiguration configuration)
         {
             this.sharedDbContext = sharedDbContext;
-            this.jwtTokenGenerator = jwtTokenGenerator;
+            this.tokenService = tokenService;
             this.configuration = configuration;
         }
 
@@ -41,14 +42,19 @@ namespace Sehatak.Infrastructure.Services.SuperAdminService.SuperAdminAuth
             var passwordValid = BCrypt.Net.BCrypt.Verify(request.password, superAdmin.PasswordHash);
             if (!passwordValid) return null;
 
-            var token = jwtTokenGenerator.GenerateToken(
+            var tokens = await tokenService.IssueTokensAsync(
                 userId: superAdmin.Id,
                 name: superAdmin.Name,
                 email: superAdmin.Email,
                 role: superAdmin.role.ToString(),
-                centerId:null
+                centerId: null,
+                ownerType: TokenOwnerType.SuperAdmin
             );
-            return new SuperAdminLoginResponseDto { Token = token };
+            return new SuperAdminLoginResponseDto 
+            {
+                Token = tokens.AccessToken,
+                RefreshToken = tokens.RefreshToken 
+            };
         }
 
         public async Task<RegisterSuperAdminResponseDto> RegisterAsync(RegisterSuperAdminRequestDto request)

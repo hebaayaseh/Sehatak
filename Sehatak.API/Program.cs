@@ -23,6 +23,7 @@ using Sehatak.Application.Interfaces.ChatInterface;
 using Sehatak.Application.Interfaces.DepartmentInterface;
 using Sehatak.Application.Interfaces.Features;
 using Sehatak.Application.Interfaces.GetSttafInterFace;
+using Sehatak.Application.Interfaces.IAuth;
 using Sehatak.Application.Interfaces.IEmail;
 using Sehatak.Application.Interfaces.IFinancialReports;
 using Sehatak.Application.Interfaces.IPatientCenter;
@@ -64,6 +65,7 @@ using Sehatak.Infrastructure.Services.SuperAdminService.Features.RemoveFeatureFr
 using Sehatak.Infrastructure.Services.SuperAdminService.Plans;
 using Sehatak.Infrastructure.Services.SuperAdminService.SubscriptionPaymentService;
 using Sehatak.Infrastructure.Services.SuperAdminService.SuperAdminAuth;
+using Sehatak.Infrastructure.Services.tokenService;
 using Serilog;
 using Serilog;
 using System;
@@ -331,6 +333,8 @@ namespace Sehatak.API
             builder.Services.AddScoped<IServicePrice, servicePrice>();
             builder.Services.AddScoped<IFinancialReportAdmin, FinancialReportAdminService>();
             builder.Services.AddScoped<IChatHub, ChatHistoryService>();
+            builder.Services.AddScoped<ITokenService, TokenService>();
+
             var app = builder.Build();
 
             // MIDDLEWARE PIPELINE 

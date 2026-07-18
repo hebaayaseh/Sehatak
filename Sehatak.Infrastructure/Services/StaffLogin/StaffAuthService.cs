@@ -1,5 +1,6 @@
 ﻿using Sehatak.Application.DTOs.Exceptions;
 using Sehatak.Application.DTOs.StaffLogIn;
+using Sehatak.Application.Interfaces.IAuth;
 using Sehatak.Application.Interfaces.IEmail;
 using Sehatak.Application.Interfaces.StaffLogin;
 using Sehatak.Domain.Enums;
@@ -19,14 +20,13 @@ namespace Sehatak.Infrastructure.Services.StaffLogin
         private readonly TenantDbContextFactory contextFactory;
         private readonly IEmailService emailService;
         private readonly SharedDbContext sharedDbContext;
-        private readonly JwtTokenGenerator jwtGenerator;
-
-        public StaffAuthService(TenantDbContextFactory contextFactory ,  IEmailService emailService , SharedDbContext sharedDbContext , JwtTokenGenerator jwtTokenGenerator)
+        private readonly ITokenService tokenService;
+        public StaffAuthService(TenantDbContextFactory contextFactory, IEmailService emailService, SharedDbContext sharedDbContext, ITokenService tokenService)
         {
             this.contextFactory = contextFactory;
             this.emailService = emailService;
             this.sharedDbContext = sharedDbContext;
-            this.jwtGenerator = jwtTokenGenerator;
+            this.tokenService = tokenService;
         }
 
         public async Task<StaffLoginResponseDto> StaffLoginAsync(int CenterId, StaffLoginRequestDto request)
@@ -54,16 +54,18 @@ namespace Sehatak.Infrastructure.Services.StaffLogin
             if (user.role == userRole.Patient)
                 throw new BusinessException("Auth.Forbidden");
 
-            var token = jwtGenerator.GenerateToken(
+            var tokens = await tokenService.IssueTokensAsync(
                 userId: user.Id,
                 name: $"{user.firstName}{user.lastName}",
                 email: user.email,
                 role: user.role.ToString(),
-                centerId: CenterId
-
+                centerId: CenterId,
+                ownerType: TokenOwnerType.TenantUser
             );
-            return new StaffLoginResponseDto { 
-                Token = token,
+            return new StaffLoginResponseDto
+            {
+                Token = tokens.AccessToken,
+                RefreshToken = tokens.RefreshToken,
                 role = user.role.ToString()
             };
 

@@ -4,12 +4,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Win32;
 using Sehatak.Application.DTOs.PatienRegisterDto;
 using Sehatak.Application.Interfaces.AuthPatient;
+using Sehatak.Application.Interfaces.IAuth;
 using Sehatak.Application.Interfaces.IEmail;
 using Sehatak.Domain.Entities;
 using Sehatak.Domain.Entities.General;
 using Sehatak.Domain.Entities.SharedEntities;
 using Sehatak.Domain.Entities.TenantEntities;
 using Sehatak.Domain.Enums;
+using Sehatak.Domain.Enums.SharedEnums;
 using Sehatak.Infrastructure.Data;
 using Sehatak.Infrastructure.Security;
 using System;
@@ -23,15 +25,15 @@ using Volo.Abp;
 namespace Sehatak.Infrastructure.Services.PatientService.PatientRegisterAuth;
     public class AuthService : IAuthService
     {
-        private readonly TenantDbContextFactory tenantFactory;
-        private readonly IEmailService emailSender;
-        private readonly JwtTokenGenerator jwtGenerator;
-        public AuthService(TenantDbContextFactory tenantDbContextFactory, IEmailService emailSenderService, JwtTokenGenerator jwtTokenGenerator)
-        {
-            tenantFactory = tenantDbContextFactory;
-            emailSender = emailSenderService;
-            jwtGenerator = jwtTokenGenerator;
-        }
+    private readonly TenantDbContextFactory tenantFactory;
+    private readonly IEmailService emailSender;
+    private readonly ITokenService tokenService;
+    public AuthService(TenantDbContextFactory tenantDbContextFactory, IEmailService emailSenderService,ITokenService tokenService)
+    {
+        tenantFactory = tenantDbContextFactory;
+        emailSender = emailSenderService;
+        this.tokenService = tokenService;
+    }
 
     public async Task<RegisterResponseDto> RegisterAsync(int CenterId, RegisterRequestDto request)
     {
@@ -163,17 +165,23 @@ namespace Sehatak.Infrastructure.Services.PatientService.PatientRegisterAuth;
 
 
 
-        var token = jwtGenerator.GenerateToken(
+        var tokens = await tokenService.IssueTokensAsync(
             userId: user.Id,
             name: $"{user.firstName} {user.lastName}",
             email: user.email!,
             role: user.role.ToString(),
-            centerId:CenterId
+            centerId: CenterId,
+            ownerType: TokenOwnerType.TenantUser
         );
 
-        return new VerifyOtpResponseDto { Token = token };
+        return new VerifyOtpResponseDto 
+        { 
+            Token = tokens.AccessToken, 
+            RefreshToken = tokens.RefreshToken 
+        };
     }
-
-
 }
+
+
+
 

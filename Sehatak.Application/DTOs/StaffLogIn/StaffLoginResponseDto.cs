@@ -10,5 +10,6 @@ namespace Sehatak.Application.DTOs.StaffLogIn
     {
         public string Token { get; set; } = string.Empty;
         public string role { get; set; }
+        public string RefreshToken { get; set; } = string.Empty;
     }
 }

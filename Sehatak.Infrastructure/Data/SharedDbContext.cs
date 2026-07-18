@@ -23,6 +23,7 @@ namespace Sehatak.Infrastructure.Data
         public DbSet<SubscriptionPayment> subscriptionPayments=> Set<SubscriptionPayment>();
         public DbSet<emailVerificationCode> emailVerificationCodes => Set<emailVerificationCode>();
         public DbSet<CenterRegistrationRequest> centerRegistrationRequests => Set<CenterRegistrationRequest>();
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
