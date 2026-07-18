@@ -19,6 +19,7 @@ using Sehatak.Application.Interfaces.AuthPatient;
 using Sehatak.Application.Interfaces.CenterRegistrationRequest;
 using Sehatak.Application.Interfaces.Centers;
 using Sehatak.Application.Interfaces.CentersStatusDto;
+using Sehatak.Application.Interfaces.ChatInterface;
 using Sehatak.Application.Interfaces.DepartmentInterface;
 using Sehatak.Application.Interfaces.Features;
 using Sehatak.Application.Interfaces.GetSttafInterFace;
@@ -233,11 +234,23 @@ namespace Sehatak.API
                     ValidateAudience = true,
                     ValidAudience = jwtAudience,
                     ValidateLifetime = true,
-                    ClockSkew = TimeSpan.Zero
+                    ClockSkew = TimeSpan.Zero,
+                    NameClaimType = System.Security.Claims.ClaimTypes.NameIdentifier
                 };
 
                 options.Events = new JwtBearerEvents
                 {
+                    OnMessageReceived = context =>
+                    {
+                        var accessToken = context.Request.Query["access_token"];
+                        var path = context.HttpContext.Request.Path;
+                        if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/Hubs/ChatHubs"))
+                        {
+                            context.Token = accessToken;
+                        }
+                        return Task.CompletedTask;
+                    },
+
                     OnChallenge = async context =>
                     {
                         context.HandleResponse();
@@ -272,6 +285,7 @@ namespace Sehatak.API
                 options.AddPolicy("DoctorOnly", policy => policy.RequireRole("Doctor"));
                 options.AddPolicy("ReceptionistOnly", policy => policy.RequireRole("Receptionist"));
                 options.AddPolicy("PatientOnly", policy => policy.RequireRole("Patient"));
+                options.AddPolicy("ChatAccess", policy => policy.RequireRole("Admin","Doctor","Receptionist","LapTechnician","Patient"));
             });
 
             // 11. SERVICES
@@ -280,7 +294,7 @@ namespace Sehatak.API
             builder.Services.AddScoped<TenantMigrationRunner>();
             builder.Services.AddScoped<ISuperAdminAuthService, SuperAdminAuthService>();
             builder.Services.AddScoped<TenantDbContextFactory>();
-
+            builder.Services.AddSingleton<Sehatak.API.Hubs.OnlineUserTracker>();
 
             builder.Services.AddScoped<IEmailService, EmailService>();
             builder.Services.AddScoped<IAuthService, AuthService>();
@@ -316,6 +330,7 @@ namespace Sehatak.API
             builder.Services.AddScoped<IAddDoctorDailyHours, AddDoctorDailyHoursService>();
             builder.Services.AddScoped<IServicePrice, servicePrice>();
             builder.Services.AddScoped<IFinancialReportAdmin, FinancialReportAdminService>();
+            builder.Services.AddScoped<IChatHub, ChatHistoryService>();
             var app = builder.Build();
 
             // MIDDLEWARE PIPELINE 

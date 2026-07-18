@@ -17,9 +17,11 @@ namespace Sehatak.Domain.Entities.General
         public bool IsRead { get; set; } = false;
 
         public DateTime SentAt { get; set; } = DateTime.UtcNow;
+        public bool IsDeleted { get; set; } = false;
 
         //  Navigation Properties :
         public User Sender { get; set; } = null!;
         public User Receiver { get; set; } = null!;
+
     }
 }
