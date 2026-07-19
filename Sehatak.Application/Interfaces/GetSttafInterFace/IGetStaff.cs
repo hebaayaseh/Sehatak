@@ -12,5 +12,8 @@ namespace Sehatak.Application.Interfaces.GetSttafInterFace
         Task<List<GetDoctorsResponseDto>> GetDoctorsAsync(int centerId);
         Task<List<GetReceptionistResponseDto>> GetReceptionistsAsync(int centerId);
         Task<List<GetLapTechnicalDto>> GetLapTechnicalsAsync(int centerId);
+        Task<DoctorSummaryDto> GetDoctorAsync(int centerId, int doctorId);
+        Task<GetReceptionistResponseDto> GetReceptionistAsync(int centerId, int userId);
+        Task<GetLapTechnicalDto> GetLapTechnicalAsync(int centerId, int userId);
     }
 }

@@ -10,6 +10,7 @@ namespace Sehatak.Application.DTOs.GetStaffDto
     {
         public int DoctorId { get; set; }
         public string DoctorName { get; set; } = string.Empty;
+        public string? Bio {  get; set; }
         public string? Specialization { get; set; }
         public string? ProfileImageUrl { get; set; }
         public bool OnlineEnabled { get; set; }
