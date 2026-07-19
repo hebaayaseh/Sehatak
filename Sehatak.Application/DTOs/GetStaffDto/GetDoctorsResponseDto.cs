@@ -14,5 +14,6 @@ namespace Sehatak.Application.DTOs.GetStaffDto
         public string? DepartmentImageUrl { get; set; }
         public List<DoctorSummaryDto> Doctors { get; set; } = new();
 
+
     }
 }

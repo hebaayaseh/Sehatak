@@ -14,5 +14,6 @@ namespace Sehatak.Application.DTOs.GetStaffDto
         public string? Specialization { get; set; }
         public string? ProfileImageUrl { get; set; }
         public bool OnlineEnabled { get; set; }
+        public List<SummatySchedualDto> doctorSchedule {  get; set; }
     }
 }

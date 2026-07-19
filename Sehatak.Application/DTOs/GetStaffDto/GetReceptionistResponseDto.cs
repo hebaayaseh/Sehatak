@@ -10,6 +10,7 @@ namespace Sehatak.Application.DTOs.GetStaffDto
     {
         public int ReceptionistId { get; set; }
         public string ReceptionistName { get;set; }
+        public int ReceptionistShift { get; set; }
 
     }
 }
