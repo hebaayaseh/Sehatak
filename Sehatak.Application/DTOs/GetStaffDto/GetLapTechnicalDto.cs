@@ -10,6 +10,6 @@ namespace Sehatak.Application.DTOs.GetStaffDto
     {
         public int LapTechnicalId { get; set; }
         public string LapTechnicalName { get; set; }
-        public int LabTechnicalShift { get; set; }
+        public List<SummaryShiftDto> LabTechnicalShift { get; set; }
     }
 }

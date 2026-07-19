@@ -105,17 +105,39 @@ namespace Sehatak.Infrastructure.Services.GetStaff
             using var db = contextFactory.CreateForCenter(centerId);
 
             var user = await db.Users
-                .FirstOrDefaultAsync(u => u.Id == userId && u.isActive && u.role == userRole.LabTechnician);
+               .FirstOrDefaultAsync(u => u.Id == userId && u.isActive && u.role == userRole.LabTechnician);
+            if (user == null)
+                throw new BusinessException("User.NotFound");
 
-            if(user == null)
+
+            var attendances = await db.StaffAttendances
+              .Include(a => a.Shift)
+              .Where(a => a.StaffId == userId)
+              .OrderByDescending(a => a.AttendanceDate)
+              .ToListAsync();
+
+            if (attendances == null)
             {
                 throw new BusinessException("User.NotFound");
             }
 
-            return new GetLapTechnicalDto 
-            { 
-                LapTechnicalId = userId,
-                LapTechnicalName = $"{user.firstName} {user.lastName}"
+            return new GetLapTechnicalDto
+            {
+                LapTechnicalId = user.Id,
+                LapTechnicalName = $"{user.firstName} {user.lastName}",
+                LabTechnicalShift = attendances.Select(a => new SummaryShiftDto
+                {
+                    ShiftName = a.Shift.ShiftName,
+                    DayOfWeek = a.Shift.DayOfWeek,
+                    StartTime = a.Shift.StartTime,
+                    EndTime = a.Shift.EndTime,
+                    CheckInTime = a.CheckInTime,
+                    CheckOutTime = a.CheckOutTime,
+                    attendanceStatus = a.attendanceStatus,
+                    IsActive = user.isActive,
+                    AttendanceDate = a.AttendanceDate,
+                }).ToList()
+
             };
         }
 
@@ -136,13 +158,14 @@ namespace Sehatak.Infrastructure.Services.GetStaff
 
                     LapTechnicalId = r.Id,
                     LapTechnicalName = r.firstName + " " + r.lastName
+                    
                 }).ToListAsync();
         }
 
         public async Task<GetReceptionistResponseDto> GetReceptionistAsync(int centerId, int userId)
         {
             var center = await SharedDbContext.MedicalCenters
-               .FirstOrDefaultAsync(c => c.Id == centerId && c.CenterStatus == CenterStatus.Active);
+              .FirstOrDefaultAsync(c => c.Id == centerId && c.CenterStatus == CenterStatus.Active);
 
             if (center == null)
                 throw new BusinessException("Center.NotFound");
@@ -150,17 +173,39 @@ namespace Sehatak.Infrastructure.Services.GetStaff
             using var db = contextFactory.CreateForCenter(centerId);
 
             var user = await db.Users
-                .FirstOrDefaultAsync(u => u.Id == userId && u.isActive && u.role == userRole.Receptionist);
-
+               .FirstOrDefaultAsync(u => u.Id == userId && u.isActive && u.role == userRole.Receptionist);
             if (user == null)
+                throw new BusinessException("User.NotFound");
+
+
+            var attendances = await db.StaffAttendances
+              .Include(a => a.Shift)
+              .Where(a => a.StaffId == userId)
+              .OrderByDescending(a => a.AttendanceDate)
+              .ToListAsync();
+
+            if (attendances == null)
             {
                 throw new BusinessException("User.NotFound");
             }
 
             return new GetReceptionistResponseDto
             {
-                ReceptionistId = userId,
-                ReceptionistName = $"{user.firstName} {user.lastName}"
+                ReceptionistId = user.Id,
+                ReceptionistName = $"{user.firstName} {user.lastName}",
+                ReceptionistShift = attendances.Select(a => new SummaryShiftDto
+                {
+                    ShiftName = a.Shift.ShiftName,
+                    DayOfWeek = a.Shift.DayOfWeek,
+                    StartTime = a.Shift.StartTime,
+                    EndTime = a.Shift.EndTime,
+                    CheckInTime = a.CheckInTime,
+                    CheckOutTime = a.CheckOutTime,
+                    attendanceStatus = a.attendanceStatus,
+                    IsActive = user.isActive,
+                    AttendanceDate = a.AttendanceDate,
+                }).ToList()
+
             };
         }
 
