@@ -88,6 +88,33 @@ namespace Sehatak.Infrastructure.Services.ServicePriceService
 
         }
 
+        public async Task<string> RemoveServicePrice(int userId, int centerId, int servicePriceId)
+        {
+            var center = sharedDbContext.MedicalCenters
+                .FirstOrDefaultAsync(c => c.Id == centerId && c.CenterStatus == CenterStatus.Active);
+
+            if (center == null)
+                throw new BusinessException("Center.NotFound");
+
+            using var db = contextFactory.CreateForCenter(centerId);
+
+            var user = await db.Users
+                .FirstOrDefaultAsync(a => a.Id == userId && a.isActive && a.role == userRole.Admin);
+
+            if (user == null)
+                throw new BusinessException("Auth.Forbidden");
+
+            var servicePrice = await db.ServicePrices
+                .FirstOrDefaultAsync(s => s.Id == servicePriceId && s.IsActive);
+
+            if (servicePrice == null)
+                throw new BusinessException("Generall.NotFound");
+
+            servicePrice.IsActive = false;
+            await db.SaveChangesAsync();
+            return "The service price has been successfully removed.";
+        }
+
         public async Task<UpaterServicePriceResponse> updateServicePrice(int userId, int centerId, UpdateServicePrice request)
         {
             var center = await sharedDbContext.MedicalCenters

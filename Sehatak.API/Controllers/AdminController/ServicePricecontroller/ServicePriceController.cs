@@ -37,5 +37,15 @@ namespace Sehatak.API.Controllers.SuperAdminAndAdmin.ServicePricecontroller
             return Ok(result);
         }
 
+        [Authorize(Policy = "AdminOnly")]
+        [HttpPost("remove-service-price/{centerId}/{servicePriceId}")]
+        public async Task<IActionResult> RemoveSrevicePrice(int centerId, int servicePriceId)
+        {
+            var userId = int.Parse(
+                User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            var result = await servicePrice.RemoveServicePrice(userId, centerId, servicePriceId);
+            return Ok(result);
+        }
+
     }
 }
