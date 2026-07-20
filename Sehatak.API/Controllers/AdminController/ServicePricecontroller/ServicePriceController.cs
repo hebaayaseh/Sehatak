@@ -19,12 +19,23 @@ namespace Sehatak.API.Controllers.SuperAdminAndAdmin.ServicePricecontroller
 
         [Authorize(Policy = "AdminOnly")]
         [HttpPost("add-service-price/{centerId}")]
-        public async Task<IActionResult> AddSrevicePrice(int centerId,ServicePriceRequest request)
+        public async Task<IActionResult> AddSrevicePrice(int centerId,[FromBody]ServicePriceRequest request)
         {
             var userId = int.Parse(
                 User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
             var result = await servicePrice.AddServicePriceAsync(userId, centerId, request);
             return Ok(result);
         }
+
+        [Authorize(Policy = "AdminOnly")]
+        [HttpPost("update-service-price/{centerId}")]
+        public async Task<IActionResult> UpdateSrevicePrice(int centerId,[FromForm] UpdateServicePrice request)
+        {
+            var userId = int.Parse(
+                User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            var result = await servicePrice.updateServicePrice(userId, centerId, request);
+            return Ok(result);
+        }
+
     }
 }
