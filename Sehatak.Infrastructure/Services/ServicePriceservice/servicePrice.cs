@@ -87,5 +87,48 @@ namespace Sehatak.Infrastructure.Services.ServicePriceService
             };
 
         }
+
+        public async Task<UpaterServicePriceResponse> updateServicePrice(int userId, int centerId, UpdateServicePrice request)
+        {
+            var center = await sharedDbContext.MedicalCenters
+               .FirstOrDefaultAsync(c => c.Id == centerId && c.CenterStatus == CenterStatus.Active);
+
+            if (center == null)
+                throw new BusinessException("Center.NotFound");
+
+            using var db = contextFactory.CreateForCenter(centerId);
+
+            var admin = await db.Users
+                 .FirstOrDefaultAsync(u => u.Id == userId && u.role == userRole.Admin && u.isActive);
+
+            if (admin == null)
+                throw new BusinessException("Auth.Forbidden");
+
+            var updateService = await db.ServicePrices
+                .FirstOrDefaultAsync(s => s.IsActive && s.Id == request.ServicePriceId);
+
+            if (updateService == null)
+                throw new BusinessException("General.NotFound");
+
+            if (request.Price != null)
+            {
+                if (request.Price <= 0)
+                    throw new BusinessException("ServicePrice.InvalidPrice");
+                updateService.Price = request.Price.Value;
+            }
+
+            if (!string.IsNullOrWhiteSpace(request.ServiceName))
+                updateService.ServiceName = request.ServiceName.Trim();
+
+            await db.SaveChangesAsync();
+            return new UpaterServicePriceResponse 
+            {
+                Id = updateService.Id,
+                Price = updateService.Price,
+                ServiceName = updateService.ServiceName,
+                Type = updateService.Type
+            };
+
+        }
     }
 }
