@@ -5,6 +5,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Sehatak.Application.Interfaces.IEmail;
 using Sehatak.Domain.Entities.SharedEntities;
+using Sehatak.Domain.Entities.TenantEntities;
+using Sehatak.Domain.Enums;
+using Sehatak.Domain.Enums.PostponeEnums;
 using Sehatak.Domain.Enums.SharedEnums;
 using Sehatak.Infrastructure.Data;
 using System;
@@ -81,7 +84,7 @@ namespace Sehatak.Infrastructure.Services.SuperAdminService.Background
 
             await sharedDb.SaveChangesAsync();
         }
-
+        
         private async Task SendRenewalReminders()
         {
             using var scope = _scopeFactory.CreateScope();

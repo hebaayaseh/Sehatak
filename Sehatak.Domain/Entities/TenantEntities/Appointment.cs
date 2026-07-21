@@ -39,6 +39,7 @@ namespace Sehatak.Domain.Entities.TenantEntities
         public decimal ConsultationCost { get; set; } = 0;
         public decimal ItemsTotal { get; set; } = 0;
         public DateTime? CheckInTime {  get; set; }
+        public bool DelayProcessed { get; set; } = false;
 
 
         //  Navigation Properties :
