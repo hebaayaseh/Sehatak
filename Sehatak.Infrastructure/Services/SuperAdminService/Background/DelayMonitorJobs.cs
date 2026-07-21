@@ -14,12 +14,12 @@ using System.Threading.Tasks;
 
 namespace Sehatak.Infrastructure.Services.SuperAdminService.Background
 {
-    public class DelayMonitorJob : BackgroundService
+    public class DelayMonitorJobs : BackgroundService
     {
         private readonly IServiceScopeFactory _scopeFactory;
         private readonly ILogger<SubscriptionActivationService> _logger;
 
-        public DelayMonitorJob(IServiceScopeFactory scopeFactory, ILogger<SubscriptionActivationService> logger)
+        public DelayMonitorJobs(IServiceScopeFactory scopeFactory, ILogger<SubscriptionActivationService> logger)
         {
             _scopeFactory = scopeFactory;
             _logger = logger;

@@ -317,7 +317,7 @@ namespace Sehatak.API
             builder.Services.AddScoped<IProfile, SuperAdminProfileService>();
             builder.Services.AddScoped<ISubscriptionPayment, SubscriptionPaymentService>();
             builder.Services.AddHostedService<SubscriptionActivationService>();
-            builder.Services.AddHostedService<DelayMonitorJob>();
+            builder.Services.AddHostedService<DelayMonitorJobs>();
             builder.Services.AddScoped<IAdminBulkEmailService, AdminBulkEmailService>();
             builder.Services.AddScoped<ICreateAdminService, CreateAdminService>();
             builder.Services.AddScoped<IStaffLogin, StaffAuthService>();
