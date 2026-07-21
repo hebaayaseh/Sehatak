@@ -28,5 +28,17 @@ namespace Sehatak.API.Controllers.SuperAdminAndAdmin.AddDoctorDaiktcontroller
             return Ok(result);
         }
 
+        [Authorize(Policy = "AdminOnly")]
+        [HttpPost("update-doctor-hours/{centerId}/{doctorId}")]
+        public async Task<IActionResult> UpdateDoctorDailyHours(int centerId, int doctorId,
+            [FromBody] UpdateDoctorDailyHousrRequest request)
+        {
+            var userId = int.Parse(
+                User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+
+            var result = await addHours.UpdateDoctorDailyHoursAsync(centerId, userId, doctorId, request);
+            return Ok(result);
+        }
+
     }
 }

@@ -10,5 +10,6 @@ namespace Sehatak.Application.Interfaces.AddDoctorDailyHours
     public interface IAddDoctorDailyHours
     {
         Task<AddDoctorDailyHoursResponse> AddDoctorDailyHoursAsync(int centerId , int userId , int doctorId ,AddDoctorDailyHoursRequest request);
+        Task<UpdateDoctorDailyHoursResponse> UpdateDoctorDailyHoursAsync(int centerId, int userId, int doctorId, UpdateDoctorDailyHousrRequest request);
     }
 }
