@@ -14,12 +14,13 @@ namespace Sehatak.Domain.Entities.TenantEntities
         public int PatientId { get; set; }
         public int DoctorId { get; set; }
         public int ReceptionistId { get; set; }
-        public DateOnly AllowFollow_UpDate { get; set; }
+        public DateOnly? AllowFollowUpDate { get; set; }
         public FollowUpStatus Status { get; set; } = FollowUpStatus.Pending;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
+        public int? ScheduledAppointmentId { get; set; }
         // Navigation Properties
         public Appointment OriginalAppointment { get; set; } = null!;
+        public Appointment? ScheduledAppointment {  get; set; } = null!;
         public Patient Patient { get; set; } = null!;
         public Doctor Doctor { get; set; } = null!;
         public User Receptionist { get; set; } = null!;

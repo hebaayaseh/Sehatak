@@ -12,6 +12,7 @@ namespace Sehatak.Domain.Entities.TenantEntities
         public int DoctorId { get; set; }
 
         public int? AppointmentId { get; set; }
+ 
 
         // If you add a pharmacy, the prescription must be complete. If you don't add one, you can use the AI-powered prescription generator.
         public string Prescription { get; set; }

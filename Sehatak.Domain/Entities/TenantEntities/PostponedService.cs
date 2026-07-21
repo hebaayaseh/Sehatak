@@ -20,6 +20,7 @@ namespace Sehatak.Domain.Entities.TenantEntities
         public DateOnly? NewDate { get; set; }
         public PostponeStatus Status { get; set; } = PostponeStatus.Active;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime? NewTimeSlot { get; set; }
 
         // Navigation Properties
         public Patient Patient { get; set; } = null!;

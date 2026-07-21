@@ -111,6 +111,7 @@ namespace Sehatak.Infrastructure.Services.ServicePriceService
                 throw new BusinessException("Generall.NotFound");
 
             servicePrice.IsActive = false;
+            servicePrice.UpdatedAt = DateTime.UtcNow;
             await db.SaveChangesAsync();
             return "The service price has been successfully removed.";
         }
@@ -147,6 +148,7 @@ namespace Sehatak.Infrastructure.Services.ServicePriceService
             if (!string.IsNullOrWhiteSpace(request.ServiceName))
                 updateService.ServiceName = request.ServiceName.Trim();
 
+            updateService.UpdatedAt = DateTime.UtcNow;
             await db.SaveChangesAsync();
             return new UpaterServicePriceResponse 
             {

@@ -36,6 +36,7 @@ using Sehatak.Application.Interfaces.MedicalCenter;
 using Sehatak.Application.Interfaces.Plans;
 using Sehatak.Application.Interfaces.RemoveFeatureFromCenter;
 using Sehatak.Application.Interfaces.RenewSubscription;
+using Sehatak.Application.Interfaces.SearchDoctor;
 using Sehatak.Application.Interfaces.ServicePriceInterface;
 using Sehatak.Application.Interfaces.SignUp;
 using Sehatak.Application.Interfaces.StaffLogin;
@@ -54,6 +55,7 @@ using Sehatak.Infrastructure.Services.FinancialReportServices;
 using Sehatak.Infrastructure.Services.GetStaff;
 using Sehatak.Infrastructure.Services.PatientService.PatientRegisterAuth;
 using Sehatak.Infrastructure.Services.PtientCenterService;
+using Sehatak.Infrastructure.Services.SearchDoctorService;
 using Sehatak.Infrastructure.Services.ServicePriceService;
 using Sehatak.Infrastructure.Services.StaffLogin;
 using Sehatak.Infrastructure.Services.SuperAdminService.Background;
@@ -334,6 +336,8 @@ namespace Sehatak.API
             builder.Services.AddScoped<IFinancialReportAdmin, FinancialReportAdminService>();
             builder.Services.AddScoped<IChatHub, ChatHistoryService>();
             builder.Services.AddScoped<ITokenService, TokenService>();
+            builder.Services.AddScoped<ISearchDoctor, searchDoctorService>();
+
 
             var app = builder.Build();
 

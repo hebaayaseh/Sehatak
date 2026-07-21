@@ -13,7 +13,9 @@ namespace Sehatak.Domain.Enums
         Completed = 3,
         Cancelled = 4,
         NoShow = 5,
-        Rescheduled = 6
-
+        Rescheduled = 6,
+        Postponed = 7,
+        CheckedIn = 8,
+        InProgress = 9 
     }
 }

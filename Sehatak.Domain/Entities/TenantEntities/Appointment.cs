@@ -38,6 +38,7 @@ namespace Sehatak.Domain.Entities.TenantEntities
         public string? cancellationReason { get; set; }
         public decimal ConsultationCost { get; set; } = 0;
         public decimal ItemsTotal { get; set; } = 0;
+        public DateTime? CheckInTime {  get; set; }
 
 
         //  Navigation Properties :

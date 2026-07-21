@@ -17,6 +17,7 @@ namespace Sehatak.Domain.Entities.TenantEntities
         public int? LabResultId { get; set; }
         public int? ConsultationId { get; set; }
         public int? AppointmentId { get; set; }
+        public DateTime? ExpiresAt { get; set; }
 
         // Navigation Properties : 
         public Appointment? Appointment { get; set; }
