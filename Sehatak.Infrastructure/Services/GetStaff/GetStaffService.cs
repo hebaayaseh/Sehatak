@@ -25,40 +25,48 @@ namespace Sehatak.Infrastructure.Services.GetStaff
 
         public async Task<DoctorSummaryDto?> GetDoctorAsync(int centerId, int doctorId)
 {
-    var center = await SharedDbContext.MedicalCenters
-        .FirstOrDefaultAsync(c => c.Id == centerId && c.CenterStatus == CenterStatus.Active);
-    if (center == null)
-        throw new BusinessException("Center.NotFound");
+            var center = await SharedDbContext.MedicalCenters
+                .FirstOrDefaultAsync(c => c.Id == centerId && c.CenterStatus == CenterStatus.Active);
+            if (center == null)
+                throw new BusinessException("Center.NotFound");
 
-    using var db = contextFactory.CreateForCenter(centerId);
+            using var db = contextFactory.CreateForCenter(centerId);
 
-    var doctor = await db.Doctors
-        .Include(d => d.user)
-        .Include(d => d.doctorschedules)
-        .FirstOrDefaultAsync(d => d.Id == doctorId && d.user.isActive);
+            var doctor = await db.Doctors
+                .Include(d => d.user)
+                .Include(d => d.doctorschedules)
+                .FirstOrDefaultAsync(d => d.Id == doctorId && d.user.isActive);
 
-    if (doctor == null)
-        throw new BusinessException("Doctor.NotFound");
+            if (doctor == null)
+                throw new BusinessException("Doctor.NotFound");
 
-    return new DoctorSummaryDto
-    {
-        DoctorId = doctor.Id,
-        DoctorName = $"{doctor.user.firstName} {doctor.user.lastName}",
-        OnlineEnabled = doctor.OnlineEnabled,
-        Bio = doctor.Bio,
-        Specialization = doctor.Specialization,
-        ProfileImageUrl = doctor.user.ProfileImageUrl,
-        doctorSchedule = doctor.doctorschedules
-            .Where(s => s.IsActive)
-            .Select(d => new SummatySchedualDto
+            var today = DateOnly.FromDateTime(DateTime.UtcNow);
+            var doctorBlockDay = await db.DoctorBlockedDays
+                        .Where(d => d.doctorId == doctor.Id && d.isBlocked && d.date >= today)
+                        .FirstOrDefaultAsync();
+
+            if (doctorBlockDay != null)
+                throw new BusinessException("Doctor.NoAvailableSlots");
+
+            return new DoctorSummaryDto
             {
-                Id = d.Id,
-                StartTime = d.StartTime,
-                EndTime = d.EndTime,
-                SlotDurationMinutes = d.SlotDurationMinutes,
-                IsActive = d.IsActive,
-            }).ToList(),
-    };
+                DoctorId = doctor.Id,
+                DoctorName = $"{doctor.user.firstName} {doctor.user.lastName}",
+                OnlineEnabled = doctor.OnlineEnabled,
+                Bio = doctor.Bio,
+                Specialization = doctor.Specialization,
+                ProfileImageUrl = doctor.user.ProfileImageUrl,
+                doctorSchedule = doctor.doctorschedules
+                    .Where(s => s.IsActive)
+                    .Select(d => new SummatySchedualDto
+                    {
+                        Id = d.Id,
+                        StartTime = d.StartTime,
+                        EndTime = d.EndTime,
+                        SlotDurationMinutes = d.SlotDurationMinutes,
+                        IsActive = d.IsActive,
+                    }).ToList(),
+            };
 }
 
         public async Task<List<GetDoctorsResponseDto>> GetDoctorsAsync(int centerId)

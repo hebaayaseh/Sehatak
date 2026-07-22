@@ -40,6 +40,7 @@ namespace Sehatak.Infrastructure.Data
         public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
 
         public DbSet<EmailVerificationCode> EmailVerificationCodes => Set<EmailVerificationCode>();
+        public DbSet<DoctorBlockedDay> DoctorBlockedDays => Set<DoctorBlockedDay>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

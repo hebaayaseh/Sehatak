@@ -132,6 +132,13 @@ namespace Sehatak.Infrastructure.Services.AddStaff
                     Type = NotificationType.Cancellation,
                     IsRead = false
                 });
+                db.DoctorBlockedDays.Add(new DoctorBlockedDay
+                {
+                    doctorId = doctorId,
+                    date = date,
+                    Reason = "إلغاء من قبل الطبيب",
+                    isBlocked = true
+                });
 
             }
             await db.SaveChangesAsync();

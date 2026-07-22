@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Sehatak.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using Sehatak.Infrastructure.Data;
 namespace Sehatak.Infrastructure.Data.Migrations.TenantMigrations
 {
     [DbContext(typeof(TenantDbContext))]
-    partial class TenantDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260722220925_BlockeDay")]
+    partial class BlockeDay
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -396,36 +399,6 @@ namespace Sehatak.Infrastructure.Data.Migrations.TenantMigrations
                         .IsUnique();
 
                     b.ToTable("doctors", (string)null);
-                });
-
-            modelBuilder.Entity("Sehatak.Domain.Entities.TenantEntities.DoctorBlockedDay", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Reason")
-                        .HasColumnType("longtext");
-
-                    b.Property<DateOnly>("date")
-                        .HasColumnType("date");
-
-                    b.Property<int>("doctorId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("isBlocked")
-                        .HasColumnType("tinyint(1)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("doctorId");
-
-                    b.ToTable("DoctorBlockedDays");
                 });
 
             modelBuilder.Entity("Sehatak.Domain.Entities.TenantEntities.DoctorRating", b =>
@@ -1217,17 +1190,6 @@ namespace Sehatak.Infrastructure.Data.Migrations.TenantMigrations
                     b.Navigation("department");
 
                     b.Navigation("user");
-                });
-
-            modelBuilder.Entity("Sehatak.Domain.Entities.TenantEntities.DoctorBlockedDay", b =>
-                {
-                    b.HasOne("Sehatak.Domain.Entities.TenantEntities.Doctor", "Doctor")
-                        .WithMany()
-                        .HasForeignKey("doctorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Doctor");
                 });
 
             modelBuilder.Entity("Sehatak.Domain.Entities.TenantEntities.DoctorRating", b =>
