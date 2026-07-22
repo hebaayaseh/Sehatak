@@ -13,11 +13,11 @@ using System.Threading.Tasks;
 
 namespace Sehatak.Infrastructure.Services.DepartmentService
 {
-    public class DepartmentsService : IDepartmentService
+    public class AddDepartmentsService : IDepartmentService
     {
         private readonly TenantDbContextFactory contextFactory;
         private readonly SharedDbContext sharedDbContext;
-        public DepartmentsService(TenantDbContextFactory contextFactory, SharedDbContext sharedDbContext)
+        public AddDepartmentsService(TenantDbContextFactory contextFactory, SharedDbContext sharedDbContext)
         {
             this.contextFactory = contextFactory;
             this.sharedDbContext = sharedDbContext;

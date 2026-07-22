@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 
 namespace Sehatak.Application.Interfaces.AddDoctorDailyHours
 {
-    public interface IAddDoctorDailyHours
+    public interface IDoctorDailyHours
     {
         Task<AddDoctorDailyHoursResponse> AddDoctorDailyHoursAsync(int centerId , int userId , int doctorId ,AddDoctorDailyHoursRequest request);
         Task<UpdateDoctorDailyHoursResponse> UpdateDoctorDailyHoursAsync(int centerId, int userId, int doctorId, UpdateDoctorDailyHousrRequest request);
+        Task<string> CancleDailyHoursAsync(int centerId, int doctorId, DateOnly date);
     }
 }

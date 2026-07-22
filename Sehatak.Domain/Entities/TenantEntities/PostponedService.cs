@@ -11,7 +11,7 @@ namespace Sehatak.Domain.Entities.TenantEntities
     {
         public int Id { get; set; }
         public int PatientId { get; set; }
-        public int ReceptionistId { get; set; }
+        public int CreatedByUserId { get; set; }
         public PostponeType Type { get; set; }
 
         public int? AppointmentId { get; set; }    
@@ -24,7 +24,7 @@ namespace Sehatak.Domain.Entities.TenantEntities
 
         // Navigation Properties
         public Patient Patient { get; set; } = null!;
-        public User Receptionist { get; set; } = null!;
+        public User CreatedByUser { get; set; } = null!;
         public Appointment? Appointment { get; set; }
         public Consultation? Consultation { get; set; }
     }

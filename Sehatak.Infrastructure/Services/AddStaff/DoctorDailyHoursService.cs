@@ -1,4 +1,5 @@
-﻿using DocumentFormat.OpenXml.Wordprocessing;
+﻿using DocumentFormat.OpenXml.Office2016.Excel;
+using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.EntityFrameworkCore;
 using Sehatak.Application.DTOs.AddDoctorDailyHour;
 using Sehatak.Application.DTOs.Exceptions;
@@ -17,11 +18,11 @@ using Umbraco.Core.Services.Implement;
 
 namespace Sehatak.Infrastructure.Services.AddStaff
 {
-    public class AddDoctorDailyHoursService : IAddDoctorDailyHours
+    public class DoctorDailyHoursService : IDoctorDailyHours
     {
         private readonly SharedDbContext sharedDbContext;
         private readonly TenantDbContextFactory contextFactory;
-        public AddDoctorDailyHoursService(SharedDbContext sharedDbContext, TenantDbContextFactory contextFactory)
+        public DoctorDailyHoursService(SharedDbContext sharedDbContext, TenantDbContextFactory contextFactory)
         {
             this.sharedDbContext = sharedDbContext;
             this.contextFactory = contextFactory;
@@ -81,8 +82,64 @@ namespace Sehatak.Infrastructure.Services.AddStaff
                 EndTime = request.EndTime
             };
         }
+
+        public async Task<string> CancleDailyHoursAsync(int centerId, int doctorId, DateOnly date)
+        {
+            var center = await sharedDbContext.MedicalCenters
+                .FirstOrDefaultAsync(c => c.Id == centerId && c.CenterStatus == CenterStatus.Active);
+            if (center == null)
+                throw new BusinessException("Center.NotFound");
+
+            using var db = contextFactory.CreateForCenter(centerId);
+
+            var doctor = await db.Doctors
+                .Include(d => d.user)
+                .FirstOrDefaultAsync(d => d.Id == doctorId && d.user.isActive);
+            if (doctor == null)
+                throw new BusinessException("Doctor.NotFound");
+
+
+            var appointments = await db.Appointments
+                .Include(a => a.Patient)
+                .ThenInclude(p => p.user)
+                .Where(a => a.doctorId == doctorId
+                 && a.appointmentDate == date
+                 && a.appointmentStatus == AppointmentStatus.Confirmed)
+                .OrderBy(a => a.timeSlot)
+                .ToListAsync();
+
+            if (!appointments.Any())
+                throw new BusinessException("Appointment.NoneForThisDay");
+
+
+            foreach (var appointment in appointments)
+            {
+                appointment.appointmentStatus = AppointmentStatus.Cancelled;
+                db.PostponedServices.Add(new PostponedService
+                {
+                    PatientId = appointment.patientId,
+                    CreatedByUserId = doctor.user.Id,
+                    Type = PostponeType.DoctorAppointment,
+                    AppointmentId = appointment.Id,
+                    Reason = "الغاء مواعيد اليوم من قبل الطبيب.",
+                    Status = PostponeStatus.Active,
+                });
+                db.Notifications.Add(new Notification
+                {
+                    UserId = (int)appointment.Patient.userId,
+                    Message = "نحيطكم علم بأنه تم الغاء مواعيد الطبيب لهذا اليوم.",
+                    CreatedAt = DateTime.UtcNow,
+                    Type = NotificationType.Cancellation,
+                    IsRead = false
+                });
+
+            }
+            await db.SaveChangesAsync();
+            return "Canceled Appointment Successfuly.";
+        }
+
         public async Task<UpdateDoctorDailyHoursResponse> UpdateDoctorDailyHoursAsync(
-    int centerId, int userId, int doctorId, UpdateDoctorDailyHousrRequest request)
+        int centerId, int userId, int doctorId, UpdateDoctorDailyHousrRequest request)
         {
             var center = await sharedDbContext.MedicalCenters
                 .FirstOrDefaultAsync(c => c.Id == centerId && c.CenterStatus == CenterStatus.Active);
@@ -139,7 +196,7 @@ namespace Sehatak.Infrastructure.Services.AddStaff
                 db.PostponedServices.Add(new PostponedService
                 {
                     PatientId = appointment.patientId,
-                    ReceptionistId = userId, 
+                    CreatedByUserId = userId, 
                     Type = PostponeType.DoctorAppointment,
                     AppointmentId = appointment.Id,
                     Reason = "تعديل جدول دوام الطبيب من قبل الإدارة",
@@ -180,6 +237,7 @@ namespace Sehatak.Infrastructure.Services.AddStaff
                 EndTime = request.EndTime
             };
         }
+
 
         //private async Task NotifyPatientPostponeAsync(User user)
         //{

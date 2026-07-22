@@ -7,11 +7,11 @@ using System.Security.Claims;
 namespace Sehatak.API.Controllers.SuperAdminAndAdmin.AddDoctorDaiktcontroller
 {
     [ApiController]
-    [Route("api-add-doctor-daily-hours")]
-    public class AddDoctorDaiylController : ControllerBase
+    [Route("api-doctor-daily-hours")]
+    public class DoctorDaiylController : ControllerBase
     {
-        private readonly IAddDoctorDailyHours addHours;
-        public AddDoctorDaiylController(IAddDoctorDailyHours addHours)
+        private readonly IDoctorDailyHours addHours;
+        public DoctorDaiylController(IDoctorDailyHours addHours)
         {
             this.addHours = addHours;
         }
@@ -37,6 +37,14 @@ namespace Sehatak.API.Controllers.SuperAdminAndAdmin.AddDoctorDaiktcontroller
                 User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
 
             var result = await addHours.UpdateDoctorDailyHoursAsync(centerId, userId, doctorId, request);
+            return Ok(result);
+        }
+
+        [Authorize(Policy = "DoctorOnly")]
+        [HttpPost("Cancel-doctor-day/{centerId}/{doctorId}")]
+        public async Task<IActionResult> CancelDoctorDay(int centerId,int doctorId, DateOnly date)
+        {
+            var result = await addHours.CancleDailyHoursAsync(centerId, doctorId, date);
             return Ok(result);
         }
 

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Sehatak.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using Sehatak.Infrastructure.Data;
 namespace Sehatak.Infrastructure.Data.Migrations.TenantMigrations
 {
     [DbContext(typeof(TenantDbContext))]
-    partial class TenantDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260722124855_CreatedByUserIdEdit")]
+    partial class CreatedByUserIdEdit
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1437,7 +1440,7 @@ namespace Sehatak.Infrastructure.Data.Migrations.TenantMigrations
                         .HasForeignKey("ConsultationId")
                         .OnDelete(DeleteBehavior.SetNull);
 
-                    b.HasOne("Sehatak.Domain.Entities.TenantEntities.User", "CreatedByUser")
+                    b.HasOne("Sehatak.Domain.Entities.TenantEntities.User", "user")
                         .WithMany()
                         .HasForeignKey("CreatedByUserId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1453,9 +1456,9 @@ namespace Sehatak.Infrastructure.Data.Migrations.TenantMigrations
 
                     b.Navigation("Consultation");
 
-                    b.Navigation("CreatedByUser");
-
                     b.Navigation("Patient");
+
+                    b.Navigation("user");
                 });
 
             modelBuilder.Entity("Sehatak.Domain.Entities.TenantEntities.StaffAttendance", b =>

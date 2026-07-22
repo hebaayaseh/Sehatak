@@ -324,15 +324,15 @@ namespace Sehatak.API
             builder.Services.AddScoped<IFinancialReport, FinancialReportService>();
             builder.Services.AddScoped<IEditPlan, EditPlanService>();
             builder.Services.AddScoped<ICenterRegistration, CenterRegistirationRequestService>();
-            builder.Services.AddScoped<IDepartmentService, DepartmentsService>();
-            builder.Services.AddScoped<IAddDoctorToDepartment, AddDoctorToDepartment>();
+            builder.Services.AddScoped<IDepartmentService, AddDepartmentsService>();
+            builder.Services.AddScoped<IAddDoctorToDepartment, DoctorToDepartment>();
             builder.Services.AddScoped<IRemoveStaff, RemoveStaffFromCenter>();
             builder.Services.AddScoped<IListOfPlan, ListOfPlanService>();
             builder.Services.AddScoped<IGetpatientCenter, GetPatientCenterService>();
             builder.Services.AddScoped<IGetStaff, GetStaffService>();
             builder.Services.AddScoped<ISignup, AddStaffService>();
             builder.Services.AddScoped<IprofileStaff, EditStaffService>();
-            builder.Services.AddScoped<IAddDoctorDailyHours, AddDoctorDailyHoursService>();
+            builder.Services.AddScoped<IDoctorDailyHours, DoctorDailyHoursService>();
             builder.Services.AddScoped<IServicePrice, servicePrice>();
             builder.Services.AddScoped<IFinancialReportAdmin, FinancialReportAdminService>();
             builder.Services.AddScoped<IChatHub, ChatHistoryService>();

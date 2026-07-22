@@ -14,12 +14,12 @@ using System.Threading.Tasks;
 
 namespace Sehatak.Infrastructure.Services.DepartmentService
 {
-    public class AddDoctorToDepartment : IAddDoctorToDepartment
+    public class DoctorToDepartment : IAddDoctorToDepartment
     {
         private TenantDbContextFactory contextFactory;
         private SharedDbContext sharedDbContext;
         private IEmailService emailService;
-        public AddDoctorToDepartment(TenantDbContextFactory contextFactory , SharedDbContext sharedDbContext , IEmailService emailService)
+        public DoctorToDepartment(TenantDbContextFactory contextFactory , SharedDbContext sharedDbContext , IEmailService emailService)
         {
             this.contextFactory = contextFactory;
             this.sharedDbContext = sharedDbContext;
