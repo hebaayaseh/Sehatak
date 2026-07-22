@@ -8,10 +8,10 @@ namespace Sehatak.API.Controllers.SuperAdminAndAdmin.AddDoctorDaiktcontroller
 {
     [ApiController]
     [Route("api-doctor-daily-hours")]
-    public class DoctorDaiylController : ControllerBase
+    public class DoctorDailyController : ControllerBase
     {
         private readonly IDoctorDailyHours addHours;
-        public DoctorDaiylController(IDoctorDailyHours addHours)
+        public DoctorDailyController(IDoctorDailyHours addHours)
         {
             this.addHours = addHours;
         }
@@ -41,9 +41,12 @@ namespace Sehatak.API.Controllers.SuperAdminAndAdmin.AddDoctorDaiktcontroller
         }
 
         [Authorize(Policy = "DoctorOnly")]
-        [HttpPost("Cancel-doctor-day/{centerId}/{doctorId}")]
-        public async Task<IActionResult> CancelDoctorDay(int centerId,int doctorId, DateOnly date)
+        [HttpPost("Cancel-doctor-day/{centerId}")]
+        public async Task<IActionResult> CancelDoctorDay(int centerId, DateOnly date)
         {
+            var doctorId = int.Parse(
+                User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+
             var result = await addHours.CancleDailyHoursAsync(centerId, doctorId, date);
             return Ok(result);
         }
