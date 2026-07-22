@@ -142,8 +142,16 @@ namespace Sehatak.Infrastructure.Services.AddStaff
                     ReceptionistId = userId, 
                     Type = PostponeType.DoctorAppointment,
                     AppointmentId = appointment.Id,
-                    Reason = "تعديل جدول دوام الدكتور من قبل الإدارة",
+                    Reason = "تعديل جدول دوام الطبيب من قبل الإدارة",
                     Status = PostponeStatus.Active,
+                });
+                db.Notifications.Add(new Notification
+                {
+                    UserId = (int)appointment.Patient.userId,
+                    Message = "تم تغيير مواعيد دوام الطبيب، يرجى إعادة جدولة الموعد في أقرب وقت",
+                    CreatedAt = DateTime.UtcNow,
+                    Type = NotificationType.Cancellation,
+                    IsRead = false
                 });
                 //await NotifyPatientPostponeAsync(appointment.Patient.user);
             }

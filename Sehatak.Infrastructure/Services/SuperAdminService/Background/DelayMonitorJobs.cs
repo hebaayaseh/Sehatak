@@ -69,6 +69,14 @@ namespace Sehatak.Infrastructure.Services.SuperAdminService.Background
                         appointment.appointmentStatus = AppointmentStatus.Cancelled;
                         appointment.Payment.Status = PaymentStatus.Failed;
 
+                        db.Notifications.Add(new Notification
+                        {
+                            UserId = (int)appointment.Patient.userId,
+                            Message = "انتهت مهلة الدفع المسبق لموعدك، تم إلغاء الحجز",
+                            CreatedAt = DateTime.UtcNow,
+                            Type = NotificationType.Cancellation,
+                            IsRead = false
+                        });
 
                         //await NotifyPatientAsync(notificationService, whatsAppService,
                         //    appointment.Patient.user, NotificationType.Cancellation,
@@ -111,7 +119,14 @@ namespace Sehatak.Infrastructure.Services.SuperAdminService.Background
                         nextWaiting.Status = WaitlistStatus.Entered;
                         nextWaiting.PromotedAppointmentId = newAppointment.Id;
 
-
+                        db.Notifications.Add(new Notification
+                        {
+                            UserId = (int)nextWaiting.Patient.userId,
+                            Message = "توفر لك موعد من قائمة الانتظار! يرجى إتمام الدفع خلال 20 دقيقة لتأكيد الحجز",
+                            CreatedAt = DateTime.UtcNow,
+                            Type = NotificationType.Cancellation,
+                            IsRead = false
+                        });
                         //await NotifyPatientAsync(notificationService, whatsAppService,
                         //    nextWaiting.Patient.user, NotificationType.Appointment,
                         //    "توفر لك موعد من قائمة الانتظار! يرجى إتمام الدفع خلال 20 دقيقة لتأكيد الحجز.");
@@ -215,8 +230,17 @@ namespace Sehatak.Infrastructure.Services.SuperAdminService.Background
                             nextWaiting.PromotedAppointmentId = newAppointment.Id;
 
                             var message = center.RequiresPrepayment
-                                ? "توفر لك موعد اليوم, يرجى إتمام الدفع خلال 20 دقيقة."
-                                : "توفر لك موعد اليوم ، تم تأكيد حجزك مباشرة.";
+                             ? "توفر لك موعد اليوم، يرجى إتمام الدفع خلال 20 دقيقة"
+                             :"توفر لك موعد اليوم، تم تأكيد حجزك مباشرة.";
+
+                            db.Notifications.Add(new Notification
+                            {
+                                UserId = (int)nextWaiting.Patient.userId,
+                                Message = message,
+                                CreatedAt = DateTime.UtcNow,
+                                Type = NotificationType.Appointment,
+                                IsRead = false
+                            });
 
                             //await NotifyPatientAsync(notificationService, whatsAppService,
                             //    nextWaiting.Patient.user, NotificationType.Appointment, message);
