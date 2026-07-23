@@ -13,6 +13,7 @@ using Sehatak.API.Middleware;
 using Sehatak.API.Middleware;
 using Sehatak.Application.Interfaces.AddDoctorDailyHours;
 using Sehatak.Application.Interfaces.AddFeatureToCenter;
+using Sehatak.Application.Interfaces.ApointmentInterface;
 using Sehatak.Application.Interfaces.AssignFeatursToPlan;
 using Sehatak.Application.Interfaces.AuditLog;
 using Sehatak.Application.Interfaces.AuthPatient;
@@ -42,6 +43,7 @@ using Sehatak.Application.Interfaces.SignUp;
 using Sehatak.Application.Interfaces.StaffLogin;
 using Sehatak.Application.Interfaces.SuperAdminInterface;
 using Sehatak.Domain.Enums.SharedEnums;
+using Sehatak.Infrastructure.CalculateSlot;
 using Sehatak.Infrastructure.Data;
 using Sehatak.Infrastructure.Data;
 using Sehatak.Infrastructure.Security;
@@ -49,6 +51,7 @@ using Sehatak.Infrastructure.Security;
 using Sehatak.Infrastructure.Services;
 using Sehatak.Infrastructure.Services;
 using Sehatak.Infrastructure.Services.AddStaff;
+using Sehatak.Infrastructure.Services.AppointmentService;
 using Sehatak.Infrastructure.Services.DepartmentService;
 using Sehatak.Infrastructure.Services.EditProfileService;
 using Sehatak.Infrastructure.Services.FinancialReportServices;
@@ -338,6 +341,8 @@ namespace Sehatak.API
             builder.Services.AddScoped<IChatHub, ChatHistoryService>();
             builder.Services.AddScoped<ITokenService, TokenService>();
             builder.Services.AddScoped<ISearchDoctor, searchDoctorService>();
+            builder.Services.AddScoped<IAppointment, AvailableDoctorSlotService>();
+            builder.Services.AddScoped<GenerateTheoreticalSlots>();
 
 
             var app = builder.Build();

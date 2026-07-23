@@ -4,12 +4,14 @@ using Sehatak.Application.DTOs.Exceptions;
 using Sehatak.Application.Interfaces.ApointmentInterface;
 using Sehatak.Domain.Enums;
 using Sehatak.Domain.Enums.SharedEnums;
+using Sehatak.Infrastructure.CalculateSlot;
 using Sehatak.Infrastructure.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace Sehatak.Infrastructure.Services.AppointmentService
 {
@@ -17,26 +19,29 @@ namespace Sehatak.Infrastructure.Services.AppointmentService
     {
         private readonly SharedDbContext sharedDbContext;
         private readonly TenantDbContextFactory contextFactory;
-        public AvailableDoctorSlotService(SharedDbContext sharedDbContext , TenantDbContextFactory contextFactory)
+        private readonly GenerateTheoreticalSlots generateTheoreticalSlots;
+        public AvailableDoctorSlotService(SharedDbContext sharedDbContext , TenantDbContextFactory contextFactory , GenerateTheoreticalSlots generateTheoreticalSlot)
         {
             this.sharedDbContext = sharedDbContext;
             this.contextFactory = contextFactory;
+            this.generateTheoreticalSlots = generateTheoreticalSlot;
         }
 
-        public async Task<AvailableDoctorSlot> GetAvailableDoctorSlot(int centerId, int doctorId)
+        public async Task<AvailableDoctorSlot> GetAvailableDoctorSlot(int centerId, int doctorId, DateOnly date)
         {
             var center = await sharedDbContext.MedicalCenters
-                .Where(c => c.Id == centerId && c.CenterStatus == CenterStatus.Active)
-                .ToListAsync();
+               .FirstOrDefaultAsync(c => c.Id == centerId && c.CenterStatus == CenterStatus.Active);
 
             if (center == null)
                 throw new BusinessException("Center.NotFound");
+
 
             using var db = contextFactory.CreateForCenter(centerId);
 
             var doctor = await db.Doctors
                 .Include(u => u.user)
-                .Where(d => d.Id == doctorId && d.user.isActive)
+                .Where(d => d.Id == doctorId 
+                && d.user.isActive)
                 .FirstOrDefaultAsync();
 
             if (doctor == null)
@@ -44,34 +49,50 @@ namespace Sehatak.Infrastructure.Services.AppointmentService
 
             var today = DateOnly.FromDateTime(DateTime.UtcNow);
 
-            var blockedDay = db.DoctorBlockedDays
-                .Where(bd => bd.doctorId == doctorId && bd.isBlocked && bd.date >= today)
-                .ToListAsync();
+            var isDayBlocked = await db.DoctorBlockedDays
+                 .AnyAsync(bd => bd.doctorId == doctorId && bd.isBlocked && bd.date == date);
 
-            if (blockedDay != null)
-                throw new BusinessException("Doctor.CancelDay");
+            if (isDayBlocked)
+                throw new BusinessException("Doctor.DayBlocked");
 
-            var doctorSchedual = await db.DoctorSchedules
+
+            var schedule = await db.DoctorSchedules
                 .Include(d => d.doctor)
                 .Where(d => d.DoctorId == doctorId
-                       && d.IsActive)
-                .ToListAsync();
+                       && d.IsActive
+                       && d.DayOfWeek == date.DayOfWeek)
+                .FirstOrDefaultAsync();
 
-            if (doctorSchedual == null)
+            if (schedule == null)
                 throw new BusinessException("Doctor.NotFound");
 
-            var appointment = await db.Appointments
-                .Include(d => d.Doctor)
-                .ThenInclude(d=>doctorSchedual)
+            var theoreticalSlots = generateTheoreticalSlots.GenerateTheoreticalSlot(schedule.StartTime, schedule.EndTime, (int)schedule.SlotDurationMinutes);
+
+            var bookedSlots = await db.Appointments
                 .Where(a => a.doctorId == doctorId
-                      && a.appointmentStatus == AppointmentStatus.Pending
-                      && a.timeSlot <= )
-                .ToListAsync();
-
-            
-            
+                       && a.appointmentStatus == AppointmentStatus.Confirmed
+                       && a.appointmentDate == date)
+                       .Select(a => a.timeSlot)
+                       .ToListAsync();
 
 
+            var availableSlots = theoreticalSlots
+                .Where(slot => slot.HasValue)
+                .Select(slot => slot!.Value)
+                .Except(bookedSlots.Where(b => b.HasValue).Select(b => b!.Value))
+                .OrderBy(s => s)
+                .ToList();
+
+
+
+            return new AvailableDoctorSlot
+            {
+                doctorId = doctorId,
+                doctorName = $"{doctor.user.firstName} {doctor.user.lastName}",
+                DayOfWeek = schedule.DayOfWeek,
+                date = date,
+                dateAvailable = availableSlots
+            };
 
         }
     }
