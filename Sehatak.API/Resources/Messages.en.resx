@@ -364,4 +364,7 @@
   <data name="Validation.DuplicateServiceNames" xml:space="preserve">
     <value>The name is duplicate!</value>
   </data>
+  <data name="Doctor.CancelDay" xml:space="preserve">
+    <value>Doctor Cancel Appointment This day</value>
+  </data>
 </root>

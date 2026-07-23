@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Sehatak.Application.DTOs.SearchDoctorDto;
 using Sehatak.Application.Interfaces.SearchDoctor;
 
-namespace Sehatak.API.Controllers.PatientController
+namespace Sehatak.API.Controllers.PatientController.SearchDoctor
 {
     [ApiController]
     [Route("api-searc-doctor")]

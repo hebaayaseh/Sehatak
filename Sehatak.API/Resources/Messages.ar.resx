@@ -364,4 +364,7 @@
   <data name="Validation.DuplicateServiceNames" xml:space="preserve">
     <value>تم تكرار الاسم </value>
   </data>
+  <data name="Doctor.CancelDay" xml:space="preserve">
+    <value>تم الغاء الحجوزات لهذا اليوم</value>
+  </data>
 </root>

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Sehatak.Application.Interfaces.GetSttafInterFace;
 
-namespace Sehatak.API.Controllers.AdminController.GetStaffcontroller
+namespace Sehatak.API.Controllers.PatientController.GetStaffcontroller
 {
     [ApiController]
     [Route("get-doctors-with-departments")]
@@ -13,14 +13,15 @@ namespace Sehatak.API.Controllers.AdminController.GetStaffcontroller
         {
             this.getStaff = getStaff;
         }
-        [Authorize(Policy = "AdminOnly")]
+        
         [HttpGet("get-doctors/{centerId}")]
         public async Task<IActionResult> GetDoctorsWithDepartments(int centerId)
         {
             var result = await getStaff.GetDoctorsAsync(centerId);
             return Ok(result);
         }
-        [Authorize(Policy = "AdminOnly")]
+
+        
         [HttpGet("get-doctor/{centerId}/{doctorId}")]
         public async Task<IActionResult> GetDoctor(int centerId,int doctorId)
         {

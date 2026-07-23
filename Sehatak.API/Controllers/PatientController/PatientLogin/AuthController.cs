@@ -6,7 +6,7 @@ using Sehatak.Application.DTOs.PatienRegisterDto;
 using Sehatak.Application.DTOs.PatientLoginDto;
 using Sehatak.Application.Interfaces.AuthPatient;
 
-namespace Sehatak.API.Controllers.Patient
+namespace Sehatak.API.Controllers.PatientController.Patient
 {
     [ApiController]
     [Route("api/auth")]

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Sehatak.Application.Interfaces.GetSttafInterFace;
 
-namespace Sehatak.API.Controllers.AdminController.GetStaffcontroller
+namespace Sehatak.API.Controllers.PatientController.GetStaffcontroller
 {
     [ApiController]
     [Route("get-Receptionist-and-LabTechnician")]
