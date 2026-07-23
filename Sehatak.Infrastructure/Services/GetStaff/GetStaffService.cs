@@ -64,6 +64,7 @@ namespace Sehatak.Infrastructure.Services.GetStaff
                         EndTime = d.EndTime,
                         SlotDurationMinutes = d.SlotDurationMinutes,
                         IsActive = d.IsActive,
+                        DayOfWeek = d.DayOfWeek
                     }).ToList(),
             };
 }
