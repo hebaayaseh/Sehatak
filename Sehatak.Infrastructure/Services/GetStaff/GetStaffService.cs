@@ -41,12 +41,10 @@ namespace Sehatak.Infrastructure.Services.GetStaff
                 throw new BusinessException("Doctor.NotFound");
 
             var today = DateOnly.FromDateTime(DateTime.UtcNow);
-            var doctorBlockDay = await db.DoctorBlockedDays
+            var blockedDates = await db.DoctorBlockedDays
                         .Where(d => d.doctorId == doctor.Id && d.isBlocked && d.date >= today)
                         .FirstOrDefaultAsync();
 
-            if (doctorBlockDay != null)
-                throw new BusinessException("Doctor.NoAvailableSlots");
 
             return new DoctorSummaryDto
             {
@@ -56,6 +54,7 @@ namespace Sehatak.Infrastructure.Services.GetStaff
                 Bio = doctor.Bio,
                 Specialization = doctor.Specialization,
                 ProfileImageUrl = doctor.user.ProfileImageUrl,
+                BlockedDates = blockedDates!=null? blockedDates.date : null,
                 doctorSchedule = doctor.doctorschedules
                     .Where(s => s.IsActive)
                     .Select(d => new SummatySchedualDto

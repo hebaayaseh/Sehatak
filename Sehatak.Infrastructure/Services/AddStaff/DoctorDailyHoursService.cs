@@ -95,54 +95,61 @@ namespace Sehatak.Infrastructure.Services.AddStaff
             var doctor = await db.Doctors
                 .Include(d => d.user)
                 .FirstOrDefaultAsync(d => d.Id == doctorId && d.user.isActive);
+
             if (doctor == null)
                 throw new BusinessException("Doctor.NotFound");
 
 
+            var alreadyBlocked = await db.DoctorBlockedDays
+                .AnyAsync(d => d.doctorId == doctorId && d.date == date && d.isBlocked);
+            if (alreadyBlocked)
+                throw new BusinessException("Doctor.DayAlreadyBlocked");
+
             var appointments = await db.Appointments
-                .Include(a => a.Patient)
-                .ThenInclude(p => p.user)
+                .Include(a => a.Patient).ThenInclude(p => p.user)
                 .Where(a => a.doctorId == doctorId
-                 && a.appointmentDate == date
-                 && a.appointmentStatus == AppointmentStatus.Confirmed)
+                         && a.appointmentDate == date
+                         && a.appointmentStatus == AppointmentStatus.Confirmed)
                 .OrderBy(a => a.timeSlot)
                 .ToListAsync();
-
-            if (!appointments.Any())
-                throw new BusinessException("Appointment.NoneForThisDay");
-
 
             foreach (var appointment in appointments)
             {
                 appointment.appointmentStatus = AppointmentStatus.Cancelled;
+
                 db.PostponedServices.Add(new PostponedService
                 {
                     PatientId = appointment.patientId,
                     CreatedByUserId = doctor.user.Id,
                     Type = PostponeType.DoctorAppointment,
                     AppointmentId = appointment.Id,
-                    Reason = "الغاء مواعيد اليوم من قبل الطبيب.",
+                    Reason = "إلغاء مواعيد اليوم من قبل الطبيب.",
                     Status = PostponeStatus.Active,
                 });
+
                 db.Notifications.Add(new Notification
                 {
                     UserId = (int)appointment.Patient.userId,
-                    Message = "نحيطكم علم بأنه تم الغاء مواعيد الطبيب لهذا اليوم.",
+                    Message = "نحيطكم علمًا بأنه تم إلغاء موعدكم اليوم. يرجى حجز موعد جديد.",
                     CreatedAt = DateTime.UtcNow,
                     Type = NotificationType.Cancellation,
                     IsRead = false
                 });
-                db.DoctorBlockedDays.Add(new DoctorBlockedDay
-                {
-                    doctorId = doctorId,
-                    date = date,
-                    Reason = "إلغاء من قبل الطبيب",
-                    isBlocked = true
-                });
-
             }
+
+            db.DoctorBlockedDays.Add(new DoctorBlockedDay
+            {
+                doctorId = doctorId,
+                date = date,
+                Reason = "إلغاء من قبل الطبيب",
+                isBlocked = true
+            });
+
             await db.SaveChangesAsync();
-            return "Canceled Appointment Successfuly.";
+
+            return appointments.Any()
+                ? "تم إلغاء مواعيد اليوم بنجاح ومنع الحجز الجديد لهذا التاريخ."
+                : "تم حظر هذا اليوم من الحجز بنجاح.";
         }
 
         public async Task<UpdateDoctorDailyHoursResponse> UpdateDoctorDailyHoursAsync(
