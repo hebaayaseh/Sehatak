@@ -83,7 +83,7 @@ namespace Sehatak.Infrastructure.Services.AddStaff
             };
         }
 
-        public async Task<string> CancleDailyHoursAsync(int centerId, int doctorId, DateOnly date)
+        public async Task<string> CancleDailyHoursAsync(int centerId, int userId, DateOnly date)
         {
             var center = await sharedDbContext.MedicalCenters
                 .FirstOrDefaultAsync(c => c.Id == centerId && c.CenterStatus == CenterStatus.Active);
@@ -93,8 +93,12 @@ namespace Sehatak.Infrastructure.Services.AddStaff
             using var db = contextFactory.CreateForCenter(centerId);
 
             var doctor = await db.Doctors
-                .Include(d => d.user)
-                .FirstOrDefaultAsync(d => d.Id == doctorId && d.user.isActive);
+             .Include(d => d.user)
+             .FirstOrDefaultAsync(d => d.userId == userId && d.user.isActive); 
+            if (doctor == null)
+                throw new BusinessException("Doctor.NotFound");
+
+            var doctorId = doctor.Id;
 
             if (doctor == null)
                 throw new BusinessException("Doctor.NotFound");
