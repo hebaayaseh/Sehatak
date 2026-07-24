@@ -10,5 +10,6 @@ namespace Sehatak.Application.Interfaces.ApointmentInterface
     public interface IAppointment
     {
         Task<AvailableDoctorSlot> GetAvailableDoctorSlot(int centerId, int doctorId,DateOnly date);
+        Task<BookAppointmentRespesponse> BookAppointmentAsync(int centerId , int doctorId ,int userId , BookAppointmentRequest request);
     }
 }

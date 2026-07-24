@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Sehatak.Application.DTOs.AppointmentDto;
 using Sehatak.Application.Interfaces.ApointmentInterface;
 using Sehatak.Infrastructure.Services.AppointmentService;
+using System.Security.Claims;
 
 namespace Sehatak.API.Controllers.PatientController.AppointmentController
 {
@@ -18,6 +21,15 @@ namespace Sehatak.API.Controllers.PatientController.AppointmentController
         public async Task<IActionResult> AvailableDoctorSlot(int centerId , int doctorId , [FromBody] DateOnly date)
         {
             var result = await slotService.GetAvailableDoctorSlot(centerId , doctorId , date);
+            return Ok(result);
+        }
+
+        [HttpPost("book/{centerId}/{doctorId}")]
+        [Authorize(Roles = "Patient")]
+        public async Task<IActionResult> BookAppointment(int centerId, int doctorId, [FromBody] BookAppointmentRequest request)
+        {
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            var result = await slotService.BookAppointmentAsync(centerId, doctorId, userId, request);
             return Ok(result);
         }
     }

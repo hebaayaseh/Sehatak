@@ -96,8 +96,8 @@ namespace Sehatak.Infrastructure.Services.SuperAdminService.Background
                             doctorId = appointment.doctorId,
                             appointmentDate = today,
                             timeSlot = nextWaiting.PreferredTimeSlot.HasValue
-                                    ? TimeOnly.FromDateTime(nextWaiting.PreferredTimeSlot.Value)
-                                    : (TimeOnly?)null,
+                                    ? nextWaiting.PreferredTimeSlot.Value
+                                    : null,
                             appointmentStatus = AppointmentStatus.Pending,
                         };
                         db.Appointments.Add(newAppointment);
@@ -204,8 +204,8 @@ namespace Sehatak.Infrastructure.Services.SuperAdminService.Background
                                 doctorId = doctorId,
                                 appointmentDate = today,
                                 timeSlot = nextWaiting.PreferredTimeSlot.HasValue
-                                    ? TimeOnly.FromDateTime(nextWaiting.PreferredTimeSlot.Value)
-                                    : (TimeOnly?)null,
+                                    ? nextWaiting.PreferredTimeSlot.Value
+                                    : null,
                                 appointmentStatus = center.RequiresPrepayment
                                     ? AppointmentStatus.Pending
                                     : AppointmentStatus.Confirmed,

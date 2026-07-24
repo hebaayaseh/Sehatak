@@ -34,3 +34,22 @@ Sehatak.Application.DTOs.Exceptions.BusinessException: Doctor.NotFound
    at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
    at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
    at Sehatak.API.Middleware.ExceptionMiddleware.InvokeAsync(HttpContext context) in C:\Users\hebah\source\repos\Sehatak_TenantClinic\Sehatak.API\Middleware\ExceptionMiddleware.cs:line 23
+2026-07-24 04:36:00 [ERR] Unhandled exception occurred. Path: /api-get-available-doctor-slot/book/6/4, Method: POST {"SourceContext":"Sehatak.API.Middleware.ExceptionMiddleware","RequestId":"0HNN94CR8AVQR:0000000F","RequestPath":"/api-get-available-doctor-slot/book/6/4","ConnectionId":"0HNN94CR8AVQR"}
+Sehatak.Application.DTOs.Exceptions.BusinessException: Doctor.NotFound
+   at Sehatak.Infrastructure.Services.AppointmentService.AvailableDoctorSlotService.BookAppointmentAsync(Int32 centerId, Int32 doctorId, Int32 userId, BookAppointmentRequest request) in C:\Users\hebah\source\repos\Sehatak_TenantClinic\Sehatak.Infrastructure\Services\AppointmentService\AvailableDoctorSlotService.cs:line 135
+   at Sehatak.API.Controllers.PatientController.AppointmentController.AvailableDoctorSlotController.BookAppointment(Int32 centerId, Int32 doctorId, BookAppointmentRequest request) in C:\Users\hebah\source\repos\Sehatak_TenantClinic\Sehatak.API\Controllers\PatientController\AppointmentController\AvailableDoctorSlotController.cs:line 32
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Localization.RequestLocalizationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Sehatak.API.Middleware.ExceptionMiddleware.InvokeAsync(HttpContext context) in C:\Users\hebah\source\repos\Sehatak_TenantClinic\Sehatak.API\Middleware\ExceptionMiddleware.cs:line 23
